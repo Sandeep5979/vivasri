@@ -1,0 +1,346 @@
+/* Hide arrows in Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+ 
+/* Hide arrows in Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.slick-prev,
+.slick-next {
+  top: auto !important;       /* remove vertical centering */
+  bottom: -40px !important;   /* push below slider */
+  transform: none !important; /* reset Slick's transform */
+}
+
+.slick-prev {
+  left: 40%;  /* adjust position */
+}
+
+.slick-next {
+  right: 40%; /* adjust position */
+}
+.slick-list {
+  margin: 0 -10px; /* compensate for slick-slide padding */
+}
+.slick-slide {
+  padding: 0 10px;
+}
+
+
+.owl-nav {
+    width: 65px;
+    height: 50px;
+    position: relative;
+    margin: 0 auto;
+}
+.owl-nav button.owl-prev {
+    right: auto;
+    left: -18px;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    background: #DD3481;
+    border-radius: 30px;
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.4s 
+ease-in-out;
+    font-size: 19px;
+    color: #fff;
+    border: 0;
+    box-shadow: rgba(221, 52, 129, 0) 0px 6px 0px, rgba(221, 52, 129, 0) 0px 6px 0px;
+}
+
+.owl-nav button.owl-next {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    background: #DD3481;
+    border-radius: 30px;
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.4s 
+ease-in-out;
+    font-size: 19px;
+    color: #fff;
+    border: 0;
+    box-shadow: rgba(221, 52, 129, 0) 0px 6px 0px, rgba(221, 52, 129, 0) 0px 6px 0px;
+}
+
+.owl-nav-latest {
+    width: 65px;
+    height: 50px;
+    position: relative;
+    margin: 0 auto;
+}
+.owl-nav-latest button.owl-prev {
+    width: 40px;
+    right: auto;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    left: -18px;
+    background: #fff;
+    border-radius: 30px;
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.4s 
+ease-in-out;
+    font-size: 19px;
+    color: #DD3481;
+    border: 0;
+    box-shadow: rgba(255, 255, 255, 0) 0px 6px 0px, rgba(255, 255, 255, 0) 0px 6px 0px;
+}
+
+.owl-nav-latest button.owl-next {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    background: #fff;
+    border-radius: 30px;
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.4s 
+ease-in-out;
+    font-size: 19px;
+    color: #DD3481;
+    border: 0;
+    box-shadow: rgba(255, 255, 255, 0) 0px 6px 0px, rgba(255, 255, 255, 0) 0px 6px 0px;
+}
+
+.form-select-new {
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 400;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.error {
+    color:red !important;
+    font-size: 14px !important;
+    margin-top:0px !important;
+}
+
+
+.hasSub.megaMenu .headerSubNavsssss {
+    max-width: 490px;
+    min-width: 132px;
+    width: 100%;
+    top: 80% !important;
+    right: 0px;
+    left: 954px;
+    margin: auto;
+    padding: 0px;
+}
+.hasSub.megaMenu .headerSubNavss {
+    max-width: 250px;
+    min-width: 250px;
+    width: 100%;
+    right: 0px;
+    left: 300px;
+    margin: auto;
+    padding: 30px;
+}
+
+.hasSub.megaMenu .headerSubNavs{
+    max-width: 622px;
+    min-width: 500px;
+    width: 100%;
+    right: 0px;
+    left: 360px;
+    margin: auto;
+    padding: 30px;
+}
+
+
+.headerMenu>li.hasSub:hover .headerSubNavs{
+    visibility: visible;
+    opacity: 1;
+    top: 80% !important;
+    max-width: 622px;
+    min-width: 500px;
+    width: 100%;
+    right: 0px;
+    left: 360px;
+    margin: auto;
+    padding: 30px;
+}
+
+.hasSub.megaMenu .headerSubNavsss{
+    max-width: 250px !important;
+    min-width: 250px !important;
+    width: 100%;
+    right: 0px;
+    left: 580px;
+    margin: auto;
+    top: 80%;
+    padding: 30px;
+}
+
+.headerMenu>li.hasSub:hover .headerSubNavsss{
+    max-width: 250px !important;
+    min-width: 250px !important;
+    width: 100%;
+    right: 0px;
+    left: 580px;
+    margin: auto;
+    top: 80%;
+    padding: 30px;
+}
+
+.hasSub.megaMenu .headerSubNavsse {
+    max-width: 250px;
+    top: 80% !important;
+    min-width: 250px;
+    width: 100%;
+    right: 0px;
+    left: 300px;
+    margin: auto;
+    padding: 30px;
+}
+
+.headerMenu>li.hasSub:hover .headerSubNavsse {
+    max-width: 250px;
+    top: 80% !important;
+    min-width: 250px;
+    width: 100%;
+    right: 0px;
+    left: 300px;
+    margin: auto;
+    padding: 30px;
+}
+.hasSub.megaMenu .headerSubNavssss{
+    max-width: 250px;
+    min-width: 250px;
+    width: 100%;
+    right: 0px;
+    left: 800px;
+    top: 80%;
+    margin: auto;
+    padding: 30px;
+}
+
+.headerMenu>li.hasSub:hover .headerSubNavssss{
+    max-width: 250px;
+    min-width: 250px;
+    width: 100%;
+    right: 0px;
+    left: 800px;
+    top: 80%;
+    margin: auto;
+    padding: 30px;
+}
+#fileInput {
+  display: none;
+}
+.openMenu{
+    display: block;
+    right: 0;
+    width: 100%;
+}
+.closedMenu{
+    display: none;
+    right: -30%
+}
+
+.openMegaMenu{
+    display: block !important;
+    max-height: 300px !important; overflow-y: auto!important;
+
+}
+.openMegaMenuClosed{
+    display: none;
+}
+.openMegaMenuMatch{
+    display: block !important;
+    max-height: 300px !important; overflow-y: auto!important;
+
+}
+.openMegaMenuClosedMatch{
+    display: none;
+}
+
+.openMegaMenuSearch{
+    display: block !important;
+    max-height: 300px !important; overflow-y: auto!important;
+
+}
+.openMegaMenuClosedSearch{
+    display: none;
+}
+.openMegaMenuInbox{
+    display: block !important;
+    max-height: 300px !important; overflow-y: auto!important;
+
+}
+.openMegaMenuClosedInbox{
+    display: none;
+}
+
+/* skeleton start */
+.skeleton-card {
+    /* width: 260px; */
+    /* height: 320px;*/
+    /* background: #fff;*/
+    /* border-radius: 8px;*/
+    padding: 12px;
+  /*  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    */
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton.image {
+    width: 100%;
+    height: 160px;
+    border-radius: 8px;
+}
+
+.skeleton.name {
+    width: 40%;
+    height: 20px;
+    margin: 10px 0;
+}
+.skeleton.title {
+    width: 50%;
+    height: 20px;
+    margin: 10px 0;
+}
+
+
+.skeleton.stars {
+    width: 60%;
+    height: 16px;
+    margin: 8px 0;
+}
+
+@keyframes loading {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+

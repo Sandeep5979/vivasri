@@ -1,0 +1,102 @@
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+/* Base Styles */
+.accordion-btn i {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    margin-right: 10px;
+    margin-top: 18px;
+}
+.mainNav {
+    /*   background:#fff;*/
+    width: 100%;
+}
+/* First Level */
+.mainNav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;/*border-bottom: 1px solid #ddd*/
+}
+.mainNav ul li {
+    background: #f4f5f6 url(../images/11.png) left 10px top 16px no-repeat;
+    font-family: 'Poppins', sans-serif;
+}
+.mainNav ul li a {
+    color: #333;
+    display: block;
+    padding: 10px 0px 10px 22px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+}
+.mainNav ul li a:hover {
+    background: #f58634;
+    text-decoration: none;
+    color: #fff;
+}
+/* Second Level */
+.mainNav ul ul {
+    padding: 0px 20px;
+    border-bottom: none
+}
+.mainNav ul ul li {
+    background: none !important;
+}
+.mainNav ul ul li a {
+    color: #545454;
+    display: block;
+    padding: 8px 10px 8px 5px !important;
+    font-size: 14px;
+    font-weight: 400;
+}
+.mainNav ul ul li a:hover {
+/*background: #333;*/
+}
+/* Third Level */
+.mainNav ul ul ul {
+}
+.mainNav ul ul ul li {
+    border: none;
+}
+.mainNav ul ul ul li a {
+    padding-left: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 14px;
+}
+/* Accordion Button */
+ul li.has-subnav .accordion-btn {
+    color: #545454;
+    background: rgba(255,255,255, 0.15);
+    font-size: 16px;
+    font-weight: 400;
+}
+ @media screen and (max-width: 1024px) {
+.mainNav {
+    width: 40%;
+}
+}
+ @media screen and (max-width: 700px) {
+.accordion-btn i {
+    margin-top: 0px;
+}
+.mainNav {
+    width: 100%;
+}
+.accordion-btn {
+    margin-top: 13px;
+}
+.right-nav a.topmenu, .right-nav .btn {
+    padding-top: 0px !important;
+}
+.searchform .form-control {
+/* height: 20px;
+    padding: 11px 5px 5px 10px;*/
+    
+}
+/*.searchform i {top: 6px !important;}*/
+.navbar-toggler-icon {
+    color: #fff;
+}
+}
+
+/*-------------accordion-new-end---------------*/
