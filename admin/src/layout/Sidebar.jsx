@@ -34,6 +34,8 @@ const Sidebar = () => {
                           <li><Link to={`${BASE_URL}/members/new-member`}>New Registrations</Link></li>
                           <li><Link to={`${BASE_URL}/members/member-list`}>View Members</Link></li>
                           <li><Link to={`${BASE_URL}/members/paid-member-list`}>View Paid Members</Link></li>
+                          <li><Link to={`${BASE_URL}/members/member-enquiry`}>Members Enquiry</Link></li>
+                          
                         </ul>
                      
                     </li>

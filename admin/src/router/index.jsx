@@ -5,6 +5,8 @@ import Login from "../pages/login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import MemberList from "../pages/members/view_member/MemberList";
 import ViewPaidMember from "../pages/members/view_paid_members/ViewPaidMember";
+import MemberEnquiry from "../pages/members/member_enquiry/MemberEnquiry";
+
 import Religion from "../pages/attribute/religion/Religion";
 import Cast from "../pages/attribute/cast/Cast";
 import SubCast from "../pages/attribute/sub_cast/SubCast";
@@ -56,6 +58,10 @@ export default function Router() {
         <Route
           path="/members/paid-member-list"
           element={<PrivateRoute><ViewPaidMember /></PrivateRoute>}
+        />
+        <Route
+          path="/members/member-enquiry"
+          element={<PrivateRoute><MemberEnquiry /></PrivateRoute>}
         />
         <Route
           path="/master/country"

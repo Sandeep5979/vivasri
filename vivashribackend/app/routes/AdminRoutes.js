@@ -16,7 +16,7 @@ import { languageCreate, languageGetAll, languageGetById, languageRemove, langua
 import { educationCreate, educationGetAll, educationGetById, educationRemove, educationUpdate } from "../controllers/admin/EducationController.js";
 import { professionalEducationCreate, professionalEducationGetAll, professionalEducationGetById, professionalEducationRemove, professionalEducationUpdate } from "../controllers/admin/ProfessionalEducationController.js";
 import { occupationCreate, occupationGetAll, occupationGetById, occupationRemove, occupationUpdate } from "../controllers/admin/OccupationController.js";
-
+import { memberEnquiryCreate, memberEnquiryGetAll, memberEnquiryGetById, memberEnquiryUpdate, memberEnquiryRemove } from "../controllers/admin/MemberEnquiryController.js";
 
 const router = express.Router();
 
@@ -120,6 +120,10 @@ router.route("/occupation/create").post(occupationCreate);
 router.route("/occupation/update/:id").post(occupationUpdate); 
 router.route("/occupation/delete/:id").delete(occupationRemove);
 
-
+router.route("/member-enquiry").get(memberEnquiryGetAll);
+router.route("/member-enquiry/:id").get(memberEnquiryGetById);
+router.route("/member-enquiry/create").post(memberEnquiryCreate);
+router.route("/member-enquiry/update/:id").post(memberEnquiryUpdate); 
+router.route("/member-enquiry/delete/:id").delete(memberEnquiryRemove);
 
 export default router;
