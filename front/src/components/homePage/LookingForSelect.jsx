@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useSelect2 from "../../hooks/useSelect2";
+
 
 export default function LookingForSelect({searchLookingButton}) {
  
@@ -34,13 +34,20 @@ searchLookingButton(selected)
 }, [selected])
 
 
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    setSelected((prev) => ({
+      
+      [name]: value,
+    }));
+
+
+  }
   
   
   
-  useSelect2(".inline-multiselect222", {
-    placeholder: "Create Profile For",
-    closeOnSelect: false,
-  }, setSelected);
+  
   
 
   
@@ -49,13 +56,13 @@ searchLookingButton(selected)
   return (
     <div className="hormformrow">
       <label htmlFor="">I’m looking for</label>
-      <select
-        
-        className="inline-multiselect inline-multiselect222"
-        multiple="multiple"
-         value={selected} 
+      <select className="form-select"
+        name="lookingfor"
+        onChange={handleChange}
+         value={selected.lookingfor} 
          
       >
+        <option value="">Select</option>
         {lookingFor && lookingFor.map((profileList, index)  => {
 
                             return (

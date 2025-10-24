@@ -10,7 +10,7 @@ useSelect2(".inline-multiselect3", {
 
   return (
     <div className="hormformrow">
-      <select className="form-select-new inline-multiselect3">
+      <select className="form-select">
         <option>Self</option>
         <option>Son</option>
         <option>Daughter</option>

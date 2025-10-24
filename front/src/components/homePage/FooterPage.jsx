@@ -1,7 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 
 function FooterPage() {
+
+const { userDetailLogin } = useSelector((state) => state.auth);
+
   return (
     <>
     <footer className="footer-wrp-main position-relative wow animate__fadeIn">
@@ -16,6 +20,7 @@ function FooterPage() {
         </h5>
       </div>
     </div>
+    {userDetailLogin?._id ? null : (
     <div className="foot-disclaimer">
       <div className="site-width">
         <p>
@@ -23,24 +28,30 @@ function FooterPage() {
         </p>
       </div>
     </div>
+    )
+  }
     <div className="site-width">
       <div className="footer-links-wrp">
         <div className="row">
           <div className="col-lg-12">
             <div className="ftr-link-bx footmainlinks">
               <ul>
+                {userDetailLogin?._id ? null : (
                 <li>
                   <a href="/">Home</a>
                 </li>
+                )}
                 <li>
                   <Link to="/about-us">About Us</Link>
                 </li>
                 <li>
-                  <a href="/#">Search</a>
+                  <a href="/basic-search">Search</a>
                 </li>
+                {userDetailLogin?._id ? null : (
                 <li>
                   <a href="/#">Login/Register</a>
                 </li>
+                )}
                 <li>
                   <a href="/#">Packages</a>
                 </li>
@@ -52,6 +63,8 @@ function FooterPage() {
           </div>
         </div>
       </div>
+      {userDetailLogin?._id ? null : (
+      
       <div className="footer-links-wrp">
         <div className="row">
           <div className="col-lg-12">
@@ -86,6 +99,9 @@ function FooterPage() {
           </div>
         </div>
       </div>
+      )}
+
+
     </div>
     <div className="site-width">
       <div className="row">

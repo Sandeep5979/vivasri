@@ -1,8 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NumberStats from '../components/homePage/NumberStats'
-import RelationSelect from '../components/homePage/RelationSelect'
-import LookingForSelect from '../components/homePage/LookingForSelect'
-import Religion from '../components/homePage/Religion'
 import MinAge from '../components/homePage/MinAge'
 import GroomList from '../components/homePage/GroomList'
 import BrideList from '../components/homePage/BrideList'
@@ -13,20 +10,57 @@ import FaqList from '../components/homePage/FaqList'
 import { Link, useNavigate } from 'react-router-dom'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
+import HeaderUser from '../components/homePage/HeaderUser'
+import { useSelector } from 'react-redux'
 
 function HomePage() {
 
-   const [searchLookingFor, setSearchLookingFor] = useState("")
+  const { userDetailLogin } = useSelector((state) => state.auth);
+
+   const [searchLookingFor, setSearchLookingFor] = useState("Bride")
    const [searchReligion, setSearchReligion] = useState("")
    const [searchMinAge, setSearchMinAge] = useState("")
    const [searchMaxAge, setSearchMaxAge] = useState("")
+   const [lookingFor, setLookingFor] = useState([])
+   const [formData, setFormData] = useState({});
+   const [isLoading, setIsLoading] = useState(false)
+   const [religion, setReligion] = useState([])
    const navigate = useNavigate()
 
-   function searchLookingButton(value){
-    
-    setSearchLookingFor(value)
+   /* function searchLookingButton(value){
+   // console.log(value)
+   // setSearchLookingFor(value?.lookingfor)
 
    }
+   */
+
+   const fetchCreateProfileFor = async () => {
+
+    const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/looking-for`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          });
+
+        const data = await res.json();
+        if(data.status){
+
+          setLookingFor(data.data)
+        }
+  }
+
+   function handleChange(e){
+   // console.log(value)
+   const { value } = e.target;
+   setSearchLookingFor(value)
+
+   }
+   function handleChangeReligion(e){
+   // console.log(value)
+   const { value } = e.target;
+   setSearchReligion(value)
+
+   }
+
    function searchReligionButton(value){
     
     setSearchReligion(value)
@@ -35,6 +69,7 @@ function HomePage() {
    function searchMinAgeButton(value){
     
     setSearchMinAge(value)
+    setSearchMaxAge("")
 
    }
    function searchMaxAgeButton(value){
@@ -49,12 +84,12 @@ function HomePage() {
 
    //console.log(searchLookingFor, searchReligion, searchMinAge, searchMaxAge)
    let url = '/search-profile?' 
-   if(searchLookingFor.length > 0){
-    url +='&looking='+searchLookingFor.join(',')
+   if(searchLookingFor){
+    url +='&gender='+searchLookingFor
 
     }
-    if(searchReligion.length > 0){
-    url +='&religion='+searchReligion.join(',')
+    if(searchReligion){
+    url +='&religion='+searchReligion
 
     }
     if(searchMinAge){
@@ -71,12 +106,90 @@ function HomePage() {
 
 
    }
+
+
+   useEffect(() => {
+    if(userDetailLogin?._id){
+      document.location.href=`/dashboard`
+    }
+
+   }, [userDetailLogin])
+
+
+   useEffect(() => {
+      fetchCreateProfileFor()
+
+   }, [])
+
+
+   const handleChangeHome = (e) => {
+    let { name, value } = e.target;
+    
+    if(name === 'mobile'){
+      value = value.replace(/[^0-9]/g, "");
+      if (value && value.length > 10) {
+          return false; 
+      }
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+
+
+   }
+
+
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if(formData.mobile){
+    setIsLoading(true)
+    const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/home-registration`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formData }),
+        
+      });
+
+      const data = await res.json();
+      setIsLoading(false)
+      if(data.status){
+        navigate(`/registration/${data.user?._id}`)
+
+      }
+    } else {
+      navigate('/registration')
+    }
+
+   }
+
+   const fetchReligion = async () => {
+   
+     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/religion`, {
+           method: "GET",
+           headers: { "Content-Type": "application/json" },
+           });
+   
+         const data = await res.json();
+         if(data.status){
+   
+           setReligion(data.data)
+         }
+   }
+   
+   useEffect(() => {
+   fetchReligion()
+   
+   }, [])
    
 
   return (
     
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
   {/* start of hero */}
   <section className="bannerSection wow animate__fadeIn" data-wow-delay="0.2s">
     <div className="bannerWrapperSection">
@@ -92,6 +205,7 @@ function HomePage() {
   </section>
   {/* Section End */}
   <div className="homebnr-form">
+    <form onSubmit={handleSubmit}>
     <div className="site-width">
       <h2 className="text-white text-center">
         Find Your Perfect Search for lifetime
@@ -107,7 +221,26 @@ function HomePage() {
                 <div class="col-lg-3 col-md-3">
                   <div className="hormformrow">
                      <label for="" class="d-block d-lg-none text-white">Create Profile For</label>
-                     <RelationSelect />
+                     {/* <RelationSelect /> */}
+
+                     <div className="hormformrow">
+                          <select className="form-select" name='create_profile' 
+                            onChange={handleChangeHome}
+                            value={formData.create_profile}
+                            
+                        >
+                          <option value="">Select</option>
+                          {lookingFor && lookingFor.map((profileList, index)  => {
+
+                            return (
+
+                                <option value={profileList._id}>{profileList.name}</option>
+                            )
+
+                          })
+                        }
+                          </select>
+                        </div>      
                   </div>
 
                 </div>
@@ -118,6 +251,9 @@ function HomePage() {
                       type="text"
                       className="form-control border-none"
                       placeholder="Name"
+                      name='name'
+                      onChange={handleChangeHome}
+                      value={formData.name}
                     />
                   </div>
                 </div>
@@ -128,17 +264,22 @@ function HomePage() {
                       type="text"
                       className="form-control border-none"
                       placeholder="Mobile Number"
+                      name='mobile'
+                      onChange={handleChangeHome}
+                      value={formData.mobile}
+                      maxLength={10} 
+                      min={0}
                     />
                   </div>
                 </div>
                 <div class="col-lg-3 col-md-3">
                   <div className="hormformrow">
-                    <Link
-                      to="/registration"
+                    <button
+                    type='submit'
                       className="button homeform-btn"
                     >
                       Register Free
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -147,6 +288,7 @@ function HomePage() {
         </div>
       </div>
     </div>
+    </form>
   </div>
   <section className="afterbnr-section pt-50 pb-50">
     <div className="site-width">
@@ -159,31 +301,64 @@ function HomePage() {
         <div className="row">
           <div className="col-lg-3">
 
-            <LookingForSelect searchLookingButton={searchLookingButton} />
+          <div className="hormformrow">
+          <label htmlFor="">I’m looking for</label>
+        <select className="form-select"
+          name="lookingfor"
+          onChange={handleChange}
+          value={searchLookingFor} 
+          
+        >
+          
+              <option value="Bride">Bride</option>
+              <option value="Groom">Groom</option>
+
+          </select>
+          </div>
 
           </div>
           <div className="col-lg-3">
             <div className="hormformrow">
               <label htmlFor="">Age</label>
               <div className="row">
-                <div className="col-6">
+                <div className="col-6 agefield">
                   {/* Dropdown 1 */}
                   <MinAge searchMinAgeButton={searchMinAgeButton} minValue={1} placeholder="Min Age" />
                 </div>
-                <div className="col-6">
+                <div className="col-6 agefield">
                   {/* Dropdown 2 */}
-                  <MinAge searchMaxAgeButton={searchMaxAgeButton} minValue={2} placeholder="Max Age" />
+                  <MinAge searchMaxAgeButton={searchMaxAgeButton} minValue={2} placeholder="Max Age" min={searchMinAge || 18} />
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-3">
 
-            <Religion searchReligionButton={searchReligionButton} />
+            <div className="hormformrow">
+              <label htmlFor="">Religion</label>
+            <select className="form-select"
+              name="lookingfor"
+              onChange={handleChangeReligion}
+              value={searchReligion} 
+              
+            >
+              <option value="">Select</option>
+                  {religion && religion.map((religionList, index)  => {
+
+                            return (
+
+                                <option key={index} value={religionList._id}>{religionList.name}</option>
+                            )
+
+                          })
+                        }
+
+              </select>
+              </div>
 
           </div>
-          <div className="col-lg-2">
-            <div className="hormformrow mt-lg-4">
+          <div className="col-lg-3">
+            <div className="hormformrow mt-lg-4 pt-lg-1">
               <Link to="#" onClick={searchSubmitButton} className="button homeform-btn">
                 Search
               </Link>

@@ -20,6 +20,8 @@ function HeaderPage() {
   const [formDataLogin, setFormDataLogin] = useState({});
   const [loginShow, setLoginShow] = useState(false);
 
+  const[isLoadingLogin, setIsLoadingLogin] = useState(false)
+
 
 const [isHeaderOpen, setHeaderOpen] = useState(false);
  
@@ -189,8 +191,9 @@ const handleChange = (e) => {
            //dispatch(registerUserLogin(data));
             
             //document.location.href=`/dashboard`
-          
+            setIsLoadingLogin(true)
             setError("")
+            
     
            
           } else {
@@ -275,7 +278,10 @@ const handleChange = (e) => {
           </div>
         </div>
         <div className="otp-login ">
-          <div className="loginformrow">
+          
+          
+          <div className="loginformrow" >
+            <form onSubmit={handleSubmit}>
             <label htmlFor="">
               Mobile No./ Email ID <span className="red">*</span>
             </label>
@@ -285,21 +291,40 @@ const handleChange = (e) => {
               className="form-control"
               onChange={handleChange}
               name='email'
-              onBlur={handleSubmit}
+              disabled={isLoadingLogin}
+              
             />
             
 
             <div className="d-flex align-items-center justify-content-between">
               <span className="otpnot">We will send you an OTP to login</span>
               <div className="text-end">
-                { /* <a href="/#" className="sendotp">
-                  Send OTP
-                </a> */ }
+                {isLoadingLogin && 
+                <Link to="#" className="sendotp" onClick={() => {
+                  setIsLoadingLogin(false)
+                  setOtp(["","","",""])
+                }}>
+                  Back
+                </Link>
+}
               </div>
             </div>
 
             <p className='otpnot red'>{error}</p>
+          {!isLoadingLogin &&
+          <div className="loginformrow pt-2">
+            <button type='submit'  className="button login-btn d-block text-center" style={{width:'100%'}}>
+              Send OTP
+            </button>
           </div>
+          }
+
+          </form>
+          </div>
+          
+          
+          <div>
+            {isLoadingLogin && 
           <form onSubmit={handleSubmitOTPButton}>
           <div className="loginformrow mt-0">
             <label className="mt-0" htmlFor="">
@@ -312,6 +337,7 @@ const handleChange = (e) => {
                     ref={(el) => (inputsRef.current[1] = el)}
                     onChange={(e) => handleChangeOTP(e, 1)}
                    value={otp[1]}
+                   autoFocus
                      />
               <input type="text" maxLength={1} className="otp-input" 
               key={2}
@@ -344,6 +370,11 @@ const handleChange = (e) => {
             </button>
           </div>
           </form>
+}
+          </div>
+          
+          
+          
           { /* <div className="or">
             <span className="">or</span>
           </div>
@@ -575,27 +606,27 @@ const handleChange = (e) => {
                                       </Link>
                                     </div>
                                     <div className="col-6">
-                                      <a href="/#" style={{ border: "none", fontSize: 13 }}>
+                                      <Link to="#" style={{ border: "none", fontSize: 13 }}>
                                         <img
                                           style={{ marginRight: 5 }}
                                           src="assets/img/icons/setting-1_svgrepo.com.png"
                                           alt=""
                                         />
                                         Setting
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="col-6">
-                                      <a href="/#" style={{ border: "none", fontSize: 13 }}>
+                                      <Link to="/#" style={{ border: "none", fontSize: 13 }}>
                                         <img
                                           style={{ marginRight: 5 }}
                                           src="assets/img/icons/key_svgrepo.com.png"
                                           alt=""
                                         />
                                         Change Password
-                                      </a>
+                                      </Link>
                                     </div>
                                     <div className="col-6">
-                                      <Link href="#" onClick={userLogoutButton} style={{ border: "none", fontSize: 13 }}>
+                                      <Link to="#" onClick={userLogoutButton} style={{ border: "none", fontSize: 13 }}>
                                         <img
                                           style={{ marginRight: 5 }}
                                           src="assets/img/icons/logout.png"
@@ -787,7 +818,7 @@ const handleChange = (e) => {
           <li>
             <div className="defaultBtn">
               <Link
-                href="#"
+                to="#"
                 className="loginbtn"
                 data-bs-toggle="modal"
                 data-bs-target="#loginModal"

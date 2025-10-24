@@ -2,18 +2,23 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
+import HeaderUser from '../components/homePage/HeaderUser'
+import { useSelector } from 'react-redux'
 
 function AboutUs() {
+
+  const { userDetailLogin } = useSelector((state) => state.auth);
+
   return (
     <>
-  <HeaderPage />
+  { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
       <div className="inrbnrContent">
         <h1>About Us</h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />

@@ -40,7 +40,7 @@ const [isLoading, setIsLoading] = useState(false)
   
           
         
-           console.log(data.data[0].name) 
+          // console.log(data.data[0].name) 
           
           
         setFormData({
@@ -219,7 +219,7 @@ const [isLoading, setIsLoading] = useState(false)
         <h1>Dashboard </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to="/dashboard">
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />

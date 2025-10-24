@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import UserModel from "../../models/UserModel.js";
-import { createUser, getUserDetail, getUserDetailAll, updateAadhaarVerification, updateBasicProfile, updateContactInformation, updateEducationDetail, updateFamilyDetail, updateLocationDetail, updatePartnerDetail, updatePartnerQualities, updateProfilePhoto, updateReligion } from "../../services/front/UserService.js";
+import { createUser, createUserHome, getUserDetail, getUserDetailAll, getUserHomeDetail, updateAadhaarVerification, updateBasicProfile, updateContactInformation, updateEducationDetail, updateFamilyDetail, updateLocationDetail, updatePartnerDetail, updatePartnerQualities, updateProfilePhoto, updateReligion } from "../../services/front/UserService.js";
 import jwt from "jsonwebtoken";
 import { validationResult, body } from "express-validator";
 import mongoose from "mongoose";
@@ -202,7 +202,7 @@ export const userRegistrationLogin = async (req, res) => {
 
 
 export const userVerifyOtp = async (req, res) => {
-  const { user, otp } = req.body;
+  const { user, otp, userId } = req.body;
   if (!user) return res.status(404).json({ status:false, message: "User not found" });
 
   if (otp == user.otp || otp == 1234) {
@@ -210,7 +210,7 @@ export const userVerifyOtp = async (req, res) => {
     //console.log(user)
 
     const profileId = await generateProfileId();
-    const userDetail = await createUser(user, profileId)
+    const userDetail = await createUser(user, profileId, userId)
 
     
 
@@ -616,5 +616,38 @@ export const userPartnerBasicDetail = async (req, res) => {
       return res.json({ status:false, message: "Partner detail not updated. Please try again" });
 
     }
+
+}
+export const userHomeRegistration = async (req, res) => {
+
+
+  const { formData } = req.body;
+  
+    try{
+    
+      const user = await createUserHome(formData)
+
+    return res.json({ status:true, message: "Registration created successfully", user: user });
+    } catch(err) {
+      return res.json({ status:false, error:err, message: "Registration not created. Please try again" });
+
+    }
+
+}
+
+export const getUserHomeDetailList = async (req, res) => {
+
+  try {
+      if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).json({ success: false, message: "User id not found" });
+      }
+  
+      const data = await getUserHomeDetail(req.params.id);
+      if (!data) return res.status(404).json({ status: false, message: "ID not found" });
+      res.json({ status: true, data });
+    } catch (err) {
+      res.status(500).json({ status: false, error: err.message });
+    }
+
 
 }

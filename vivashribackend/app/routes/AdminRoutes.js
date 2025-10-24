@@ -17,6 +17,7 @@ import { educationCreate, educationGetAll, educationGetById, educationRemove, ed
 import { professionalEducationCreate, professionalEducationGetAll, professionalEducationGetById, professionalEducationRemove, professionalEducationUpdate } from "../controllers/admin/ProfessionalEducationController.js";
 import { occupationCreate, occupationGetAll, occupationGetById, occupationRemove, occupationUpdate } from "../controllers/admin/OccupationController.js";
 import { memberEnquiryCreate, memberEnquiryGetAll, memberEnquiryGetById, memberEnquiryUpdate, memberEnquiryRemove } from "../controllers/admin/MemberEnquiryController.js";
+import { workingWithCreate, workingWithGetAll, workingWithGetById, workingWithRemove, workingWithUpdate } from "../controllers/admin/WorkingWithController.js";
 
 const router = express.Router();
 
@@ -125,5 +126,11 @@ router.route("/member-enquiry/:id").get(memberEnquiryGetById);
 router.route("/member-enquiry/create").post(memberEnquiryCreate);
 router.route("/member-enquiry/update/:id").post(memberEnquiryUpdate); 
 router.route("/member-enquiry/delete/:id").delete(memberEnquiryRemove);
+
+router.route("/working-with").get(workingWithGetAll);
+router.route("/working-with/:id").get(workingWithGetById);
+router.route("/working-with/create").post(workingWithCreate);
+router.route("/working-with/update/:id").post(workingWithUpdate); 
+router.route("/working-with/delete/:id").delete(workingWithRemove);
 
 export default router;

@@ -30,7 +30,7 @@ export const decimalToFeetInches = (decimalFeet) => {
 }
 
 
-function formatNumber(num) {
+export function formatNumber(num) {
   if (num >= 10000000) return `${num / 10000000} Crore`;
   if (num >= 100000) return `${num / 100000} Lakh`;
   return num.toString();
@@ -67,6 +67,36 @@ export const formatIndianCurrencyRange = (input) => {
   return
 }
   */
+}
+
+
+export const maskMobileNumber = (number) => {
+  if (!number) return "";
+  const str = number.toString();
+  const visibleDigits = 4;
+  const maskedSection = "*".repeat(Math.max(str.length - visibleDigits, 0));
+  const visibleSection = str.slice(-visibleDigits);
+  return maskedSection + visibleSection;
+};
+
+
+
+export const maskEmail = (email) => {
+  if (!email || !email.includes("@")) return email;
+  const [localPart, domain] = email.split("@");
+  const visible = localPart.slice(0, 2);
+  return `${visible}${"*".repeat(Math.max(localPart.length - 2, 0))}@${domain}`;
+}
+
+export const decimaltocm = (value) => {
+  if (!value) return "";
+  let feet = Math.floor(value);
+  let inches = (value - feet) * 10;
+
+let totalCm = Math.round((feet * 30.48) + (inches * 2.54));
+return totalCm + " cm";
+//console.log(totalCm.toFixed(2) + " cm");
+
 }
 
 

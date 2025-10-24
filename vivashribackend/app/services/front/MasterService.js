@@ -4,6 +4,7 @@ import ComplexionModel from "../../models/ComplexionModel.js";
 import CountryModel from "../../models/CountryModel.js";
 import DietModel from "../../models/DietModel.js";
 import EducationModel from "../../models/EducationModel.js";
+import GotraModel from "../../models/GotraModel.js";
 import HobbiesModel from "../../models/HobbiesModel.js";
 import LanguageModel from "../../models/LanguageModel.js";
 import LookingForModel from "../../models/LookingForModel.js";
@@ -13,6 +14,7 @@ import ProfessionalEducationModel from "../../models/ProfessionalEducationModel.
 import ReligionModel from "../../models/ReligionModel.js";
 import StateModel from "../../models/StateModel.js";
 import SubCasteModel from "../../models/SubCasteModel.js";
+import WorkingWithModel from "../../models/WorkingWithModel.js";
 
 
 
@@ -90,4 +92,15 @@ export const getAllProfessionalEducationList = async () => {
 };
 export const getAllOccupationList = async () => {
     return await OccupationModel.find({ status: 'Active' });
+};
+export const getAllWorkingWithList = async () => {
+    return await WorkingWithModel.find({ status: 'Active' });
+};
+export const getAllGotraList = async (religion_id=null) => {
+    let condition = { status: 'Active' };
+    
+    if (religion_id) {
+        condition.religion_id = religion_id;
+    }
+    return await GotraModel.find(condition);
 };

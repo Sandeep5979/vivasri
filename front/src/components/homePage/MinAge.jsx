@@ -4,6 +4,7 @@ export default function AgeDropdown({ min = 18, max = 62, labelSuffix = " years"
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const dropdownRef = useRef(null);
+  const [selectedMax, setSelectedMax] = useState(null);
 
   
   const numbers = Array.from({ length: max - min + 1 }, (_, i) => i + min);
@@ -23,6 +24,7 @@ export default function AgeDropdown({ min = 18, max = 62, labelSuffix = " years"
     //console.log(selected)
     if(minValue === 1){
     searchMinAgeButton(selected)
+    setSelectedMax("")
     } else {
       searchMaxAgeButton(selected)
     }

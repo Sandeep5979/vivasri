@@ -20,5 +20,6 @@ import Dashboard from "./Dashboard";
 import MyProfile from "./MyProfile";
 import AboutUs from "./AboutUs";
 import BasicSearch from "./BasicSearch";
+import ProfileDetail from "./ProfileDetail"
 
-export { HomePage, SearchProfile, Registration, SendOtp, BasicDetails, ContactInformation, AadhaarVerification, AadhaarOtp, RegistrationSuccess, ReligionPage, LocationDetail, FamilyDetail, EducationDetail, ImageUpload, PartnerQualities, PartnerBasicDetail, ContactUs, Dashboard, MyProfile, AboutUs, BasicSearch, NoMatch,  };
+export { HomePage, SearchProfile, Registration, SendOtp, BasicDetails, ContactInformation, AadhaarVerification, AadhaarOtp, RegistrationSuccess, ReligionPage, LocationDetail, FamilyDetail, EducationDetail, ImageUpload, PartnerQualities, PartnerBasicDetail, ContactUs, Dashboard, MyProfile, AboutUs, BasicSearch, ProfileDetail, NoMatch,  };

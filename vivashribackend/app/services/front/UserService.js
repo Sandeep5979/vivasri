@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import UserModel from "../../models/UserModel.js";
+import HomeRegistrationModel from "../../models/HomeRegistrationModel.js";
 
 export const getAllUser = async () => {
   
@@ -32,6 +33,19 @@ export const getUserDetailAll = async (id) => {
     { path: "partner_professional_qualification" },
     { path: "partner_occupation" },
     { path: "partner_diet" },
+    { path: "occupation" },
+    { path: "working_with" },
+    { path: "partner_working_as" },
+    { path: "caste" },
+    { path: "sub_caste" },
+    { path: "gotra" },
+    { path: "partner_mother_tongue" },
+    { path: "diet" },
+    { path: "partner_religion" },
+    { path: "partner_caste" },
+    { path: "partner_sub_caste" },
+    { path: "partner_complexion" },
+    
 
     
 
@@ -51,8 +65,14 @@ export const getUserDetail = async (id) => {
   
 };
 
-export const createUser = async (data, profileId) => {
-  data = {...data, profile_id:profileId}
+export const createUser = async (data, profileId, userId) => {
+  if(userId){
+  data = {...data, profile_id:profileId, home_reg_id:userId}
+
+  } else {
+    data = {...data, profile_id:profileId}
+  }
+  
   const user = new UserModel(data);
   return await user.save();
 };
@@ -133,5 +153,16 @@ export const updatePartnerDetail = async (id,  data) => {
   
   
  return await UserModel.findByIdAndUpdate({_id:id}, data, { new: true });
+  
+};
+export const createUserHome = async (data) => {
+  //data = {...data, profile_id:profileId}
+  const userHome = new HomeRegistrationModel(data);
+  return await userHome.save();
+};
+
+export const getUserHomeDetail = async (id) => {
+  
+  return await HomeRegistrationModel.find({_id:id});
   
 };

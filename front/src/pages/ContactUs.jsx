@@ -2,13 +2,19 @@ import React from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
+
+
 
 
 function ContactUs() {
+  const { userDetailLogin } = useSelector((state) => state.auth);
+  
   return (
     
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
     <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -16,13 +22,13 @@ function ContactUs() {
         <h1>Contact Us</h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
           <li>
-            <a href="/#">Contact Us</a>
+            <Link to="#">Contact Us</Link>
           </li>
         </ul>
       </div>

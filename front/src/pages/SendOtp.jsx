@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import {  useDispatch, useSelector } from 'react-redux';
 import { useRef } from "react";
 import { verifyOtp } from '../store/authActions';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 
 function SendOtp() {
 const dispatch = useDispatch();
 const navigate = useNavigate();
+const { userId } = useParams();
+const { userDetailLogin } = useSelector((state) => state.auth);
 const [isLoading, setIsLoading] = useState(false)
+
 
 
 
@@ -55,10 +59,14 @@ if(user){
     e.preventDefault();
     const fullOtp = otp.join("");
     setIsLoading(true)
+    //console.log(user)
+    
+    
+    
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user, otp:fullOtp }),
+        body: JSON.stringify({ user, otp:fullOtp, userId}),
         
       });
 
@@ -72,6 +80,7 @@ if(user){
       } else {
         setError(data.message)
       }
+      
 
       //console.log(data)
     
@@ -86,7 +95,7 @@ if(user){
 
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
         
         <>
   <section className="inrbnr">
@@ -95,17 +104,14 @@ if(user){
         <h1>OTP </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">OTP</Link>
           </li>
         </ul>
       </div>

@@ -47,7 +47,7 @@ export default function AgeRange({changeShow, name, minAgeChange, maxAgeChange, 
 
   return (
     <div className="range-container">
-      <label>{name ? name:`Filter By Age`}</label>
+      {name && <label>{name ? name:``}</label> }
       <div className="slider">
         <input
           type="range"
@@ -72,7 +72,7 @@ export default function AgeRange({changeShow, name, minAgeChange, maxAgeChange, 
         />
       </div>
 
-      <div className="values">
+      <div className="values valuebetween">
         <input type="text" className="minAgeValue" value={minAge} readOnly />
         <input type="text" className="maxAgeValue" value={maxAge} readOnly />
       </div>
