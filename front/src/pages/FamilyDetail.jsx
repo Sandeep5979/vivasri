@@ -3,6 +3,7 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function FamilyDetail() {
 
@@ -182,9 +183,21 @@ const handleSubmit = async (e) => {
   };
 
 
+  const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/family-detail-edit'){
+          navigate('/my-profile')
+        } else {
+          navigate('/education-detail')
+        }
+
+  }
+
+
   return (
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
     <>
   <section className="inrbnr">
@@ -193,7 +206,7 @@ const handleSubmit = async (e) => {
         <h1>Family Details </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -214,10 +227,18 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
-              <h3>Family &amp; More Detail</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                  <div class="step-info">
+                    <h2>Family & More Detail</h2>
+                    <p><span>Prev Step- Location Details,</span> Next Step- Educational Details</p>
+                  </div>
+                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 70%, pink 0)"}}>
+                      <span>7 of 11</span>
+                  </div>
               </div>
+
+
+
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg">
@@ -326,8 +347,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -349,8 +370,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -372,8 +393,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -395,8 +416,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -419,8 +440,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -442,8 +463,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -465,8 +486,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -488,8 +509,8 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ))}
                         </select>
@@ -626,18 +647,30 @@ const handleSubmit = async (e) => {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button className="back">
-                          <Link
-                            style={{ color: "white" }}
-                            to="/location-detail"
-                          >
-                            Back
-                          </Link>
-                        </button>
-                        <button className="" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                                                    <Link className="backbtn"
+                                                                                      style={{ color: "white" }}
+                                                                                      to="/location-detail"
+                                                                                    >
+                                                                                      Back
+                                                                                    </Link>{" "}                          
+                                                                                    <button className="countiniue" type='submit' disabled={isLoading}>
+                                                                                      {isLoading ? "Wait..." : "Continue"}
+                                                                                    </button>
+                                                                              </div>
+                                                                              <br/>
+                                                                              <hr />
+                                                
+                                                                              <div className="d-flex align-items-center justify-content-center">
+                                                                                    <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                                              </div>
+                        
+                        
+                        
+
+
+
                       </div>
                     </div>
                   </div>

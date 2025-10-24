@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCasteMasterList, getAllCasteMasterListMulti, getAllCityMasterList, getAllCityMasterListMulti, getAllComplexionMasterList, getAllCountryMasterList, getAllDietMasterList, getAllEducationMasterList, getAllEducationTypeMasterList, getAllHobbiesMasterList, getAllLanguageMasterList, getAllLookingForMasterList, getAllMaritalStatusMasterList, getAllOccupationMasterList, getAllProfessionalEducationMasterList, getAllReligionMasterList, getAllSearchProfileList, getAllStateMasterList, getAllStateMasterListMulti, getAllSubCasteMasterList, getAllUserOccupationMasterList, getAllUserOrganizationMasterList } from "../controllers/front/MasterController.js";
+import { getAllCasteMasterList, getAllCasteMasterListMulti, getAllCityMasterList, getAllCityMasterListMulti, getAllComplexionMasterList, getAllCountryMasterList, getAllDietMasterList, getAllEducationMasterList, getAllEducationTypeMasterList, getAllGotraMasterList, getAllHobbiesMasterList, getAllLanguageMasterList, getAllLookingForMasterList, getAllMaritalStatusMasterList, getAllOccupationMasterList, getAllProfessionalEducationMasterList, getAllReligionMasterList, getAllSearchProfileList, getAllStateMasterList, getAllStateMasterListMulti, getAllSubCasteMasterList, getAllUserOccupationMasterList, getAllUserOrganizationMasterList, getAllWorkingWithMasterList } from "../controllers/front/MasterController.js";
 import { adminLogin } from "../controllers/admin/AdminController.js"
 
 
@@ -30,9 +30,12 @@ router.route("/education").get(getAllEducationMasterList);
 router.route("/education/:id").get(getAllEducationTypeMasterList);
 router.route("/professional-education").get(getAllProfessionalEducationMasterList);
 router.route("/occupation").get(getAllOccupationMasterList);
+router.route("/working-with").get(getAllWorkingWithMasterList);
 router.route("/occupation-user").get(getAllUserOccupationMasterList);
 router.route("/organization-user").get(getAllUserOrganizationMasterList);
 router.route("/search-list").post(getAllSearchProfileList);
+router.route("/gotra").get(getAllGotraMasterList);
+router.route("/gotra/:religion_id").get(getAllGotraMasterList);
 
 
 

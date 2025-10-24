@@ -42,8 +42,8 @@ const [isScroll, setIsScroll] = useState(false)
           
         setFormData({
   
-          profile_for:data.data[0].profile_for.name,
-          name:data.data[0].name,
+          profile_for:data.data[0].profile_for?.name,
+          name:data.data[0]?.name,
           about:data.data[0].about,
           height:data.data[0].height,
           weight:data.data[0].weight,
@@ -63,7 +63,7 @@ const [isScroll, setIsScroll] = useState(false)
           birth_am:ampm,
           dobYear:ageCalculate(data.data[0].dob),
           religion:data.data[0].religion?.name,
-          occupation:data.data[0].occupation,
+          occupation:data.data[0].occupation?.name,
           education:data.data[0].highest_degree?.name,
           photo:data.data[0].photo,
           loc_state:data.data[0].loc_state?.name,
@@ -72,7 +72,7 @@ const [isScroll, setIsScroll] = useState(false)
           disability:data.data[0].disability,
           blood_group:data.data[0].blood_group,
           annual_income:data.data[0].annual_income,
-        working_with:data.data[0].working_with,
+        working_with:data.data[0].working_with?.name,
         organization_name:data.data[0].organization_name,
         prev_working_detail:data.data[0].prev_working_detail,
         family_type:data.data[0].family_type,
@@ -113,9 +113,9 @@ const [isScroll, setIsScroll] = useState(false)
       partner_height_to:data.data[0].partner_height_to,
       partner_weight_from:data.data[0].partner_weight_from,
       partner_weight_to:data.data[0].partner_weight_to,
-      partner_language:data.data[0].partner_language.name,
+      partner_language:data.data[0].partner_language?.name,
       partner_mother_tongue:data.data[0].partner_mother_tongue,
-      partner_marital_status:data.data[0].partner_marital_status.name,
+      partner_marital_status:data.data[0].partner_marital_status?.name,
       partner_have_children:data.data[0].partner_have_children,
       partner_family_type:data.data[0].partner_family_type,
       partner_family_value:data.data[0].partner_family_value,
@@ -125,7 +125,7 @@ const [isScroll, setIsScroll] = useState(false)
       partner_education:data.data[0].partner_education?.name,
       partner_professional_qualification:data.data[0].partner_professional_qualification?.name,
       partner_occupation:data.data[0].partner_occupation?.name,
-      partner_working_as:data.data[0].partner_working_as,
+      partner_working_as:data.data[0].partner_working_as?.name,
       partner_income_from:data.data[0].partner_income_from,
       partner_income_to:data.data[0].partner_income_to,
       partner_religion:data.data[0].partner_religion,
@@ -174,7 +174,7 @@ const [isScroll, setIsScroll] = useState(false)
         <h1>My Profile </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to="/dashboard">
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -467,7 +467,7 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>BloodGroup</span>
+                                <span>Blood Group</span>
                               </div>
                               <div className="col-6">
                                 <strong>: {formData.blood_group}</strong>

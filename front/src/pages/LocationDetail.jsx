@@ -4,6 +4,7 @@ import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { validateMobile } from '../utils/utils';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function LocationDetail() {
   
@@ -185,9 +186,9 @@ const fetchUserDetail = async (userId) => {
         loc_temp_city:data.data[0].loc_temp_city,
         loc_temp_pincode:data.data[0].loc_temp_pincode,
         loc_relation:data.data[0].loc_relation,
-        loc_relation_name:data.data[0].loc_relation_name,
-        loc_relation_email:data.data[0].loc_relation_email,
-        loc_relation_mobile:data.data[0].loc_relation_mobile,
+        loc_relation_name:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_name,
+        loc_relation_email:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_email,
+        loc_relation_mobile:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_mobile,
 
       })
 
@@ -212,10 +213,13 @@ const validate = () => {
     if (!formData.loc_temp_state) errs.loc_temp_state = "State is required";
     if (!formData.loc_temp_city) errs.loc_temp_city = "City is required";
     if (!formData.loc_temp_pincode) errs.loc_temp_pincode = "Pin Code is required";
+    
     if (!formData.loc_relation) errs.loc_relation = "Relation is required";
+    if(formData.loc_relation === 'Self'){ } else {
     if (!formData.loc_relation_name) errs.loc_relation_name = "Name is required";
     if (!formData.loc_relation_email) errs.loc_relation_email = "Email is required";
     if (!formData.loc_relation_mobile) errs.loc_relation_mobile = "Mobile is required";
+    }
     if(formData.loc_relation_email){
       if(!isValidEmail(formData.loc_relation_email)){
         errs.loc_relation_email = "Please enter a valid email address";
@@ -316,11 +320,23 @@ const handleSubmit = async (e) => {
         setIsScroll(false)
       
     }, [isScroll]);
+
+    const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/location-detail-edit'){
+          navigate('/my-profile')
+        } else {
+          navigate('/family-detail')
+
+        }
+
+  }
   
   
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
         <>
   <section className="inrbnr">
@@ -329,7 +345,7 @@ const handleSubmit = async (e) => {
         <h1>Location Details </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -350,9 +366,14 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
-              <h3>Location Details</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                  <div class="step-info">
+                    <h2>Location Details</h2>
+                    <p><span>Prev Step- Religion Details,</span> Next Step- Family & More Detail</p>
+                  </div>
+                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 60%, pink 0)"}}>
+                      <span>6 of 11</span>
+                  </div>
               </div>
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
@@ -404,12 +425,14 @@ const handleSubmit = async (e) => {
                         value={formData.loc_residence_type}
                         >
                           <option>-- Select Residence Type --</option>
-                          <option value="Permanent Residence">Permanent Residence</option>
-                          <option value="Temporary Residence">Temporary Residence</option>
-                          <option value="Student Visa">Student Visa</option>
-                          <option value="Visa">Visa</option>
+                          <option value="Owned House">Owned House</option>
+                          <option value="Rented House">Rented House</option>
+                          <option value="Staying with Family">Staying with Family</option>
+                          <option value="Hostel / PG">Hostel / PG</option>
+                          <option value="Company Accommodation">Company Accommodation</option>
+                          <option value="Living Alone">Living Alone</option>
+                          <option value="Living Abroad">Living Abroad</option>
                           <option value="Other">Other</option>
-                          <option value="Prefer not to say">Prefer not to say</option>
                         </select>
                         {error.loc_residence_type && <p className="error">{error.loc_residence_type}</p>}
                       </div>
@@ -432,12 +455,13 @@ const handleSubmit = async (e) => {
                         value={formData.loc_house_type}
                         >
                           <option>-- Select Permanent House Type --</option>
-                          <option value="Own">Own</option>
-                          <option value="Rented">Rented</option>
-                          <option value="Leased">Leased</option>
-                          <option value="Company Provided">Company Provided</option>
+                          <option value="Independent House">Independent House</option>
+                          <option value="Apartment / Flat">Apartment / Flat</option>
+                          <option value="Bungalow">Bungalow</option>
+                          <option value="Ancestral Home">Ancestral Home</option>
+                          <option value="Government Quarters / Staff Housing">Government Quarters / Staff Housing</option>
+                          <option value="Temporary / Rented House">Temporary / Rented House</option>
                           <option value="Other">Other</option>
-                          <option value="Prefer not to say">Prefer not to say</option>
                         </select>
                         {error.loc_house_type && <p className="error">{error.loc_house_type}</p>}
                       </div>
@@ -666,14 +690,13 @@ const handleSubmit = async (e) => {
                         >
                           <option>-- Select Relation --</option>
                           {relation && relation.map((relationList, index)  => {
-                            if (relationList.name.toLowerCase() !== "self") {
+                            
                             return (
 
                                 <option value={relationList.name}>{relationList.name}</option>
                             );
 
-                          }
-                          return null;
+                          
 
                           })
                         }
@@ -683,6 +706,9 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
+                
+                {formData.loc_relation === 'Self' ? null : (
+                <>
                 <div className="row  inputs-margs nam-inp  ">
                   <div className="col-12  align-items-center p-0">
                     <div className="row">
@@ -742,21 +768,37 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
+                </>
+                )}
+
+
                 <div className="row inputs-margs nam-inp  ">
                   <div className="col-12 d-flex text-right p-0">
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button className="back">
-                          <Link style={{ color: "white" }} to="/religion">
-                            Back
-                          </Link>
-                        </button>
-                        <button className="" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                            
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                            <Link className="backbtn"
+                                                              style={{ color: "white" }}
+                                                              to="/religion"
+                                                            >
+                                                              Back
+                                                            </Link>{" "}                          
+                                                            <button className="countiniue" type='submit' disabled={isLoading}>
+                                                              {isLoading ? "Wait..." : "Continue"}
+                                                            </button>
+                                                      </div>
+                                                      <br/>
+                                                      <hr />
+                        
+                                                      <div className="d-flex align-items-center justify-content-center">
+                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                      </div>
+                        
+                        
+
+
                       </div>
                     </div>
                   </div>

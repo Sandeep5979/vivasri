@@ -81,12 +81,12 @@ useEffect(() => {
                             aria-expanded="false"
                             aria-controls="collapseTwo"
                           >
-                            Religion
+                            <img src='assets/img/religion.png' alt='' /> Religion
                           </button>
                         </h2>
                         <div
                           id="collapseTwo3"
-                          className="accordion-collapse collapse show"
+                          className="accordion-collapse collapse "
                           aria-labelledby="headingTwo"
                           data-bs-parent="#myAccordion"
                         >
@@ -123,12 +123,12 @@ useEffect(() => {
                             aria-expanded="false"
                             aria-controls="collapseTwo"
                           >
-                            Cast
+                            <img src='assets/img/list.png' alt='' /> Caste
                           </button>
                         </h2>
                         <div
                           id="collapseTwo4"
-                          className="accordion-collapse collapse show"
+                          className="accordion-collapse collapse"
                           aria-labelledby="headingTwo"
                           data-bs-parent="#myAccordion"
                         >

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import HeaderUser from '../components/homePage/HeaderUser';
+import { registerUserLogin } from '../store/authActions';
 
 function PartnerBasicDetail() {
 
   const location = useLocation();
+  const dispatch = useDispatch();
   const { userDetailLogin } = useSelector((state) => state.auth);
   
 const { userDetail } = useSelector((state) => state.auth);
@@ -41,6 +44,8 @@ const [showMessage, setShowMessage] = useState(false)
 const [complexion, setComplexion] = useState([])
 const [diet, setDiet] = useState([])
 const [showChildren, setShowChildren] = useState(false)
+const [workingWith, setWorkingWith] = useState([])
+const [gotra, setGotra] = useState([])
 
 const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,6 +63,7 @@ const handleChange = (e) => {
     }
     if(name === 'partner_religion'){
       fetchCaste(value)
+      fetchGotra(value)
     }
 
     if(name === 'partner_caste'){
@@ -96,6 +102,7 @@ const handleChange = (e) => {
         fetchCity(data.data[0].partner_state)
         fetchCaste(data.data[0].partner_religion)
         fetchSubCaste(data.data[0].partner_caste)
+        fetchGotra(data.data[0].partner_religion)
 
         if (data.data[0].partner_marital_status === '68cbc2783946bd183864e28d') {
           setShowChildren(false)
@@ -107,6 +114,8 @@ const handleChange = (e) => {
 
       setFormData((prev) => ({
       ...prev,
+      email:data.data[0].email,
+      mobile:data.data[0].mobile,
       partner_age_from:data.data[0].partner_age_from,
       partner_age_to:data.data[0].partner_age_to,
       partner_height_from:data.data[0].partner_height_from,
@@ -132,6 +141,7 @@ const handleChange = (e) => {
       partner_caste:data.data[0].partner_caste,
       partner_sub_caste:data.data[0].partner_sub_caste,
       partner_gotra:data.data[0].partner_gotra,
+      partner_gotra_other:data.data[0].partner_gotra_other,
       partner_dosh:data.data[0].partner_dosh,
       partner_diet:data.data[0].partner_diet,
       partner_drinking:data.data[0].partner_drinking,
@@ -167,22 +177,25 @@ const fetchHeight = () => {
 
    const heights = [];
 
-    for (let ft = 4; ft <= 6; ft++) {
-      let maxInches = ft === 6 ? 0 : 11; // stop at exactly 6.0
-      for (let inch = ft === 4 ? 1 : 0; inch <= maxInches; inch++) {
-        if (ft === 6 && inch === 0) {
-          heights.push({
-            label: `${ft} ft`,
-            value: `${ft}.0`,
-          });
-        } else {
-          heights.push({
-            label: `${ft} ft ${inch} in`,
-            value: `${ft}.${inch}`,
-          });
-        }
-      }
+    for (let ft = 4; ft <= 8; ft++) {
+  
+  let maxInches = ft === 8 ? 6 : 11;
+
+  
+  for (let inch = ft === 4 ? 1 : 0; inch <= maxInches; inch++) {
+    if (inch === 0) {
+      heights.push({
+        label: `${ft} ft`,
+        value: `${ft}.0`,
+      });
+    } else {
+      heights.push({
+        label: `${ft} ft ${inch} in`,
+        value: `${ft}.${inch}`,
+      });
     }
+  }
+}
 
     setHeight(heights); 
 
@@ -378,6 +391,34 @@ const fetchDietList = async () => {
       }
 }
 
+const fetchWorkingWithList = async () => {
+
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/working-with`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      if(data.status){
+
+        setWorkingWith(data.data)
+      }
+}
+
+const fetchGotra = async (religionId) => {
+
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/gotra/${religionId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      if(data.status){
+
+        setGotra(data.data)
+      }
+}
+
 useEffect(() => {
   fetchReligion();
 
@@ -396,6 +437,7 @@ fetchOccupationList()
 fetchReligion()
 fetchComplexionList()
 fetchDietList()
+fetchWorkingWithList()
 
 }, [])
 
@@ -472,7 +514,11 @@ const handleSubmit = async (e) => {
         if(location.pathname === '/partner-basic-detail-edit'){
             navigate('/my-profile')
         } else {
-          navigate('/partner-basic-detail')
+          
+
+
+          loginSubmitButton()
+         // navigate('/dashboard')
         }
       } else {
         
@@ -492,11 +538,53 @@ const handleSubmit = async (e) => {
       //console.log(data)
     
   };
+
+
+  const loginSubmitButton = async () => {
+        let email;
+        
+          if(formData.email){
+            email=formData.email
+          } else {
+            email=formData.mobile
+          }
+
+          
+          const resLogin = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/registration-login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({email:email}),
+            credentials: "include"
+
+        });
+    
+          const dataLogin = await resLogin.json();
+
+          //console.log('okkkkk', dataLogin)
+          if(dataLogin.status){
+            dispatch(registerUserLogin(dataLogin));
+            document.location.href=`/dashboard`
+          } else {
+
+
+          }
+
+  }
+
+
+  const skipButton = (e) => {
+        e.preventDefault()
+        if(location.pathname === '/partner-basic-detail-edit'){
+            navigate('/my-profile')
+        } else {
+        loginSubmitButton()
+        }
+  }
   
   
   return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
      
 
@@ -508,7 +596,7 @@ const handleSubmit = async (e) => {
         <h1>Partner’s Basic Details </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -536,14 +624,21 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-md-10 col-lg 8 ">
             <div className="con-reg">
-              <h3>Partner’s Basic Details</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                <div class="step-info">
+                  <h2>Partner’s Basic Details</h2>
+                  <p><span>Prev Step- Partner’s Qualities</span></p>
+                </div>
+                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 100%, pink 0)"}}>
+                    <span>11 of 11</span>
+                </div>
               </div>
+
+
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg ">
-                  <div className="col-12  align-items-center p-0">
+                  <div className="col-12 align-items-center p-0">
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
                         <label htmlFor="">
@@ -601,7 +696,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_weight_from}
                         >
-                          {[...Array(60)].map((_, i) => (
+                          {[...Array(111)].map((_, i) => (
                             <option key={i + 40} value={i + 40}>
                               {i + 40} Kg
                             </option>
@@ -615,7 +710,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_weight_to}
                         >
-                          {[...Array(60)].map((_, i) => {
+                          {[...Array(111)].map((_, i) => {
                             const weight = i + parseInt(formData.partner_weight_from || 40, 10);
                             
                             return (
@@ -1102,7 +1197,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_occupation}
                         >
-                          <option>-- Select --</option>
+                          <option value="">-- Select --</option>
                           {occupation && occupation.map((occupationList, index)  => {
 
                             return (
@@ -1128,11 +1223,25 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <input type="text" 
+                        <select className="form-select"
                         name='partner_working_as'
                         onChange={handleChange}
                         value={formData.partner_working_as}
-                        />
+                        >
+                          <option value="">-- Select --</option>
+                          {workingWith && workingWith.map((workingWithList, index)  => {
+
+                            return (
+
+                                <option value={workingWithList._id}>{workingWithList.name}</option>
+                            )
+
+                          })
+                        }
+                        </select>
+                        
+                        
+                        
                         {error.partner_working_as && <p className="error">{error.partner_working_as}</p>}
                       </div>
                     </div>
@@ -1208,7 +1317,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_religion}
                         >
-                          <option>-- Select Religion --</option>
+                          <option value="">-- Select Religion --</option>
 
                           {religion && religion.map((religionList, index)  => {
 
@@ -1242,7 +1351,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_caste}
                         >
-                          <option>-- Select Cast --</option>
+                          <option value="">-- Select Cast --</option>
                           {caste && caste.map((casteList, index)  => {
 
                             return (
@@ -1263,7 +1372,7 @@ const handleSubmit = async (e) => {
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
                         <label htmlFor="">
-                          Subcaste{" "}
+                          Sub Caste{" "}
                           
                         </label>
                       </div>
@@ -1273,7 +1382,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_sub_caste}
                         >
-                          <option>-- Select Sub Caste--</option>
+                          <option value="">-- Select Sub Caste--</option>
                           {subCaste && subCaste.map((subCasteList, index)  => {
 
                             return (
@@ -1288,7 +1397,7 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
-                <div className="row  inputs-margs nam-inp  ">
+                { /* <div className="row  inputs-margs nam-inp  ">
                   <div className="col-12  align-items-center p-0">
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
@@ -1298,9 +1407,40 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <input type="text" name="partner_gotra" 
+                        <select className="form-select"
+                        name='partner_gotra'
                         onChange={handleChange}
                         value={formData.partner_gotra}
+                        
+                        >
+                          <option value="">-- Select Gotra --</option>
+                          {gotra && gotra.map((gotraList, index)  => {
+
+                            return (
+
+                                <option value={gotraList._id}>{gotraList.name}</option>
+                            )
+
+                          })
+                        }
+                        </select>
+                        
+                        
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row  inputs-margs nam-inp  ">
+                  <div className="col-12  align-items-center p-0">
+                    <div className="row">
+                      <div className="col-md-4 col-sm-12">
+                        
+                      </div>
+                      <div className="col-md-8 col-sm-12">
+                        <input type="text" name="partner_gotra_other" 
+                        onChange={handleChange}
+                        value={formData.partner_gotra_other}
                         />
 
                         {error.partner_gotra && <p className="error">{error.partner_gotra}</p>}
@@ -1308,6 +1448,9 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
+*/ }
+
+
                 <div className="row  inputs-margs nam-inp  ">
                   <div className="col-12  align-items-center p-0">
                     <div className="row">
@@ -1445,10 +1588,30 @@ const handleSubmit = async (e) => {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                                                              <Link className="backbtn"
+                                                                                                              style={{ color: "white" }}
+                                                                                                              to="/partner-qualities"
+                                                                                                            >
+                                                                                                              Back
+                                                                                                            </Link>{" "}                          
+                                                                                                            <button className="countiniue" type='submit' disabled={isLoading}>
+                                                                                                              {isLoading ? "Wait..." : "Continue"}
+                                                                                                            </button>
+                                                                                                      </div>
+                                                                        <br/>
+                                                                                                      <hr />
+                                                                        
+                                                                                                      <div className="d-flex align-items-center justify-content-center">
+                                                                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                                                                      </div>
+                        
+                        
+                        
+                        
+
+
                       </div>
                     </div>
                   </div>

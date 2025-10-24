@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import AgeRange from '../components/profiePage/AgeRange';
 import HeightRange from '../components/profiePage/HeightRange';
 import AdvanceSearch from './AdvanceSearch';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function BasicSearch() {
 
@@ -25,6 +26,7 @@ function BasicSearch() {
     const [language, setLanguage] = useState([])
     const [religion, setReligion] = useState([])
     const [occupation, setOccupation] = useState([])
+    const [height, setHeight] = useState([])
     
 
     const fetchMaritalStatusList = async () => {
@@ -109,7 +111,7 @@ const fetchReligion = async () => {
 }
 const fetchOccupation = async () => {
 
-  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/occupation-user`, {
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/occupation`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         });
@@ -121,6 +123,34 @@ const fetchOccupation = async () => {
       }
 }
 
+const fetchHeight = () => {
+
+   const heights = [];
+
+    for (let ft = 4; ft <= 8; ft++) {
+  
+  let maxInches = ft === 8 ? 6 : 11;
+
+  
+  for (let inch = ft === 4 ? 1 : 0; inch <= maxInches; inch++) {
+    if (inch === 0) {
+      heights.push({
+        label: `${ft} ft`,
+        value: `${ft}.0`,
+      });
+    } else {
+      heights.push({
+        label: `${ft} ft ${inch} in`,
+        value: `${ft}.${inch}`,
+      });
+    }
+  }
+}
+
+    setHeight(heights); 
+
+}
+
 
 useEffect(() => {
 fetchMaritalStatusList()
@@ -129,6 +159,7 @@ fetchEducation()
 fetchLanguage()
 fetchReligion()
 fetchOccupation()
+fetchHeight()
 
 }, [])
 
@@ -270,14 +301,26 @@ const handleChange = (e) => {
 
   return (
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
     <>
+  <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
       <div className="inrbnrContent inrbnrContentss">
-        <h1>Look for Partner </h1>
-        <ul className="inrbrnNav">
-          <ul className="nav nav-tabss nav-tabs" id="myTab" role="tablist">
+        {/* <h1>Look for Partner</h1> */}
+      </div>
+    </div>
+  </section>
+  {/* Section End */}
+  <section>
+    <div className="register-sec">
+      <div className="container-fluid con-flu-padd">
+        <div className="col-lg-10 offset-lg-1 pt-2">
+          <ul
+            className="nav nav-tabs nav-tabs basicsrc-tabbing"
+            id="myTab"
+            role="tablist"
+          >
             <li className="nav-item" role="presentation">
               <button
                 className="nav-links active"
@@ -289,7 +332,8 @@ const handleChange = (e) => {
                 aria-controls="home"
                 aria-selected="true"
               >
-                Basic
+                <img src="assets/img/search.png" alt="Search Icon" /> Basic
+                Search
               </button>
             </li>
             <li className="nav-item" role="presentation">
@@ -303,392 +347,474 @@ const handleChange = (e) => {
                 aria-controls="profile"
                 aria-selected="false"
               >
-                Advanced
+                <img src="assets/img/setting.png" alt="Setting Icon" /> Advanced
+                Search
               </button>
             </li>
           </ul>
-        </ul>
-      </div>
-    </div>
-  </section>
-  {/* Section End */}
-  <section>
-    <div className="register-sec ">
-      <div className="container-fluid con-flu-padd  ">
-        <div className="container-fluid mt-5  ">
-          <div className="row">
-            <div className="tab-content" id="myTabContent">
-              <div
-                className="tab-pane fade show active"
-                id="home"
-                role="tabpanel"
-                aria-labelledby="home-tab"
-              >
-                <div className="col-12">
-                  <div className="ser-con-basic">
-                    <div className="row">
-                      <div className="col-md-4">
-                        <img src="assets/img/search-img.png" alt="" />
-                      </div>
-                      <div className="col-md-8 pad-ser-right">
-                        <form onSubmit={handleSubmit}>
-                        <div className="bgser-basic">
-                          <div className="row">
-                            <div className="col-12">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Search Profile Id</h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <input
-                                    type="text"
-                                    placeholder="Search Profile Id"
-                                    name="profile_id"
-                                    onChange={handleChange}
-                                    value={formData.profile_id}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-12 ">
-                              <div className="border-line-basi "></div>
-                              <div className="or-bsic-ser text-center ">
-                                <p>or</p>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Search</h5>
-                                </div>
-                                <div className="inp-bas-ser">
-                                  <div className="radio-wrapper-basic-20">
-                                    <label htmlFor="example-20-10">
-                                      <input
-                                        id="example-20-10"
-                                        type="radio"
-                                        name="gender"
-                                        onChange={handleChange}
-                                        value='Bride'
-                                        checked={formData.gender === "Bride"}
-                                      />
-                                      <span className="name">Bride</span>
-                                    </label>
-                                    <label htmlFor="example-20-27">
-                                      <input
-                                        id="example-20-27"
-                                        type="radio"
-                                        name="gender"
-                                        onChange={handleChange}
-                                        value='Groom'
-                                        checked={formData.gender === "Groom"}
-                                      />
-                                      <span className="name">Groom</span>
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6 mt-1">
-                              <div className="items-ser">
-                                <div className="accordion-item">
-                                  <h2
-                                    className="accordion-header"
-                                    id="headingOne"
-                                  >&nbsp;</h2>
-                                  <div
-                                    id="collapseOne"
-                                    className="accordion-collapse collapse show"
-                                    aria-labelledby="headingOne"
-                                    data-bs-parent="#myAccordion"
-                                  >
-                                    <div className="accordion-body">
-                                      {/* start */}
-                                      <AgeRange name="Age" changeShow={0} minAgeChange={minAgeChange} maxAgeChange={maxAgeChange} />
-                                      {/* end */}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Marital Status</h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='marital_status'
-                                    onChange={handleChange}
-                                    value={formData.marital_status}
+          <div className="tab-content" id="myTabContent">
+            <div
+              className="tab-pane fade show active"
+              id="home"
+              role="tabpanel"
+              aria-labelledby="home-tab"
+            >
+             <form onSubmit={handleSubmit}>
+                                        <div className="bgser-basic">                      
+
+
+                                            <div className="col-lg-7 offset-lg-2">
+                                                <div className="basicform-row">
+                                                    <div className="row">
+                                                        <div className="col-md-4">
+                                                            <label className="basiclabel" htmlFor="example-20-10">Search Profile Id</label>
+                                                        </div>
+                                                        <div className="col-md-8">
+                                                            <div className="basicfld">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Search Profile Id"
+                                                                name="profile_id"
+                                                                onChange={handleChange}
+                                                                value={formData.profile_id}
+                                                                style={{paddingLeft:'20px'}}
+                                                            />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                {/* row end */}
+                                            </div>
+                                            <div className="basic-or">
+                                                <span>or</span>
+                                            </div>
+
+                                            <div className="col-lg-7 offset-lg-2">
+                                                    <div className="basicform-row">
+                                                        <div className="row">
+                                                            <div className="col-md-4">
+                                                            <label className="basiclabel" htmlFor="">Search</label>
+                                                            </div>
+                                                            <div className="col-md-8">
+                                                                <div className="inp-bas-ser">
+                                                                    <div className="radio-wrapper-basic-20">
+                                                                        <label htmlFor="example-20-10">
+                                                                        <input
+                                                                            id="example-20-10"
+                                                                            type="radio"
+                                                                            name="gender"
+                                                                            onChange={handleChange}
+                                                                            value='Bride'
+                                                                            checked={formData.gender === "Bride"}
+                                                                        />
+                                                                        <span className="name">Bride</span>
+                                                                        </label>
+                                                                        <label htmlFor="example-20-27">
+                                                                        <input
+                                                                            id="example-20-27"
+                                                                            type="radio"
+                                                                            name="gender"
+                                                                            onChange={handleChange}
+                                                                            value='Groom'
+                                                                            checked={formData.gender === "Groom"}
+                                                                        />
+                                                                        <span className="name">Groom</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <label className="basiclabel" htmlFor="">Age</label>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="accordion-item mt-3">
+                                                                        <div
+                                                                            id="collapseOne"
+                                                                            className="accordion-collapse collapse show"
+                                                                            aria-labelledby="headingOne"
+                                                                            data-bs-parent="#myAccordion"
+                                                                        >
+                                                                            <div className="accordion-body">
+                                                                            {/* start */}
+                                                                            <AgeRange changeShow={0} minAgeChange={minAgeChange} maxAgeChange={maxAgeChange} />
+                                                                            {/* end */}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <label className="basiclabel" htmlFor="">Height</label>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="accordion-item mt-3">
+                                                                        {/* start */}
+                                                                        <HeightRange  changeShow={0} minHeightChange={minHeightChange} maxHeightChange={maxHeightChange} />
+                                                                        {/* end */}
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Marital Status</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                        <select className="form-select" name='marital_status'
+                                                                                onChange={handleChange}
+                                                                                value={formData.marital_status}
+                                                                                
+                                                                                >
+                                                                                <option value="">-- Select --</option>
+                                                                                    {maritalStatus && maritalStatus.map((maritalList, index)  => {
+                                            
+                                                                                        return (
+                                            
+                                                                                            <option value={maritalList._id}>{maritalList.name}</option>
+                                                                                        )
+                                            
+                                                                                    })
+                                                                                    }
+                                                                    </select>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Manglik Status</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select"
+                                                                        name='manglik'
+                                                                            onChange={handleChange}
+                                                                            value={formData.manglik}
+                                                                        >
+                                                                            <option value="">--Select--</option>
+                                                                            <option value="Manglik">Manglik</option>
+                                                                                        <option value="Non Manglik">Non Manglik</option>
+                                                                                    <option value="Angshik Manglik">Angshik Manglik</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    {/* caste here */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Religion</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select" name='religion'
+                                                                            onChange={handleChange}
+                                                                            value={formData.religion}
+                                                                            
+                                                                            >
+                                                                            <option value="">-- Select --</option>
+                                                                            {religion && religion.map((religionList, index)  => {
+                                        
+                                                                                return (
+                                        
+                                                                                    <option value={religionList._id}>{religionList.name}</option>
+                                                                                )
+                                        
+                                                                            })
+                                                                            }
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Country</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select" name='country'
+                                                                            onChange={handleChange}
+                                                                            value={formData.country}
+                                                                            
+                                                                            >
+                                                                            <option value="">-- Select --</option>
+                                                                            {country && country.map((countryList, index)  => {
+                                        
+                                                                                return (
+                                        
+                                                                                    <option value={countryList._id}>{countryList.name}</option>
+                                                                                )
+                                        
+                                                                            })
+                                                                            }
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">State</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select" name='state'
+                                                                            onChange={handleChange}
+                                                                            value={formData.state}
+                                                                            
+                                                                            >
+                                                                            <option value="">-- Select --</option>
+                                                                            {state && state.map((stateList, index)  => {
+                                        
+                                                                                return (
+                                        
+                                                                                    <option value={stateList._id}>{stateList.name}</option>
+                                                                                )
+                                        
+                                                                            })
+                                                                            }
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
+
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Education</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select" name='education'
+                                                                        onChange={handleChange}
+                                                                        value={formData.education}
+                                                                        
+                                                                        >
+                                                                        <option value="">-- Select --</option>
+                                                                        {highest && highest.map((highestList, index)  => {
                                     
-                                    >
-                                    <option value="">-- Select --</option>
-                                        {maritalStatus && maritalStatus.map((maritalList, index)  => {
-
-                                            return (
-
-                                                <option value={maritalList._id}>{maritalList.name}</option>
-                                            )
-
-                                        })
-                                        }
-                        </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="accordion-item">
-                                  <div
-                                    id="collapseTwo"
-                                    className="accordion-collapse collapse show"
-                                    aria-labelledby="headingTwo"
-                                    data-bs-parent="#myAccordion"
-                                  >
-                                    <div className="accordion-body">
-                                      {/* start */}
-                                      <HeightRange name="Height" changeShow={0} minHeightChange={minHeightChange} maxHeightChange={maxHeightChange} />
-                                      {/* end */}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Mother Tongue</h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='language'
-                                    onChange={handleChange}
-                                    value={formData.language}
+                                                                            return (
                                     
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {language && language.map((languageList, index)  => {
-
-                                        return (
-
-                                            <option value={languageList._id}>{languageList.name}</option>
-                                        )
-
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Religion</h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='religion'
-                                    onChange={handleChange}
-                                    value={formData.religion}
+                                                                                <option value={highestList._id}>{highestList.name}</option>
+                                                                            )
                                     
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {religion && religion.map((religionList, index)  => {
+                                                                        })
+                                                                        }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
 
-                                        return (
 
-                                            <option value={religionList._id}>{religionList.name}</option>
-                                        )
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
 
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Country</h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='country'
-                                    onChange={handleChange}
-                                    value={formData.country}
-                                    
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {country && country.map((countryList, index)  => {
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Occupation</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select" name='occupation'
+                                                                                onChange={handleChange}
+                                                                                value={formData.occupation}
+                                                                                
+                                                                                >
+                                                                                <option value="">-- Select --</option>
+                                                                                {occupation && occupation.map((occupationList, index)  => {
+                                            
+                                                                                    return (
+                                            
+                                                                                        <option value={occupationList._id}>{occupationList.name}</option>
+                                                                                    )
+                                            
+                                                                                })
+                                                                                }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
 
-                                        return (
 
-                                            <option value={countryList._id}>{countryList.name}</option>
-                                        )
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}                                                    
 
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>State </h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='state'
-                                    onChange={handleChange}
-                                    value={formData.state}
-                                    
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {state && state.map((stateList, index)  => {
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor="">Annual Income</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="basicfld">
+                                                                       <select className="form-select"
+                                                                            name='annual_income'
+                                                                            onChange={handleChange}
+                                                                            value={formData.annual_income}
+                                                                            >
+                                                                            <option value="">-- Select --</option>
+                                                                            <option value="0-100000">Upto 1 Lakh</option>
+                                                                            <option value="100000-200000">1 Lakh - 2 Lakh</option>
+                                                                            <option value="200000-400000">2 Lakh - 4 Lakh</option>
+                                                                            <option value="400000-700000">4 Lakh - 7 Lakh</option>
+                                                                            <option value="700000-1000000">7 Lakh - 10 Lakh</option>
+                                                                            <option value="1000000-1500000">10 Lakh - 15 Lakh</option>
+                                                                            <option value="1500000-2000000">15 Lakh - 20 Lakh</option>
+                                                                            <option value="2000000-3000000">20 Lakh - 30 Lakh</option>
+                                                                            <option value="3000000-5000000">30 Lakh - 50 Lakh</option>
+                                                                            <option value="5000000-7500000">50 Lakh - 75 Lakh</option>
+                                                                            <option value="7500000-10000000">75 Lakh - 1 Crore</option>
+                                                                            <option value="10000000-30000000">1 Crore - 3 Crore</option>
+                                                                            <option value="30000000-50000000">3 Crore - 5 Crore</option>
+                                                                            <option value="Above 50000000">Above 5 Crore</option>
+                                                                            <option value="Not Applicable">Not Applicable</option>
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
 
-                                        return (
 
-                                            <option value={stateList._id}>{stateList.name}</option>
-                                        )
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
 
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Education </h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='education'
-                                    onChange={handleChange}
-                                    value={formData.education}
-                                    
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {highest && highest.map((highestList, index)  => {
+                                                    
 
-                                        return (
+                                                    <div className="basicform-row">
+                                                            <div className="row">
+                                                                <div className="col-md-4">
+                                                                    <div className='basicfld'>
+                                                                        <label className="basiclabel" htmlFor=""></label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-8">
+                                                                    <div className="ser-button">
+                                                                        <button className="basi-ser" type='submit' disabled={isLoading}>{isLoading ? 'Wait...' : 'Search Now'}</button>
+                                                                        
+                                                                    </div>
+                                                                </div>
 
-                                            <option value={highestList._id}>{highestList.name}</option>
-                                        )
 
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Annual Income </h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select"
-                                    name='annual_income'
-                                    onChange={handleChange}
-                                    value={formData.annual_income}
-                                    >
-                                    <option value="">-- Select --</option>
-                                    <option value="0-100000">Upto 1 Lakh</option>
-                                    <option value="100000-200000">1 Lakh - 2 Lakh</option>
-                                    <option value="200000-400000">2 Lakh - 4 Lakh</option>
-                                    <option value="400000-700000">4 Lakh - 7 Lakh</option>
-                                    <option value="700000-1000000">7 Lakh - 10 Lakh</option>
-                                    <option value="1000000-1500000">10 Lakh - 15 Lakh</option>
-                                    <option value="1500000-2000000">15 Lakh - 20 Lakh</option>
-                                    <option value="2000000-3000000">20 Lakh - 30 Lakh</option>
-                                    <option value="3000000-5000000">30 Lakh - 50 Lakh</option>
-                                    <option value="5000000-7500000">50 Lakh - 75 Lakh</option>
-                                    <option value="7500000-10000000">75 Lakh - 1 Crore</option>
-                                    <option value="10000000-30000000">1 Crore - 3 Crore</option>
-                                    <option value="30000000-50000000">3 Crore - 5 Crore</option>
-                                    <option value="Above 50000000">Above 5 Crore</option>
-                                    <option value="Not Applicable">Not Applicable</option>
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Occupation </h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select" name='occupation'
-                                    onChange={handleChange}
-                                    value={formData.occupation}
-                                    
-                                    >
-                                    <option value="">-- Select --</option>
-                                    {occupation && occupation.map((occupationList, index)  => {
+                                                                </div>
+                                                    </div>
+                                                    {/* row end */}
 
-                                        return (
 
-                                            <option value={occupationList.occupation}>{occupationList.occupation}</option>
-                                        )
 
-                                    })
-                                    }
-                                    </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="items-ser">
-                                <div className="labels">
-                                  <h5>Manglik Status </h5>
-                                </div>
-                                <div className="inp-bas-sers">
-                                  <select className="form-select"
-                                  name='manglik'
-                                    onChange={handleChange}
-                                    value={formData.manglik}
-                                  >
-                                    <option value="">--Select--</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-6" />
-                            <div className="col-6">
-                              <div className="ser-button">
-                                <button className="basi-ser" type='submit' disabled={isLoading}>{isLoading ? 'Wait...' : 'Search Now'}</button>
-                                <button className="ad-ser">
-                                  Advanced Search
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                          </form>        
 
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="tab-pane fade"
-                id="profile"
-                role="tabpanel"
-                aria-labelledby="profile-tab"
-              >
+                                                    
+
+
+
+
+
+
+                                            </div>
+                                            
+
+
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <div className="col-6" />
+                                            
+                                          </form>
+              
+            </div>
+            <div
+              className="tab-pane fade"
+              id="profile"
+              role="tabpanel"
+              aria-labelledby="profile-tab"
+            >
+              
+              
+              <div className="bgser-basic">
                 
-                 <AdvanceSearch />                   
 
+                                   <AdvanceSearch />                                             
 
-
+                     {/* end    */}
+                
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>
     </div>
   </section>
+</>
+
 </>
 
 <FooterPage /> 

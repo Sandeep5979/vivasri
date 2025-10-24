@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AadhaarOtp, AadhaarVerification, AboutUs, BasicDetails, BasicSearch, ContactInformation, ContactUs, Dashboard, EducationDetail, FamilyDetail, HomePage, ImageUpload, LocationDetail, MyProfile, NoMatch, PartnerBasicDetail, PartnerQualities, Registration, RegistrationSuccess, ReligionPage, SearchProfile, SendOtp, } from "../pages";
+import { AadhaarOtp, AadhaarVerification, AboutUs, BasicDetails, BasicSearch, ContactInformation, ContactUs, Dashboard, EducationDetail, FamilyDetail, HomePage, ImageUpload, LocationDetail, MyProfile, NoMatch, PartnerBasicDetail, PartnerQualities, ProfileDetail, Registration, RegistrationSuccess, ReligionPage, SearchProfile, SendOtp, } from "../pages";
+
 
 
 
@@ -15,7 +16,9 @@ export default function Router() {
             <Route path="/" element={<HomePage />} />
             <Route path="/search-profile" element={<SearchProfile />} />
             <Route path="/registration" element={<Registration />} />
+            <Route path="/registration/:userId" element={<Registration />} />
             <Route path="/send-otp" element={<SendOtp />} />
+            <Route path="/send-otp/:userId" element={<SendOtp />} />
             <Route path="/basic-details" element={<BasicDetails />} />
             <Route path="/basic-details-edit" element={<BasicDetails />} />
             <Route path="/contact-information" element={<ContactInformation />} />
@@ -40,7 +43,8 @@ export default function Router() {
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/basic-search" element={<BasicSearch />} />
-            <Route path="*" element={<NoMatch />} />
+            <Route path="/profile-details/:profileId" element={<ProfileDetail />} />
+            
             
           </Routes>
     </BrowserRouter>

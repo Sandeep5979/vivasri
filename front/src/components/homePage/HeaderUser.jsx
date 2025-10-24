@@ -121,7 +121,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
   <div className="site-width sitewidths">
     <div className="headerWrapper">
       <div className="logoSection">
-        <Link to="/">
+        <Link to="/dashboard">
           <img
             src="assets/img/logo-light.png"
             alt="Vivashri"
@@ -151,7 +151,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/dashboard">Dashboard</Link>
                     </li>
                     <li>
-                      <a href="/#">Partner Preferences</a>
+                      <Link to="#">Partner Preferences</Link>
                     </li>
                   </ul>
                   <ul className="headerSubMenu">
@@ -159,7 +159,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/my-profile">My Profile</Link>
                     </li>
                     <li>
-                      <a href="/#">Settings</a>
+                      <Link to="#">Settings</Link>
                     </li>
                   </ul>
                   <ul className="headerSubMenu">
@@ -167,13 +167,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/profile-photo-edit">My Photos</Link>
                     </li>
                     <li>
-                      <a href="/#">Notification</a>
+                      <Link to="#">Notification</Link>
                     </li>
                   </ul>
                 </div>
               </li>
               <li className="hasSub megaMenu">
-                <a href="/#">
+                <Link to="#">
                   Matches{" "}
                   <img
                     src="assets/img/icons/dropdown-arrow.svg"
@@ -181,24 +181,24 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
                   />
-                </a>
+                </Link>
                 <div className="headerSubNav headerSubNavsse ">
                   <ul className="headerSubMenu headerSubMenuss ">
                     {/* <li><h5>Horoscope</h5></li> */}
                     <li>
-                      <a href="/#">My Matches</a>
+                      <Link to="#">My Matches</Link>
                     </li>
                     <li>
-                      <a href="/#">Today Matches</a>
+                      <Link to="#">Today Matches</Link>
                     </li>
                     <li>
-                      <a href="/#">Near Me</a>
+                      <Link to="#">Near Me</Link>
                     </li>
                   </ul>
                 </div>
               </li>
               <li className="hasSub megaMenu">
-                <a href="/#">
+                <Link to="#">
                   Search{" "}
                   <img
                     src="assets/img/icons/dropdown-arrow.svg"
@@ -206,7 +206,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
                   />
-                </a>
+                </Link>
                 <div className="headerSubNav headerSubNavsss">
                   <ul className="headerSubMenu headerSubMenuss">
                     {/* <li><h5>Horoscope</h5></li> */}
@@ -214,13 +214,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/basic-search">Basic Search</Link>
                     </li>
                     <li>
-                      <a href="/#">Advance Search</a>
+                      <Link to="/basic-search">Advance Search</Link>
                     </li>
                   </ul>
                 </div>
               </li>
               <li className="hasSub megaMenu">
-                <a href="/#">
+                <Link to="#">
                   Inbox{" "}
                   <img
                     src="assets/img/icons/dropdown-arrow.svg"
@@ -228,21 +228,21 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
                   />
-                </a>
+                </Link>
                 <div className="headerSubNav headerSubNavssss">
                   <ul className="headerSubMenu headerSubMenuss">
                     {/* <li><h5>Horoscope</h5></li> */}
                     <li>
-                      <a href="/#">Received</a>
+                      <Link to="#">Received</Link>
                     </li>
                     <li>
-                      <a href="/#">Accepted</a>
+                      <Link to="#">Accepted</Link>
                     </li>
                     <li>
-                      <a href="/#">Request</a>
+                      <Link to="#">Request</Link>
                     </li>
                     <li>
-                      <a href="/#">Sent</a>
+                      <Link to="#">Sent</Link>
                     </li>
                   </ul>
                 </div>
@@ -258,7 +258,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               </div>   */}
         <ul className="headerMenu">
           <li className="hasSub megaMenu" style={{padding:'0px'}}>
-            <a href="/#" style={{ borderBottom: "none" }}>
+            <Link to="/dashboard" style={{ borderBottom: "none" }}>
               <img
                 className="size-togle-pro"
                 src={formData.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo}` : 'assets/img/no-image.jpg'}
@@ -270,7 +270,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 className="dropdownicon"
                 style={{ marginLeft: 5 }}
               />
-            </a>
+            </Link>
             <div className="headerSubNav headerSubNavsssss">
               <ul className="headerSubMenu">
                 {/* <li><h5>Horoscope</h5></li> */}
@@ -314,27 +314,27 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         </Link>
                       </div>
                       <div className="col-6">
-                        <a href="/#" style={{ border: "none", fontSize: 13 }}>
+                        <Link to="#" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
                             src="assets/img/icons/setting-1_svgrepo.com.png"
                             alt=""
                           />
                           Setting
-                        </a>
+                        </Link>
                       </div>
                       <div className="col-6">
-                        <a href="/#" style={{ border: "none", fontSize: 13 }}>
+                        <Link to="#" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
                             src="assets/img/icons/key_svgrepo.com.png"
                             alt=""
                           />
                           Change Password
-                        </a>
+                        </Link>
                       </div>
                       <div className="col-6">
-                        <Link href="#" onClick={userLogoutButton} style={{ border: "none", fontSize: 13 }}>
+                        <Link to="#" onClick={userLogoutButton} style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
                             src="assets/img/icons/logout.png"
@@ -378,7 +378,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
         <div className="headerNav">
           <ul className="headerMenu">
             <li className="hasSub megaMenu">
-              <a href="/#" style={{ color: "#7C172B" }}>
+              <Link to="#" style={{ color: "#7C172B" }}>
                 My Vivashri{" "}
                 <img
                   src="assets/img/icons/dropdown-arrow.svg"
@@ -386,7 +386,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
                 />
-              </a>
+              </Link>
               <div className="headerSubNav headerSubNavs">
                 <ul className="headerSubMenu">
                   {/* <li><h5>Horoscope</h5></li> */}
@@ -394,7 +394,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link to="/dashboard">Dashboard</Link>
                   </li>
                   <li>
-                    <a href="/#">Partner Preferences</a>
+                    <Link to="#">Partner Preferences</Link>
                   </li>
                 </ul>
                 <ul className="headerSubMenu">
@@ -402,7 +402,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link to="/my-profile">My Profile</Link>
                   </li>
                   <li>
-                    <a href="/#">Settings</a>
+                    <Link to="#">Settings</Link>
                   </li>
                 </ul>
                 <ul className="headerSubMenu">
@@ -410,13 +410,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link to="/profile-photo-edit">My Photos</Link>
                   </li>
                   <li>
-                    <a href="/#">Notification</a>
+                    <Link to="#">Notification</Link>
                   </li>
                 </ul>
               </div>
             </li>
             <li className="hasSub megaMenu">
-              <a href="/#" style={{ color: "#7C172B" }}>
+              <Link to="#" style={{ color: "#7C172B" }}>
                 Matches{" "}
                 <img
                   src="assets/img/icons/dropdown-arrow.svg"
@@ -424,24 +424,24 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
                 />
-              </a>
+              </Link>
               <div className="headerSubNav headerSubNavss">
                 <ul className="headerSubMenu headerSubMenuss">
                   {/* <li><h5>Horoscope</h5></li> */}
                   <li>
-                    <a href="/#">My Matches</a>
+                    <Link to="#">My Matches</Link>
                   </li>
                   <li>
-                    <a href="/#">Today Matches</a>
+                    <Link to="#">Today Matches</Link>
                   </li>
                   <li>
-                    <a href="/#">Near Me</a>
+                    <Link to="#">Near Me</Link>
                   </li>
                 </ul>
               </div>
             </li>
             <li className="hasSub megaMenu">
-              <a href="/#" style={{ color: "#7C172B" }}>
+              <Link to="#" style={{ color: "#7C172B" }}>
                 Search{" "}
                 <img
                   src="assets/img/icons/dropdown-arrow.svg"
@@ -449,7 +449,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
                 />
-              </a>
+              </Link>
               <div className="headerSubNav headerSubNavsss">
                 <ul className="headerSubMenu headerSubMenuss">
                   {/* <li><h5>Horoscope</h5></li> */}
@@ -457,13 +457,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link href="/basic-search">Basic Search</Link>
                   </li>
                   <li>
-                    <a href="/#">Advance Search</a>
+                    <Link to="#">Advance Search</Link>
                   </li>
                 </ul>
               </div>
             </li>
             <li className="hasSub megaMenu">
-              <a href="/#" style={{ color: "#7C172B" }}>
+              <Link to="#" style={{ color: "#7C172B" }}>
                 Inbox{" "}
                 <img
                   src="assets/img/icons/dropdown-arrow.svg"
@@ -471,21 +471,21 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
                 />
-              </a>
+              </Link>
               <div className="headerSubNav headerSubNavssss">
                 <ul className="headerSubMenu headerSubMenuss">
                   {/* <li><h5>Horoscope</h5></li> */}
                   <li>
-                    <a href="/#">Received</a>
+                    <Link to="#">Received</Link>
                   </li>
                   <li>
-                    <a href="/#">Accepted</a>
+                    <Link to="#">Accepted</Link>
                   </li>
                   <li>
-                    <a href="/#">Request</a>
+                    <Link to="#">Request</Link>
                   </li>
                   <li>
-                    <a href="/#">Sent</a>
+                    <Link to="#">Sent</Link>
                   </li>
                 </ul>
               </div>

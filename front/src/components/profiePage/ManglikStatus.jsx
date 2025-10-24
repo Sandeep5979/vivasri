@@ -23,8 +23,9 @@ useEffect(() => {
     value={searchManglik}
     >
       <option value="">--Select--</option>
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
+      <option value="Manglik">Manglik</option>
+                                                                                        <option value="Non Manglik">Non Manglik</option>
+                                                                                    <option value="Angshik Manglik">Angshik Manglik</option>
     </select>
   );
 }

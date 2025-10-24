@@ -3,6 +3,7 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function BasicDetails() {
 
@@ -162,22 +163,25 @@ const fetchHeight = () => {
 
    const heights = [];
 
-    for (let ft = 4; ft <= 6; ft++) {
-      let maxInches = ft === 6 ? 0 : 11; // stop at exactly 6.0
-      for (let inch = ft === 4 ? 1 : 0; inch <= maxInches; inch++) {
-        if (ft === 6 && inch === 0) {
-          heights.push({
-            label: `${ft} ft`,
-            value: `${ft}.0`,
-          });
-        } else {
-          heights.push({
-            label: `${ft} ft ${inch} in`,
-            value: `${ft}.${inch}`,
-          });
-        }
-      }
+    for (let ft = 4; ft <= 8; ft++) {
+  
+  let maxInches = ft === 8 ? 6 : 11;
+
+  
+  for (let inch = ft === 4 ? 1 : 0; inch <= maxInches; inch++) {
+    if (inch === 0) {
+      heights.push({
+        label: `${ft} ft`,
+        value: `${ft}.0`,
+      });
+    } else {
+      heights.push({
+        label: `${ft} ft ${inch} in`,
+        value: `${ft}.${inch}`,
+      });
     }
+  }
+}
 
     setHeight(heights); 
 
@@ -186,7 +190,7 @@ const fetchWeight = () => {
 
    const weights = [];
 
-    for (let wt = 40; wt <= 100; wt++) {
+    for (let wt = 40; wt <= 150; wt++) {
       weights.push(wt)
     }
 
@@ -554,7 +558,63 @@ const handleSubmit = async (e) => {
 
   return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
+
+     <>
+  {/* hobbies Modal */}
+  <div
+    className="modal fade"
+    id="hobbiesModal"
+    tabIndex={-1}
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog modal-xl">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h1 className="modal-title fs-5" id="exampleModalLabel">
+            Hobbies
+          </h1>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          />
+        </div>
+        <div className="modal-body" style={{ background: "#FFF0F9" }}>
+          <div className="radio-wrapper-301s inputs-margs">
+            {hobbies && hobbies.map((hobbiesList, index)  => {
+
+                            if(index > 6){
+                              return (
+
+                                <label htmlFor={hobbiesList._id} className='mb-3'>  
+                                <input
+                                  id={hobbiesList._id}
+                                  type="checkbox"
+                                  name={`hobbies`}
+                                  checked={selected.includes(hobbiesList._id)}
+                                  value={hobbiesList._id}
+                                  onChange={handleChange}
+                                  ref={hobbiesRef}
+                                />
+                                <span className="name">{hobbiesList.name}</span>
+                              </label>
+                            )
+                          }
+
+                          })
+                        }
+          </div>
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+</>
+
 
         <>
   <section className="inrbnr">
@@ -563,7 +623,7 @@ const handleSubmit = async (e) => {
         <h1>Basic Details </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -579,15 +639,28 @@ const handleSubmit = async (e) => {
   {/* Section End */}
   <section>
   <div className="register-sec ">
-    <div className="container-fluid con-flu-padd  ">
+    <div className="container-fluid con-flu-padd">
       <div className="container-fluid  bg-register ">
         <div className="row pb-50 pt-40">
           <div className="col-lg-8 ">
             <div className="con-reg">
-              <h3>Basic details</h3>
+              <div class="step-container">
+                  <div class="step-info">
+                    <h2>Basic Details</h2>
+                    <p>Next Step- Contact Details</p>
+                  </div>
+                  <div class="progress-bar"  style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 10%, pink 0)"}}>
+                       <span>1 of 11</span>
+                  </div>
+              </div>
+
+
+              {/* <h3>Basic details</h3>
               <div className="col-12">
                 <div className="line-bg" />
-              </div>
+              </div> */}
+
+
               <form onSubmit={handleSubmit}>
               <div className=" form-bas-de ">
                 
@@ -759,29 +832,40 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <div className="radio-wrapper-20">
+                        <div className="radio-wrapper-20 d-block">
                           <label htmlFor="example-20-11">
                             <input
                               id="example-20-11"
                               type="radio"
                               name="manglik"
-                              checked={formData.manglik === "Yes"}
-                              value='Yes'
+                              checked={formData.manglik === "Manglik"}
+                              value='Manglik'
                               onChange={handleChange}
                               ref={manglikRef}
                             />
-                            <span className="name">Yes</span>
+                            <span className="name" style={{width:'auto'}}>Manglik</span>
                           </label>
                           <label htmlFor="example-20-22">
                             <input
                               id="example-20-22"
                               type="radio"
                               name="manglik"
-                              value='No'
+                              value='Non Manglik'
                               onChange={handleChange}
-                              checked={formData.manglik === "No"}
+                              checked={formData.manglik === "Non Manglik"}
                             />
-                            <span className="name">No</span>
+                            <span className="name" style={{width:'auto'}}>Non Manglik</span>
+                          </label>
+                          <label htmlFor="example-20-23">
+                            <input
+                              id="example-20-23"
+                              type="radio"
+                              name="manglik"
+                              value='Angshik Manglik'
+                              onChange={handleChange}
+                              checked={formData.manglik === "Angshik Manglik"}
+                            />
+                            <span className="name" style={{width:'auto'}}>Angshik Manglik</span>
                           </label>
                         </div>
                         {error.manglik && <p className="error">{error.manglik}</p>}
@@ -1119,12 +1203,13 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <div className="radio-wrapper-201s inputs-margs">
+                        <div className="radio-wrapper-301s inputs-margs ">
                           {hobbies && hobbies.map((hobbiesList, index)  => {
 
-                            return (
+                            if(index < 7){
+                              return (
 
-                                <label htmlFor={hobbiesList._id}>
+                                <label htmlFor={hobbiesList._id} className='mb-3'>  
                                 <input
                                   id={hobbiesList._id}
                                   type="checkbox"
@@ -1137,6 +1222,7 @@ const handleSubmit = async (e) => {
                                 <span className="name">{hobbiesList.name}</span>
                               </label>
                             )
+                          }
 
                           })
                         }
@@ -1145,6 +1231,11 @@ const handleSubmit = async (e) => {
 
                           
                         </div>
+
+                        <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ Add More Hobbies</Link>
+
+
+
                         {error.hobbies && <p className="error">{error.hobbies}</p>}
                         
                         

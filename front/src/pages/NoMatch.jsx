@@ -2,13 +2,17 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
+import HeaderUser from '../components/homePage/HeaderUser'
+import { useSelector } from 'react-redux'
 
 
 function NoMatch() {
+const { userDetailLogin } = useSelector((state) => state.auth);
+
   return (
     
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
     <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -16,13 +20,13 @@ function NoMatch() {
         <h1>Page Not Found </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
           <li>
-            <a href="/#">Page Not Found</a>
+            <Link to="#">Page Not Found</Link>
           </li>
         </ul>
       </div>

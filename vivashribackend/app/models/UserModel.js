@@ -126,9 +126,17 @@ const UserSchema = new Schema(
       trim: true
     },
     gotra: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Gotra",
+      trim: true,
+      default: null,
+      set: v => (v === "" ? null : v)
+    },
+    gotra_other: {
       type: String,
       trim: true
     },
+    
     dosh: {
       type: String,
       trim: true
@@ -256,13 +264,15 @@ const UserSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Education",
       trim: true,
-      default: null
+      default: null,
+      set: v => (v === "" ? null : v),
     },
     pg_degree: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Education",
       trim: true,
-      default: null
+      default: null,
+      set: v => (v === "" ? null : v),
     },
     pg_college_name: {
       type: String,
@@ -289,11 +299,13 @@ const UserSchema = new Schema(
       trim: true
     },
     working_with: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WorkingWith",
       trim: true
     },
     occupation: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Occupation",
       trim: true
     },
     organization_name: {
@@ -413,7 +425,8 @@ const UserSchema = new Schema(
       trim: true
     },
     partner_working_as: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WorkingWith",
       trim: true
     },
     partner_income_from: {
@@ -440,9 +453,17 @@ const UserSchema = new Schema(
       trim: true
     },
     partner_gotra: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Gotra",
+      trim: true,
+      default: null,
+      set: v => (v === "" ? null : v)
+    },
+    partner_gotra_other: {
       type: String,
       trim: true
     },
+    
     partner_dosh: {
       type: String,
       trim: true
@@ -473,7 +494,18 @@ const UserSchema = new Schema(
       type: String,
       trim: true
     },
+    reference_other: {
+      type: String,
+      trim: true
+    },
     
+    home_reg_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "HomeRegistration",
+      default: null,
+      set: v => (v === "" ? null : v),
+      
+    },
 
 
     status: {

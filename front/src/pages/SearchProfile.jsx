@@ -15,15 +15,18 @@ import ProfilePercentage from '../components/profiePage/ProfilePercentage'
 import ManglikStatus from '../components/profiePage/ManglikStatus'
 import AnnualIncome from '../components/profiePage/AnnualIncome'
 import RightPanel from '../components/profiePage/RightPanel'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ageCalculate, decimalToFeetInches } from '../utils/utils'
 import ProfieSkeleton from '../components/skeleton/ProfieSkeleton'
+import HeaderUser from '../components/homePage/HeaderUser'
+import { useSelector } from 'react-redux'
 
 
 
 function SearchProfile() {
   
   const [searchParams] = useSearchParams();
+  const { userDetailLogin } = useSelector((state) => state.auth);
   const [searchLooking, setSearchLooking] = useState(searchParams.get('looking'))
   const [searchReligion, setSearchReligion] = useState(searchParams.get('religion')?searchParams.get('religion').split(','):[])
   const [searchCaste, setSearchCaste] = useState(searchParams.get('caste')?searchParams.get('caste').split(','):[])
@@ -192,10 +195,13 @@ function SearchProfile() {
         
       }, [isScroll]);
   
+  const windowReload = () => {
+    window.location.reload();
+  }    
   
   return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
     
     <>
   <section className="inrbnr">
@@ -207,10 +213,10 @@ function SearchProfile() {
             Age {searchMinAge} to {searchMaxAge}
           </span>
         </div>
-        <a href="/#" className="filter">
+        <Link to="#" className="filter">
           <img src="assets/img/icons/filter.png" alt="filter icon" /> Modify
           Search
-        </a>
+        </Link>
       </div>
     </div>
   </section>
@@ -219,29 +225,31 @@ function SearchProfile() {
     <div className="container-fluid">
       <div className="astroList">
         <div className="row">
-          <div className="col-md-4 col-lg-3">
+          <div className="col-md-3 col-lg-3 pe-lg-5">
             <div className="productSideBar">
-              <div className="pinksidebar">
-                <div className="leftbarhd">
-                  <i className="fa-solid fa-filter" /> Refine Search
+              <div className="filterbar">
+                <div className="leftbarhd filterhd">
+                  <img src='assets/img/filter-icon.png' alt='' /> Refine Search
+
+                  <Link to="#" onClick={windowReload}>Clear All</Link>
                 </div>
-                <div className="accordion" id="myAccordion">
+                <div className="accordion filteraccordion" id="myAccordion">
                   <div className="accordion-item">
                     <h2 className="accordion-header" id="headingOne">
                       <button
-                        className="accordion-button"
+                        className="accordion-button collapsed"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#collapseOne"
-                        aria-expanded="true"
+                        aria-expanded="false"
                         aria-controls="collapseOne"
                       >
-                        Age
+                        <img src='assets/img/age.png' alt='' /> Age
                       </button>
                     </h2>
                     <div
                       id="collapseOne"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingOne"
                       data-bs-parent="#myAccordion"
                     >
@@ -263,12 +271,12 @@ function SearchProfile() {
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        Height
+                        <img src='assets/img/height.png' alt='' /> Height
                       </button>
                     </h2>
                     <div
                       id="collapseTwo"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingTwo"
                       data-bs-parent="#myAccordion"
                     >
@@ -290,12 +298,12 @@ function SearchProfile() {
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        Marital Status
+                        <img src='assets/img/marital-status.png' alt='' /> Marital Status
                       </button>
                     </h2>
                     <div
                       id="collapseTwo2"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingTwo"
                       data-bs-parent="#myAccordion"
                     >
@@ -306,6 +314,36 @@ function SearchProfile() {
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="headingTwo">
+                      <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo11"
+                        aria-expanded="false"
+                        aria-controls="collapseTwo"
+                      >
+                        <img src='assets/img/manglik.png' alt='' /> Manglik Status
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseTwo11"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="headingTwo"
+                      data-bs-parent="#myAccordion"
+                    >
+                      <div className="accordion-body">
+                        {/* start */}
+                        <ManglikStatus manglikButton={manglikButton} searchManglik={searchManglik} />
+                        {/* end */}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                  
                   {/* item end */}
                   <Religion religionButton={religionButton} searchReligion={searchReligion} />
 
@@ -322,12 +360,12 @@ function SearchProfile() {
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        Education
+                        <img src='assets/img/education.png' alt='' /> Education
                       </button>
                     </h2>
                     <div
                       id="collapseTwo8"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingTwo"
                       data-bs-parent="#myAccordion"
                     >
@@ -349,12 +387,12 @@ function SearchProfile() {
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        Profession
+                        <img src='assets/img/profession.png' alt='' /> Profession
                       </button>
                     </h2>
                     <div
                       id="collapseTwo9"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingTwo"
                       data-bs-parent="#myAccordion"
                     >
@@ -372,70 +410,16 @@ function SearchProfile() {
                         className="accordion-button collapsed"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo10"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo"
-                      >
-                        Profile Percentage
-                      </button>
-                    </h2>
-                    <div
-                      id="collapseTwo10"
-                      className="accordion-collapse collapse show"
-                      aria-labelledby="headingTwo"
-                      data-bs-parent="#myAccordion"
-                    >
-                      <div className="accordion-body">
-                        {/* start */}
-                        <ProfilePercentage />
-                        {/* end */}
-                      </div>
-                    </div>
-                  </div>
-                  {/* item end */}
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingTwo">
-                      <button
-                        className="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo11"
-                        aria-expanded="false"
-                        aria-controls="collapseTwo"
-                      >
-                        Manglik Status
-                      </button>
-                    </h2>
-                    <div
-                      id="collapseTwo11"
-                      className="accordion-collapse collapse show"
-                      aria-labelledby="headingTwo"
-                      data-bs-parent="#myAccordion"
-                    >
-                      <div className="accordion-body">
-                        {/* start */}
-                        <ManglikStatus manglikButton={manglikButton} searchManglik={searchManglik} />
-                        {/* end */}
-                      </div>
-                    </div>
-                  </div>
-                  {/* item end */}
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingTwo">
-                      <button
-                        className="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo12"
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        Annual Income
+                        <img src='assets/img/income.png' alt='' /> Annual Income
                       </button>
                     </h2>
                     <div
                       id="collapseTwo12"
-                      className="accordion-collapse collapse show"
+                      className="accordion-collapse collapse"
                       aria-labelledby="headingTwo"
                       data-bs-parent="#myAccordion"
                     >
@@ -446,12 +430,44 @@ function SearchProfile() {
                       </div>
                     </div>
                   </div>
+                  
+                  
+                  {/* item end */}
+                  <div className="accordion-item">
+                    <h2 className="accordion-header" id="headingTwo">
+                      <button
+                        className="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo10"
+                        aria-expanded="false"
+                        aria-controls="collapseTwo"
+                      >
+                        <img src='assets/img/user-alt.png' alt='' /> Profile Percentage
+                      </button>
+                    </h2>
+                    <div
+                      id="collapseTwo10"
+                      className="accordion-collapse collapse"
+                      aria-labelledby="headingTwo"
+                      data-bs-parent="#myAccordion"
+                    >
+                      <div className="accordion-body">
+                        {/* start */}
+                        <ProfilePercentage />
+                        {/* end */}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                  
                   {/* item end */}
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-md-8 col-lg-9">
+          <div className="col-md-9 col-lg-9 ps-lg-0 lg-rev">
             <div className="row">
               <div className="col-md-10 col-lg-9">
                 <div className="d-lg-flex align-items-center justify-content-between">
@@ -496,7 +512,7 @@ function SearchProfile() {
                           <span className="fieldname">Religion</span>: {searchList.religion?.name}
                         </div>
                         <div className="profiledata-row d-flex align-items-start  mb-2">
-                          <span className="fieldname">Occupation</span>: {searchList.occupation}
+                          <span className="fieldname">Occupation</span>: {searchList?.occupation?.name}
                         </div>
                         <div className="profiledata-row d-flex align-items-start  mb-2">
                           <span className="fieldname">Location</span>: {[searchList?.loc_state?.name, searchList?.loc_city?.name].filter(Boolean).join(", ")}

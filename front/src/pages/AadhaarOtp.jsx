@@ -3,13 +3,14 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function AadhaarOtp() {
   
   
 const navigate = useNavigate();
 const { userDetail } = useSelector((state) => state.auth);
-
+const { userDetailLogin } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({});
   const [error, setError] = useState({})
 
@@ -49,7 +50,7 @@ const { userDetail } = useSelector((state) => state.auth);
     const value = e.target.value.replace(/[^0-9]/g, "");
     if (value && value.length > 1) {
         return false; 
-  }
+    }
     const newOtp = [...otp];
     newOtp[index] = value.slice(0, 1);
     setOtp(newOtp);
@@ -91,28 +92,35 @@ const { userDetail } = useSelector((state) => state.auth);
         setIsScroll(false)
       
     }, [isScroll]);
+
+const skipButton = (e) => {
+      e.preventDefault()
+      
+    navigate('/registration-success')
+            
+
+}
+
+
   return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
     <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
       <div className="inrbnrContent">
-        <h1>Aadhaar OTP </h1>
+        <h1>OTP Verification </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <a href="/#">OTP Verification</a>
           </li>
         </ul>
       </div>
@@ -126,10 +134,16 @@ const { userDetail } = useSelector((state) => state.auth);
         <div className="row pb-50 pt-40">
           <div className="col-md-8 ">
             <div className="con-reg">
-              <h3>ID Verification</h3>
-              <div className="col-12">
-                <div className="line-bg" />
-              </div>
+              <div class="step-container">
+                    <div class="step-info">
+                      <h2>OTP Verification</h2>
+                      <p><span>Prev Step- Aadhaar Verification,</span> Next Step- Religion Details</p>
+                    </div>
+                    <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 35%, pink 0)"}}>
+                        <span>4 of 11</span>
+                    </div>
+                </div>
+
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg    ">
@@ -142,7 +156,7 @@ const { userDetail } = useSelector((state) => state.auth);
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <div className=" form-otp ">
+                        <div className="form-otp ms-0">
                           
                             <input type="text" 
                             key={1}
@@ -227,18 +241,25 @@ const { userDetail } = useSelector((state) => state.auth);
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid-aadhar">
-                        <button className="back">
-                          <Link style={{ color: "white" }} to="/aadhaar-verification">
-                            Back
-                          </Link>
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                                <Link className="backbtn" style={{ color: "white" }} to="/aadhaar-verification">Back</Link>{" "}                          
+                                                              <button className="send-aad-otp" type='submit' disabled={isLoading}>
+                                                              {isLoading ? "Wait..." : "Verify Code"}
+                                                                
+                                                              
+                                                            </button>
+                                                                                          </div>
+                                                            { /* <br/>
+                                                            <hr />
+                                                            <div className="d-flex align-items-center justify-content-center">
+                                                              <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                            </div>
+                                                            */ }
                         
                         
-                        <button className="send-aad-otp" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Verify Code"}
-                            
-                          
-                        </button>
+                        
+                        
                       </div>
                     </div>
                   </div>

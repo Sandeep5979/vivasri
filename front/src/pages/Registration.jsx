@@ -3,10 +3,13 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from "../store/authActions";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 
 function Registration() {
+  const { userId } = useParams();
+  const { userDetailLogin } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "" });
   const dispatch = useDispatch();
@@ -60,7 +63,11 @@ if(otpSent){
              //navigate(`/${data.page}`)
              document.location.href=`/${data.page}`
             } else {
-              navigate('/send-otp')
+              if(userId){
+              navigate(`/send-otp/${userId}`)
+              } else {
+              navigate(`/send-otp`)  
+              }
             }
           
             
@@ -72,9 +79,46 @@ if(otpSent){
 
     
   };
+
+useEffect(() => {
+    if(userDetailLogin?._id){
+      document.location.href=`/dashboard`
+    }
+
+   }, [userDetailLogin])
+
+
+   const fetchUserDetail = async (userId) => {
+    
+    const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/user-home-detail/${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      //console.log(data)
+      if(data.status){
+        
+      setFormData({
+
+        email:data.data[0].mobile,
+      })
+
+    }
+
+  }
+
+useEffect(() => {
+    if(userId){
+      fetchUserDetail(userId)
+
+    }
+
+   }, [userId])
+
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
         <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -82,17 +126,14 @@ if(otpSent){
         <h1>Register </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">Register</Link>
           </li>
         </ul>
       </div>
@@ -116,7 +157,7 @@ if(otpSent){
             </div>
             <div className="col-md-5">
               <div className="con-reg">
-                <h3>Member Login</h3>
+                <h3>Member Registration</h3>
                 <div className="col-12">
                   <div className="line-bg" />
                 </div>
@@ -124,7 +165,7 @@ if(otpSent){
                 <div className="form ">
                   <p>Mobile No. / Email Id</p>
                   
-                    <input type="text" placeholder="Mobile No. / Email Id" name="email" onChange={handleChange} required />
+                    <input type="text" placeholder="Mobile No. / Email Id" name="email" onChange={handleChange} value={formData.email} required />
                   {
                   error && <p className='error'>{error}</p>
                   

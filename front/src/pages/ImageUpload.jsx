@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function ImageUpload() {
 
@@ -225,29 +226,37 @@ const handleSubmit = async (e) => {
         setIsScroll(false)
       
     }, [isScroll]);
+
+    const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/profile-photo-edit'){
+          navigate('/dashboard')
+        } else {
+          navigate('/partner-qualities')
+        }
+
+  }
   
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
         <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
       <div className="inrbnrContent">
-        <h1>Profile Photo</h1>
+        <h1>Upload Photo</h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">Upload Photo</Link>
           </li>
         </ul>
       </div>
@@ -261,20 +270,37 @@ const handleSubmit = async (e) => {
     
     <div className="container-fluid con-flu-padd  ">
       <div className="container-fluid  bg-register ">
-        <div className="row pb-50 pt-40">
+        <div className="row pb-50 pt-3 mt-2">
           <div className="col-md-12 p-0">
             <div className="con-reg">
-              <h3>Upload Profile Photo</h3>
+              {/* <h3 className='text-center'>Upload Profile Photo</h3> */}
+
+              <div class="step-container">
+                <div class="step-info">
+                  <h2>Upload Photo</h2>
+                  <p><span>Prev Step- Educational Details,</span> Next Step- Partner’s Qualities</p>
+                </div>
+                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
+                    <span>9 of 11</span>
+                </div>
+              </div>
+
               <div className="restrictions py-3">
-                <ul className="">
+                <ul className="justify-content-center">
                   <li>1. Maximum image upload size:&nbsp;10 MB.</li>
                   <li>2. Recommended dimensions:&nbsp;576 x 709 px.</li>
+                  <li>3. Photo Upload:&nbsp;JPG, JPEG, PNG Only.</li>
                   <li>📌 Photo 1 is mandatory to upload.</li>
                 </ul>
               </div>
-              <div className=" images-boxes  ">
+              <div className="images-boxes uploadimage">
                 <div className="row ">
-                  <div className="col-md-2 img-box m-3">
+                  <div className="col-md-2 img-box m-3 po-rel-new">
+                    { /* <div class="del-icon">
+                        <img src="assets/img/delete.png" alt="" />
+                      </div>
+                      */ }
+                    
                     <img
                       src={previewUrl ? previewUrl : formData.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo}`:`assets/img/register/image-picture_svgrepo.com.png`}
                       alt=""
@@ -306,6 +332,9 @@ const handleSubmit = async (e) => {
                       {/* <button><img src="assets/img/upload_svgrepo.com.png" alt="">Select image </button> */}
                     </div>
                     <p>width : 576px, Height : 709px.</p>
+                    { /* <p class="pro-pho-p">Profile Photo</p>
+                    <p class="pro-pho-p-2">Choose your profile photo</p>
+                    */ }
                     {error.photo && <p className="error">{error.photo}</p>}
                   </div>
                   <div className=" col-md-2 img-box m-3 ">
@@ -432,13 +461,57 @@ const handleSubmit = async (e) => {
                 <div className="col-12">
                   <div className="btn-uplod text-center">
                     
-                    <button disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Upload Images"}
-                      
-                      
-                        
-                      
-                    </button>
+                    <div className="d-flex align-items-center justify-content-center">
+                          <Link className="backbtn mt-3"
+                            style={{ color: "white" }}
+                            to="/education-detail"
+                          >
+                            Back
+                          </Link>{" "}                          
+                          <button className="countiniue" type='submit' disabled={isLoading}>
+                            {isLoading ? "Wait..." : "Upload"}
+                          </button>
+                    </div>
+                    { /* <br/>
+                    <hr />
+
+                    <div className="d-flex align-items-center justify-content-center">
+                          <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                    </div>
+                    */ }
+                    
+                    <hr />
+                    
+                    <div className='uploadtips'>
+                          <h3 class="text-center mb-3">Few tips to upload pics</h3>
+                          <p>Avoid the following photos to highlight your profile better</p>
+                          <div className="d-lg-flex align-item-lg-center justify-content-lg-center">
+                               <div className="tipspic text-center">
+                                   <img src="assets/img/tips1.png" alt="tips pic" />
+                                   <span>Blur Photo</span>
+                               </div>
+                               <div className="tipspic text-center">
+                                   <img src="assets/img/tips2.png" alt="tips pic" />
+                                   <span>Side Photo</span>
+                               </div>
+                               <div className="tipspic text-center">
+                                   <img src="assets/img/tips3.png" alt="tips pic" />
+                                   <span>Copyright Photo</span>
+                               </div>
+                               <div className="tipspic text-center">
+                                   <img src="assets/img/tips4.png" alt="tips pic" />
+                                   <span>Group Photo</span>
+                               </div>
+                          </div>
+
+
+
+                    </div>
+                    
+                    
+                    
+
+
                   </div>
                 </div>
               </div>

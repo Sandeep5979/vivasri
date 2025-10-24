@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function AadhaarVerification() {
   
   const { userDetail } = useSelector((state) => state.auth);
+  const { userDetailLogin } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isScroll, setIsScroll] = useState(false)
+  const inputsRef = useRef([]);
+  const [otp, setOtp] = useState(["", "", ""]);
   
   
-  const handleChange = (e) => {
+  /* const handleChange = (e) => {
       const { name, value } = e.target;
       
       setFormData((prev) => ({
@@ -34,7 +38,22 @@ function AadhaarVerification() {
       }
       
     };
-  
+  */ 
+
+    const handleChange = (e, index) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value && value.length > 4) {
+        return false; 
+    }
+    const newOtp = [...otp];
+    newOtp[index] = value.slice(0, 4);
+    setOtp(newOtp);
+
+    
+    if (value && value.length > 3 && index < inputsRef.current.length - 1) {
+      inputsRef.current[index + 1].focus();
+    }
+  };
   
     const fetchUserDetail = async (userId) => {
       
@@ -44,9 +63,19 @@ function AadhaarVerification() {
           });
   
         const data = await res.json();
-        //console.log(data)
+        console.log('adddhar', data.data[0].aadhaar_no)
         if(data.status){
-        setFormData({
+          const aadhaar = data?.data?.[0]?.aadhaar_no;
+          const newOtp = []
+          if (aadhaar) {
+            newOtp[1] = String(aadhaar).slice(0, 4);
+            newOtp[2] = String(aadhaar).slice(4, 8);
+            newOtp[3] = String(aadhaar).slice(8, 12);
+            setOtp(newOtp);
+          }
+        
+        
+          setFormData({
           aadhaar_no:data.data[0].aadhaar_no,
          
   
@@ -66,10 +95,10 @@ function AadhaarVerification() {
   
   const validate = () => {
       const errs = {};
-      
-      if (!formData.aadhaar_no) {
+      const fullOtp = otp.join("");
+      if (!fullOtp) {
         errs.aadhaar_no = "Aadhaar no. is required";
-      } else if (!/^\d{12}$/.test(formData.aadhaar_no)) {
+      } else if (!/^\d{12}$/.test(fullOtp)) {
         errs.aadhaar_no = "Aadhaar no. must be a 12-digit number";
       }
       
@@ -93,11 +122,13 @@ function AadhaarVerification() {
         setIsScroll(true)
        return;
      }
+     //console.log(formData)
+     const fullOtp = otp.join("");
       setIsLoading(true)
       const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/aadhaar-verification`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userDetail, formData }),
+          body: JSON.stringify({ userDetail, formData:{aadhaar_no:fullOtp} }),
           
         });
   
@@ -125,10 +156,19 @@ function AadhaarVerification() {
         //console.log(data)
       
     };
+
+    const skipButton = (e) => {
+      e.preventDefault()
+      
+      
+        navigate('/registration-success')
+            
+
+}
   
   return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
         <>
   <section className="inrbnr">
@@ -137,17 +177,14 @@ function AadhaarVerification() {
         <h1>Aadhaar Verification </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">Aadhaar Verification</Link>
           </li>
         </ul>
       </div>
@@ -161,11 +198,19 @@ function AadhaarVerification() {
         <div className="row pb-50 pt-40">
           <div className="col-lg-8 col-md-12 col-sm-12 ">
             <div className="con-reg">
-              <h3>Aadhaar Verification</h3>
-              <div className="col-12">
-                <div className="line-bg" />
-              </div>
-              <div className=" form-bas-de ">
+                <div class="step-container">
+                    <div class="step-info">
+                      <h2>Aadhaar Verification</h2>
+                      <p><span>Prev Step- Contact Details,</span> Next Step- OTP Verification</p>
+                    </div>
+                    <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 30%, pink 0)"}}>
+                        <span>3 of 11</span>
+                    </div>
+                </div>
+                
+              
+
+              <div className="form-bas-de pt-2">
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg  nam-inp  ">
                   <div className="col-12  align-items-center p-0">
@@ -175,9 +220,39 @@ function AadhaarVerification() {
                           Enter Aadhaar Number{" "}
                           <span style={{ color: "#FF0A0A" }}>&nbsp;*</span>
                         </label>
+                        
                       </div>
-                      <div className="col-md-8 col-sm-12">
-                        <input
+                      <div className="col-md-5 col-sm-12">
+                           
+                        <div className="d-flex align-items-center adhaarfld">
+                        <input type="text" style={{marginRight:'10px'}} key={1}
+                            maxLength={4} 
+                            min={0}
+                            ref={(el) => (inputsRef.current[1] = el)}
+                            onChange={(e) => handleChange(e, 1)}
+                            value={otp[1]}
+                        /> -
+                        <input type="text" style={{ width: 100, marginRight: 10, marginLeft: 10 }} 
+                        key={2}
+                            maxLength={4} 
+                            min={0}
+                            ref={(el) => (inputsRef.current[2] = el)}
+                            onChange={(e) => handleChange(e, 2)}
+                            value={otp[2]}
+                        /> -
+                        <input type="text" style={{ width: 100, marginLeft: 10 }} 
+                        key={3}
+                            maxLength={4} 
+                            min={0}
+                            ref={(el) => (inputsRef.current[3] = el)}
+                            onChange={(e) => handleChange(e, 3)}
+                            value={otp[3]}
+                        
+                        />
+                      </div>
+
+
+                      {/*  <input
                           type="number"
                           placeholder="Your Aadhaar Number"
                           name="aadhaar_no"
@@ -187,35 +262,38 @@ function AadhaarVerification() {
                           
                           
                         />
+                        */ }
                         {error.aadhaar_no && <p className="error">{error.aadhaar_no}</p>}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="row inputs-margs nam-inp  ">
-                  <div className="col-12 d-flex text-right p-0">
-                    <div className="col-4" />
-                    <div className="col-8">
-                      <div className="maxwid">
-                        <button className="back">
-                          <Link
-                            style={{ color: "white" }}
-                            to="/contact-information"
-                          >
-                            Back
-                          </Link>{" "}
-                        </button>
+
+                        <div className="row inputs-margs nam-inp row">
+                              <div className="col-12 px-0 pt-3">
+                                  <div className="">
+                                    
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <Link className="backbtn" style={{ color: "white" }} to="/contact-information">Back</Link>{" "}                          
+                                      <button className="continue" type='submit' disabled={isLoading}>
+                                      {isLoading ? "Wait..." : "Send OTP"}</button>
+                                                                  </div>
+                                    <br/>
+                                    <hr />
+                                    <div className="d-flex align-items-center justify-content-center">
+                                      <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                  </div>
+                            </div>
+                        </div>
+
                         
-                                                
-                        <button className="send-aad-otp" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Send-OTP"}
-                            
-                          
-                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
+                
                 </form>
               </div>
             </div>

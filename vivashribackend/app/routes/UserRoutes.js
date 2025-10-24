@@ -1,5 +1,5 @@
 import express from "express";
-import { aadhaarVerification, basicProfile, contactInformation, getUserDetailList, getUserDetailListAll, userEducationDetail, userFamilyDetail, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, validateBasicProfile } from "../controllers/front/UserController.js";
+import { aadhaarVerification, basicProfile, contactInformation, getUserDetailList, getUserDetailListAll, getUserHomeDetailList, userEducationDetail, userFamilyDetail, userHomeRegistration, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, validateBasicProfile } from "../controllers/front/UserController.js";
 import { authJwt } from "../middlewares/index.js";
 
 const router = express.Router();
@@ -23,5 +23,7 @@ router.post("/profile-photo-user", userProfilePhotoAdd);
 router.post("/partner-qualities", userPartnerQualities);
 router.post("/partner-basic-detail", userPartnerBasicDetail);
 router.route("/registration-login").post(userRegistrationLogin);
+router.route("/home-registration").post(userHomeRegistration);
+router.route("/user-home-detail/:id").get(getUserHomeDetailList);
 export default router;
 

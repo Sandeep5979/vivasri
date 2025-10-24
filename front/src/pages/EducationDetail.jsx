@@ -3,6 +3,7 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function EducationDetail() {
 
@@ -20,6 +21,8 @@ const [pgDegree, setPgDegree] = useState([])
 const [ugDegree, setUgDegree] = useState([])
 const [pgDegreeShow, setPgDegreeShow] = useState(false)
 const [ugDegreeShow, setUgDegreeShow] = useState(false)
+const [occupation, setOccupation] = useState([])
+const [workingWith, setWorkingWith] = useState([])
 
 const handleChange = (e) => {
     const { name, value } = e.target;
@@ -204,8 +207,37 @@ const fetchUgEducation = async (educationId) => {
       }
 }
 
+const fetchOccupationList = async () => {
+
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/occupation`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      if(data.status){
+
+        setOccupation(data.data)
+      }
+}
+const fetchWorkingWithList = async () => {
+
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/working-with`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      if(data.status){
+
+        setWorkingWith(data.data)
+      }
+}
+
 useEffect(() => {
 fetchEducation()
+fetchOccupationList()
+fetchWorkingWithList()
 
 }, [])
 
@@ -279,10 +311,23 @@ const handleSubmit = async (e) => {
   };
 
 
+   const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/education-detail-edit'){ 
+        navigate('/my-profile')
+        } else {
+          navigate('/profile-photo')
+
+        }
+
+  }
+
+
 
   return (
     <>
-    <HeaderPage />
+    { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
     <>
   <section className="inrbnr">
@@ -291,7 +336,7 @@ const handleSubmit = async (e) => {
         <h1>Educational Details </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -312,10 +357,16 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
-              <h3>Educational Details</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                  <div class="step-info">
+                    <h2>Educational Details</h2>
+                    <p><span>Prev Step- Family & More Detail,</span> Next Step- Upload Photo</p>
+                  </div>
+                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 80%, pink 0)"}}>
+                      <span>8 of 11</span>
+                  </div>
               </div>
+
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
                 
@@ -578,11 +629,24 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <input type="text" 
+                        <select className="form-select"
                         name='working_with'
                         onChange={handleChange}
                         value={formData.working_with}
-                        />
+                        >
+                          <option value="">-- Select --</option>
+                          {workingWith && workingWith.map((workingWithList, index)  => {
+
+                            return (
+
+                                <option value={workingWithList._id}>{workingWithList.name}</option>
+                            )
+
+                          })
+                        }
+                        </select>
+                        
+                        
                         {error.working_with && <p className="error">{error.working_with}</p>}
                       </div>
                     </div>
@@ -598,11 +662,24 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <input type="text"
+                        <select className="form-select"
                         name='occupation'
                         onChange={handleChange}
                         value={formData.occupation}
-                        />
+                        >
+                          <option value="">-- Select --</option>
+                          {occupation && occupation.map((occupationList, index)  => {
+
+                            return (
+
+                                <option value={occupationList._id}>{occupationList.name}</option>
+                            )
+
+                          })
+                        }
+                        </select>
+                        
+                        
                         {error.occupation && <p className="error">{error.occupation}</p>}
                       </div>
                     </div>
@@ -649,18 +726,29 @@ const handleSubmit = async (e) => {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button className="back">
-                          <Link
-                            style={{ color: "white" }}
-                            to="/family-detail"
-                          >
-                            Back
-                          </Link>
-                        </button>
-                        <button className="" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                            <Link className="backbtn"
+                                                              style={{ color: "white" }}
+                                                              to="/family-detail"
+                                                            >
+                                                              Back
+                                                            </Link>{" "}                          
+                                                            <button className="countiniue" type='submit' disabled={isLoading}>
+                                                              {isLoading ? "Wait..." : "Continue"}
+                                                            </button>
+                                                      </div>
+                        <br/>
+                                                      <hr />
+                        
+                                                      <div className="d-flex align-items-center justify-content-center">
+                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                      </div>
+                        
+                        
+                    
+
+
                       </div>
                     </div>
                   </div>

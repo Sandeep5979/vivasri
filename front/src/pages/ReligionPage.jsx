@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function ReligionPage() {
   
   const { userDetail } = useSelector((state) => state.auth);
+  const { userDetailLogin } = useSelector((state) => state.auth);
+  const location = useLocation();
 const navigate = useNavigate();
 const [formData, setFormData] = useState({});
 const [error, setError] = useState({})
@@ -15,6 +18,7 @@ const [caste, setCaste] = useState([])
 const [subCaste, setSubCaste] = useState([])
 const [isLoading, setIsLoading] = useState(false)
 const [isScroll, setIsScroll] = useState(false)
+const [gotra, setGotra] = useState([])
 
 const religionRef = useRef(null);
 const casteRef = useRef(null);
@@ -31,12 +35,14 @@ const casteRef = useRef(null);
       if(data.status){
         fetchCaste(data.data[0].religion)
         fetchSubCaste(data.data[0].caste)
+        fetchGotra(data.data[0].religion)
       
         setFormData({
         religion:data.data[0].religion,
         caste:data.data[0].caste,
         sub_caste:data.data[0].sub_caste,
         gotra:data.data[0].gotra,
+        gotra_other:data.data[0].gotra_other,
         dosh:data.data[0].dosh
 
       })
@@ -91,6 +97,19 @@ const fetchSubCaste = async (casteId) => {
         setSubCaste(data.data)
       }
 }
+const fetchGotra = async (religionId) => {
+
+  const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/gotra/${religionId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        });
+
+      const data = await res.json();
+      if(data.status){
+
+        setGotra(data.data)
+      }
+}
 
 useEffect(() => {
   fetchReligion();
@@ -119,6 +138,7 @@ const handleChange = (e) => {
 
     if(name === 'religion'){
       fetchCaste(value)
+      fetchGotra(value)
     }
 
     if(name === 'caste'){
@@ -189,10 +209,22 @@ const handleSubmit = async (e) => {
         setIsScroll(false)
       
     }, [isScroll]);
+
+
+    const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/religion-edit'){
+              navigate('/my-profile')
+              } else {
+                navigate('/location-detail')
+              }
+
+  }
   
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
       <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -200,17 +232,14 @@ const handleSubmit = async (e) => {
         <h1>Religion </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">Religion</Link>
           </li>
         </ul>
       </div>
@@ -224,10 +253,18 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-lg-8 col-md-12">
             <div className="con-reg">
-              <h3>Religion / Cast Details (help us find better matches)</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                  <div class="step-info">
+                    <h2>Religion Details</h2>
+                    <p><span>Prev Step- OTP Verification,</span> Next Step- Location Details</p>
+                  </div>
+                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 50%, pink 0)"}}>
+                      <span>5 of 11</span>
+                  </div>
               </div>
+
+
+
               <div className=" form-bas-de ">
                 
                 <form onSubmit={handleSubmit}>
@@ -247,7 +284,7 @@ const handleSubmit = async (e) => {
                         value={formData.religion}
                         ref={religionRef}
                         >
-                          <option>-- Select Religion --</option>
+                          <option value="">-- Select Religion --</option>
 
                           {religion && religion.map((religionList, index)  => {
 
@@ -281,7 +318,7 @@ const handleSubmit = async (e) => {
                         value={formData.caste}
                         ref={casteRef}
                         >
-                          <option>-- Select Cast --</option>
+                          <option value="">-- Select Caste --</option>
                           {caste && caste.map((casteList, index)  => {
 
                             return (
@@ -302,7 +339,7 @@ const handleSubmit = async (e) => {
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
                         <label htmlFor="">
-                          Subcaste{" "}
+                          Sub Caste{" "}
                           
                         </label>
                       </div>
@@ -312,7 +349,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.sub_caste}
                         >
-                          <option>-- Select Sub Caste--</option>
+                          <option value="">-- Select Sub Caste--</option>
                           {subCaste && subCaste.map((subCasteList, index)  => {
 
                             return (
@@ -327,6 +364,7 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
+
                 <div className="row  inputs-margs nam-inp  ">
                   <div className="col-12  align-items-center p-0">
                     <div className="row">
@@ -337,12 +375,44 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <input type="text" name="gotra" 
+                        <select className="form-select"
+                        name='gotra'
                         onChange={handleChange}
                         value={formData.gotra}
+                        
+                        >
+                          <option value="">-- Select Gotra --</option>
+                          {gotra && gotra.map((gotraList, index)  => {
+
+                            return (
+
+                                <option value={gotraList._id}>{gotraList.name}</option>
+                            )
+
+                          })
+                        }
+                        </select>
+                        
+                        
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row inputs-marg  nam-inp  ">
+                  <div className="col-12  align-items-center p-0">
+                    <div className="row">
+                      <div className="col-md-4 col-sm-12">
+                        
+                      </div>
+                      <div className="col-md-8 col-sm-12">
+                        
+                        <input type="text" name="gotra_other" 
+                        onChange={handleChange}
+                        value={formData.gotra_other}
                         />
 
-                        {error.gotra && <p className="error">{error.gotra}</p>}
+                        
                       </div>
                     </div>
                   </div>
@@ -371,18 +441,28 @@ const handleSubmit = async (e) => {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button className="back">
-                          <Link
-                            style={{ color: "white" }}
-                            to="/registration-success"
-                          >
-                            Back
-                          </Link>
-                        </button>
-                        <button className="" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                            <Link className="backbtn"
+                                                              style={{ color: "white" }}
+                                                              to="/registration-success"
+                                                            >
+                                                              Back
+                                                            </Link>{" "}                          
+                                                            <button className="countiniue" type='submit' disabled={isLoading}>
+                                                              {isLoading ? "Wait..." : "Continue"}
+                                                            </button>
+                                                      </div>
+                        <br/>
+                                                      <hr />
+                        
+                                                      <div className="d-flex align-items-center justify-content-center">
+                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                      </div>
+                        
+                        
+                        
+                        
                       </div>
                     </div>
                   </div>

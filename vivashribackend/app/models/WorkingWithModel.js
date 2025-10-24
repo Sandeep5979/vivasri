@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const HobbiesSchema = new Schema(
+const WorkingWithSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,  
+      required: true,
+      unique: true,  
       trim: true     
     },
     status: {
@@ -17,7 +18,7 @@ const HobbiesSchema = new Schema(
   { timestamps: true }
 );
 
-const HobbiesModel =
-  mongoose.models.Hobbies || mongoose.model("Hobbies", HobbiesSchema);
+const WorkingWithModel =
+  mongoose.models.WorkingWith || mongoose.model("WorkingWith", WorkingWithSchema);
 
-export default HobbiesModel;
+export default WorkingWithModel;

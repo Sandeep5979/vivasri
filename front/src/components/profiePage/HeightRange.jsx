@@ -43,7 +43,7 @@ export default function HeightRange({changeShow, name, minHeightChange, maxHeigh
 
   return (
     <div className="range-container2">
-      <label>{name ? name : `Filter By Height`}</label>
+      { name && <label>{name ? name : ``}</label> }
       <div className="slider">
         <input
           type="range"
@@ -67,7 +67,7 @@ export default function HeightRange({changeShow, name, minHeightChange, maxHeigh
         />
       </div>
 
-      <div className="values">
+      <div className="values valuebetween">
         <input
           type="text"
           className="minHeightValue"

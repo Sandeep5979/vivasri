@@ -25,11 +25,11 @@ export default function Country({countryButton, searchCountry, searchState, sear
       }
 }
 const fetchState = async (id) => {
-
+  
   const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/state-multi`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:JSON.stringify({country:selectedCountry})
+        body:JSON.stringify({country:[selectedCountry]})
         });
 
       const data = await res.json();
@@ -43,7 +43,7 @@ const fetchCity = async (id) => {
   const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/city-multi`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:JSON.stringify({state:selectedState})
+        body:JSON.stringify({state:[selectedState]})
         });
 
       const data = await res.json();
@@ -63,7 +63,8 @@ fetchCountry()
  useEffect(() => {
   
   if(selectedCountry)
-  fetchState()
+    
+    fetchState()
   countryButton(selectedCountry, 'country')
 }, [selectedCountry])
 
@@ -109,12 +110,12 @@ useEffect(() => {
                             aria-expanded="false"
                             aria-controls="collapseTwo"
                           >
-                            Country
+                            <img src='assets/img/locationn.png' alt='' /> Country
                           </button>
                         </h2>
                         <div
                           id="collapseTwo5"
-                          className="accordion-collapse collapse show"
+                          className="accordion-collapse collapse"
                           aria-labelledby="headingTwo"
                           data-bs-parent="#myAccordion"
                         >
@@ -122,7 +123,7 @@ useEffect(() => {
                             {/* start */}
                             <select
                               className="inline-multiselect inline-multiselectC4"
-                              multiple="multiple"
+                              search={false}
                               value={selectedCountry}
                             >
                               <option value="">--Select--</option>
@@ -151,12 +152,12 @@ useEffect(() => {
                             aria-expanded="false"
                             aria-controls="collapseTwo"
                           >
-                            State
+                            <img src='assets/img/state.png' alt='' /> State
                           </button>
                         </h2>
                         <div
                           id="collapseTwo6"
-                          className="accordion-collapse collapse show"
+                          className="accordion-collapse collapse"
                           aria-labelledby="headingTwo"
                           data-bs-parent="#myAccordion"
                         >
@@ -164,7 +165,7 @@ useEffect(() => {
                             {/* start */}
                             <select
                             className="inline-multiselect inline-multiselectC5"
-                            multiple="multiple"
+                           
                             value={selectedState}
                           >
                             <option value="">--Select--</option>
@@ -193,12 +194,12 @@ useEffect(() => {
                             aria-expanded="false"
                             aria-controls="collapseTwo"
                           >
-                            District/City
+                            <img src='assets/img/district.png' alt='' /> District/City
                           </button>
                         </h2>
                         <div
                           id="collapseTwo7"
-                          className="accordion-collapse collapse show"
+                          className="accordion-collapse collapse"
                           aria-labelledby="headingTwo"
                           data-bs-parent="#myAccordion"
                         >
@@ -206,7 +207,7 @@ useEffect(() => {
                             {/* start */}
                             <select
                             className="inline-multiselect inline-multiselectC6"
-                            multiple="multiple"
+                            
                             value={selectedCity}
                           >
                             <option value="">--Select--</option>

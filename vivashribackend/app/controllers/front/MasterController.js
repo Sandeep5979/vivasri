@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import UserModel from "../../models/UserModel.js";
-import { getAllCasteList, getAllCityList, getAllComplexionList, getAllCountryList, getAllDietList, getAllEducationList, getAllEducationTypeList, getAllHobbiesList, getAllLanguageList, getAllLookingForList, getAllMaritalStatusList, getAllOccupationList, getAllProfessionalEducationList, getAllReligionList, getAllStateList, getAllSubCasteList } from "../../services/front/MasterService.js";
+import { getAllCasteList, getAllCityList, getAllComplexionList, getAllCountryList, getAllDietList, getAllEducationList, getAllEducationTypeList, getAllGotraList, getAllHobbiesList, getAllLanguageList, getAllLookingForList, getAllMaritalStatusList, getAllOccupationList, getAllProfessionalEducationList, getAllReligionList, getAllStateList, getAllSubCasteList, getAllWorkingWithList } from "../../services/front/MasterService.js";
 import ReligionModel from "../../models/ReligionModel.js";
 import CasteModel from "../../models/CasteModel.js";
 import StateModel from "../../models/StateModel.js";
@@ -211,6 +211,14 @@ export const getAllProfessionalEducationMasterList = async (req, res) => {
 export const getAllOccupationMasterList = async (req, res) => {
   try {
     const data = await getAllOccupationList();
+    res.json({ status: true, data });
+  } catch (err) {
+    res.status(500).json({ status: false, error: err.message });
+  }
+};
+export const getAllWorkingWithMasterList = async (req, res) => {
+  try {
+    const data = await getAllWorkingWithList();
     res.json({ status: true, data });
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });
@@ -482,17 +490,35 @@ if (Array.isArray(searchProfession)) {
       }
   }
 }
+if (Array.isArray(searchOccupation)) {
+  let searchOccupationArr = searchOccupation.filter(value => value != null && value !== "");
+  if(searchOccupationArr.length > 0){
+    
+    query.occupation = { $in: searchOccupationArr.map(id => new mongoose.Types.ObjectId(id)) };
+  }
+} else {
+  if (searchOccupation && searchOccupation !== '') {
+    //const isValid = mongoose.Types.ObjectId.isValid(searchMarital_status);
+    if (searchOccupation && !mongoose.Types.ObjectId.isValid(searchOccupation)) {
+        return res.json({data:[], status:false}); 
+      }
+  
+      if (mongoose.Types.ObjectId.isValid(searchOccupation)) {
+        query.occupation = new mongoose.Types.ObjectId(searchOccupation);
+      }
+  }
+}
 
 
 
 
 
-
-if (searchOccupation && searchOccupation !== '') {
+/* if (searchOccupation && searchOccupation !== '') {
    
     //query.occupation = { $regex: new RegExp(`^${searchOccupation}$`, 'i') };
     query.occupation = searchOccupation;
 }
+    */
 /* if (searchAnnual_income && searchAnnual_income !== '') {
    
     //query.occupation = { $regex: new RegExp(`^${searchOccupation}$`, 'i') };
@@ -662,6 +688,8 @@ const users = await UserModel.find(query).populate([
     { path: "religion" },
     { path: "loc_state" },
     { path: "loc_city" },
+    { path: "occupation" },
+    
 ])
 
 
@@ -671,3 +699,12 @@ const users = await UserModel.find(query).populate([
   }
 };
 
+
+export const getAllGotraMasterList = async (req, res) => {
+  try {
+    const data = await getAllGotraList(req.params.religion_id);
+    res.json({ status: true, data });
+  } catch (err) {
+    res.status(500).json({ status: false, error: err.message });
+  }
+};

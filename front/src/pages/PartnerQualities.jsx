@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function PartnerQualities() {
+
+  const location = useLocation();
   
   const { userDetail } = useSelector((state) => state.auth);
+  const { userDetailLogin } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   
   const [hobbies, setHobbies] = useState([])
@@ -20,6 +24,8 @@ function PartnerQualities() {
   const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isScroll, setIsScroll] = useState(false)
+
+  const  hobbiesRef= useRef(null);
   
   const fetchHobbiesList = async () => {
   
@@ -87,6 +93,7 @@ function PartnerQualities() {
         setFormData({
   
           partner_qualities:data.data[0].partner_qualities,
+          gender:data.data[0].gender,
          
   
         })
@@ -159,29 +166,99 @@ function PartnerQualities() {
           setIsScroll(false)
         
       }, [isScroll]);
+
+const skipButton = (e) => {
+        e.preventDefault()
+        
+        if(location.pathname === '/partner-qualities-edit'){
+          navigate('/my-profile')
+        } else {
+          navigate('/partner-basic-detail')
+        }
+
+  }
+
+
+
   
   return (
     <>
-      <HeaderPage />
+      { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
+
+      <div
+    className="modal fade"
+    id="hobbiesModal"
+    tabIndex={-1}
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog modal-xl">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h1 className="modal-title fs-5" id="exampleModalLabel">
+            Hobbies
+          </h1>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          />
+        </div>
+        <div className="modal-body" style={{ background: "#FFF0F9" }}>
+          <div className="radio-wrapper-301s inputs-margs">
+            {hobbies && hobbies.map((hobbiesList, index)  => {
+
+                            if(index > 6){
+                              return (
+
+                                <label htmlFor={hobbiesList._id} className='mb-3'>  
+                                <input
+                                  id={hobbiesList._id}
+                                  type="checkbox"
+                                  name={`partner_hobbies`}
+                                  checked={selected.includes(hobbiesList._id)}
+                                  value={hobbiesList._id}
+                                  onChange={handleChange}
+                                  ref={hobbiesRef}
+                                />
+                                <span className="name">{hobbiesList.name}</span>
+                              </label>
+                            )
+                          }
+
+                          })
+                        }
+          </div>
+          
+                  
+        </div>
+      </div>
+    </div>
+  </div>
 
         <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
       <div className="inrbnrContent">
-        <h1>Partner’s Qualities </h1>
+        <h1>
+          {formData.gender == 'Male' ?
+          <img src="assets/img/femalee.png" alt="male icons" style={{margin: '-2px 10px -3px 0px', maxHeight: '46px'}}/>
+          : 
+          <img src="assets/img/malee.png" alt="female icons" style={{margin: '-2px 10px -3px 0px', maxHeight: '46px'}}/>
+          }
+
+          Partner’s Qualities </h1>
         <ul className="inrbrnNav">
           <li>
-            <a href="index.html">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
-            </a>
+            </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
           </li>
+          
           <li>
-            <a href="/#"> Login/Register</a>
-            <img src="assets/img/icons/arrows.png" alt="arrows icons" />
-          </li>
-          <li>
-            <a href="/#">Register</a>
+            <Link to="#">Partner’s Qualities</Link>
           </li>
         </ul>
       </div>
@@ -195,11 +272,17 @@ function PartnerQualities() {
         <div className="row pb-50 pt-40">
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
-              <h3>Partner’s Desired Qualities</h3>
-              <div className="col-12">
-                <div className="line-bg" />
+              <div class="step-container">
+                <div class="step-info">
+                  <h2>Partner’s Qualities</h2>
+                  <p><span>Prev Step- Upload Photo,</span> Next Step- Partner’s Basic</p>
+                </div>
+                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
+                    <span>10 of 11</span>
+                </div>
               </div>
-              <div className=" form-bas-de ">
+
+              <div className="form-bas-de mt-4">
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg">
                   <div className="col-12 d-flex align-items-center p-0">
@@ -278,13 +361,13 @@ function PartnerQualities() {
                         </label>
                       </div>
                       <div className="col-lg-8 col-md-12">
-                        <div className="radio-wrapper-201s inputs-margs">
+                        <div className="radio-wrapper-301s inputs-margs">
                           
                           {hobbies && hobbies.map((hobbiesList, index)  => {
-
+                            if(index < 7){
                             return (
 
-                                <label htmlFor={hobbiesList._id}>
+                                <label htmlFor={hobbiesList._id} className='mb-3'>
                                 <input
                                   id={hobbiesList._id}
                                   type="checkbox"
@@ -296,12 +379,15 @@ function PartnerQualities() {
                                 <span className="name">{hobbiesList.name}</span>
                               </label>
                             )
+                          }
 
                           })
                         }
 
 
                         </div>
+
+                        <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ Add More Hobbies</Link>
 
                         {error.partner_hobbies && <p className="error">{error.partner_hobbies}</p>}
                         
@@ -314,18 +400,29 @@ function PartnerQualities() {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        <button className="back">
-                          <Link
-                            style={{ color: "white" }}
-                            to="/profile-photo"
-                          >
-                            Back
-                          </Link>
-                        </button>
-                        <button className="" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                          
-                        </button>
+                        
+                        <div className="d-flex align-items-center justify-content-between">
+                                                                                    <Link className="backbtn"
+                                                                                      style={{ color: "white" }}
+                                                                                      to="/profile-photo"
+                                                                                    >
+                                                                                      Back
+                                                                                    </Link>{" "}                          
+                                                                                    <button className="countiniue" type='submit' disabled={isLoading}>
+                                                                                      {isLoading ? "Wait..." : "Continue"}
+                                                                                    </button>
+                                                                              </div>
+                                                <br/>
+                                                                              <hr />
+                                                
+                                                                              <div className="d-flex align-items-center justify-content-center">
+                                                                                    <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                                                              </div>
+                        
+                        
+                        
+                        
+                        
                       </div>
                     </div>
                   </div>

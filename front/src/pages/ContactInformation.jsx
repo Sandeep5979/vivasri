@@ -3,6 +3,7 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import HeaderUser from '../components/homePage/HeaderUser';
 
 function ContactInformation() {
 
@@ -57,7 +58,8 @@ const handleChange = (e) => {
         contact_email:data.data[0].contact_email,
         instagram:data.data[0].instagram,
         facebook:data.data[0].facebook,
-        reference:data.data[0].reference
+        reference:data.data[0].reference,
+        reference_other:data.data[0].reference_other
 
       })
 
@@ -92,7 +94,7 @@ const validateMobile = (value) => {
 const validate = () => {
     const errs = {};
     
-    if (!formData.reference) {
+    if (!formData.reference && !formData.reference_other) {
       errs.reference = "Reference is required";
       referenceRef.current.focus();
     }
@@ -184,10 +186,20 @@ const handleSubmit = async (e) => {
       
     }, [isScroll]);
 
+const skipButton = (e) => {
+  e.preventDefault()
+  
+  if(location.pathname === '/contact-information-edit'){
+        navigate('/my-profile')
+        } else {
+          navigate('/aadhaar-verification')
+        }
+
+}
 
 return (
     <>
-     <HeaderPage />
+     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
         <>
   <section className="inrbnr">
@@ -196,7 +208,7 @@ return (
         <h1>Contact Information </h1>
         <ul className="inrbrnNav">
           <li>
-            <Link to="/">
+            <Link to={userDetailLogin?._id ? '/dashboard':'/'}>
               <img src="assets/img/icons/home.png" alt="home icon" />
             </Link>
             <img src="assets/img/icons/arrows.png" alt="arrows icons" />
@@ -217,10 +229,16 @@ return (
           <div className="row pb-50 pt-40">
             <div className="col-md-8 ">
               <div className="con-reg">
-                <h3>Contact details</h3>
-                <div className="col-12">
-                  <div className="line-bg" />
+                <div class="step-container">
+                  <div class="step-info">
+                    <h2>Contact Details</h2>
+                    <p><span>Prev Step- Basic Details,</span> Next Step- Aadhaar Verification</p>
+                  </div>
+                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 20%, pink 0)"}}>
+                       <span>2 of 11</span>
+                  </div>
                 </div>
+                
                 <div className=" form-bas-de ">
                   <form onSubmit={handleSubmit}>
                   <div className="row inputs-marg  nam-inp  ">
@@ -311,12 +329,34 @@ return (
                         ref={referenceRef}
                         >
                           <option value="">-- Select Reference --</option>
-                          <option value='Google'>Google</option>
-                          <option value='Linked In'>Linked In</option>
+                          <option value='Google Search'>Google Search</option>
                           <option value='Facebook'>Facebook</option>
-                          <option value='Other'>Other</option>
+                          <option value='Instagram'>Instagram</option>
+                          <option value='WhatsApp'>WhatsApp</option>
+                          <option value='Event'>Event</option>
+                          <option value='Linked In'>Linked In</option>
+                          
                         </select>
+                        
                         {error.reference && <p className="error">{error.reference}</p>}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row inputs-marg  nam-inp  ">
+                    <div className="col-12 d-flex align-items-center p-0">
+                      <div className="col-4">
+                        <label htmlFor="">
+                          Other
+                          
+                        </label>
+                      </div>
+                      <div className="col-8">
+                        <input type="text" name='reference_other'
+                        onChange={handleChange}
+                        value={formData.reference_other}
+                        />
+                        
+                        
                       </div>
                     </div>
                   </div>
@@ -325,22 +365,29 @@ return (
                       <div className="col-4" />
                       <div className="col-8">
                         <div className="maxwid">
-                          <button className="back">
-                            <Link
-                              style={{ color: "white" }}
-                              to="/basic-details"
-                            >
-                              Back
-                            </Link>{" "}
-                          </button>
-                          
-                          
-                          
-                          <button className="countiniue" type='submit' disabled={isLoading}>
-                          {isLoading ? "Wait..." : "Continue"}
-                
-                          </button>
+                              <div className="d-flex align-items-center justify-content-between">
+                                    <Link className="backbtn"
+                                      style={{ color: "white" }}
+                                      to="/basic-details"
+                                    >
+                                      Back
+                                    </Link>{" "}                          
+                                    <button className="countiniue" type='submit' disabled={isLoading}>
+                                      {isLoading ? "Wait..." : "Continue"}
+                                    </button>
+                              </div>
+<br/>
+                              <hr />
+
+                              <div className="d-flex align-items-center justify-content-center">
+                                    <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                              </div>
                         </div>
+
+                        
+
+
+
                       </div>
                     </div>
                   </div>
