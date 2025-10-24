@@ -15,7 +15,7 @@ export const hobbiesCreate = async (req, res) => {
       const icon = req.files.icon;
 
       const ext = path.extname(icon.name).toLowerCase();
-      const allowed = [".jpg", ".jpeg", ".png", ".webp"];
+      const allowed = [".jpg", ".jpeg", ".png"];
 
       if (!allowed.includes(ext)) {
         return res

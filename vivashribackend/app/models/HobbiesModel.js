@@ -8,7 +8,7 @@ const HobbiesSchema = new Schema(
       required: true,  
       trim: true     
     },
-     name: {
+     icon: {
       type: String,
       default: null,  
       trim: true     

@@ -309,7 +309,7 @@ export default function Hobbies(){
                                 ) : (
                                   <tr>
                                     <td colSpan={4} className="text-center">
-                                      No religions found.
+                                      No hobbies found.
                                     </td>
                                   </tr>
                                 )}

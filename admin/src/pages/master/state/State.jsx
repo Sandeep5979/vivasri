@@ -96,7 +96,7 @@ export default function State() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          religion_id: data.religion_id,
+          country_id: data.country_id,
           name: data.name.trim(),
           status: data.isActive ? 'Active' : 'Deactive',
         }),
