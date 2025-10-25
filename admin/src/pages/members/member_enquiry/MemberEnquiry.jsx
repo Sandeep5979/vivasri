@@ -18,11 +18,11 @@ export const MemberEnquiry = () => {
     const API_URL = process.env.REACT_APP_BASE_URL_API || "";
     const token = localStorage.getItem("adminToken");
     
-    const fetchEnquiries = async (search = null, pageNumber = 1) => {
+    const fetchEnquiries = async (search = null, page = 1) => {
         setLoading(true);
         
         try {
-             const url = `${API_URL.replace(/\/$/, "")}/api/admin/member-enquiry?page=${pageNumber}&limit=${PAGE_SIZE}${
+             const url = `${API_URL.replace(/\/$/, "")}/api/admin/member-enquiry?page=${page}&limit=${PAGE_SIZE}${
                         search ? `&name=${encodeURIComponent(search.name || "")}&mobile=${encodeURIComponent(search.mobile || "")}` : ""
                         }`;
 
@@ -49,7 +49,7 @@ export const MemberEnquiry = () => {
     };
 
     useEffect(() => {
-        fetchEnquiries();
+        fetchEnquiries(null ,page);
     }
     , [page]);
     
