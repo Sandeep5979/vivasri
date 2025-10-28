@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AadhaarOtp, AadhaarVerification, AboutUs, BasicDetails, BasicSearch, ContactInformation, ContactUs, Dashboard, EducationDetail, FamilyDetail, HomePage, ImageUpload, LocationDetail, MyProfile, NoMatch, PartnerBasicDetail, PartnerQualities, ProfileDetail, Registration, RegistrationSuccess, ReligionPage, SearchProfile, SendOtp, } from "../pages";
+import InboxLeftSideBar from "../components/inbox/InboxLeftSideBar";
+import Inbox from "../pages/Inbox";
 
 
 
@@ -44,8 +46,10 @@ export default function Router() {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/basic-search" element={<BasicSearch />} />
             <Route path="/profile-details/:profileId" element={<ProfileDetail />} />
-            
-            
+            <Route path="/inbox/received" element={<Inbox />} />
+            <Route path="/inbox/accepted" element={<Inbox />} />
+            <Route path="/inbox/decline" element={<Inbox />} />
+            <Route path="/inbox/sent" element={<Inbox />} />
           </Routes>
     </BrowserRouter>
     

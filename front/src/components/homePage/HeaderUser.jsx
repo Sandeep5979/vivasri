@@ -123,7 +123,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
       <div className="logoSection">
         <Link to="/dashboard">
           <img
-            src="assets/img/logo-light.png"
+            src={`${process.env.REACT_APP_BASE_URL}/assets/img/logo-light.png`}
             alt="Vivashri"
             title="Vivashri"
             oncontextmenu="return false;"
@@ -138,7 +138,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <a href="/#">
                   My Vivashri{" "}
                   <img
-                    src="assets/img/icons/dropdown-arrow.svg"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                     alt="down Icon"
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
@@ -176,7 +176,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <Link to="#">
                   Matches{" "}
                   <img
-                    src="assets/img/icons/dropdown-arrow.svg"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                     alt="down Icon"
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
@@ -201,7 +201,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <Link to="#">
                   Search{" "}
                   <img
-                    src="assets/img/icons/dropdown-arrow.svg"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                     alt="down Icon"
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
@@ -223,7 +223,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <Link to="#">
                   Inbox{" "}
                   <img
-                    src="assets/img/icons/dropdown-arrow.svg"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                     alt="down Icon"
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
@@ -233,16 +233,16 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   <ul className="headerSubMenu headerSubMenuss">
                     {/* <li><h5>Horoscope</h5></li> */}
                     <li>
-                      <Link to="#">Received</Link>
+                      <Link to="/inbox/received">Received</Link>
                     </li>
                     <li>
-                      <Link to="#">Accepted</Link>
+                      <Link to="/inbox/accepted">Accepted</Link>
                     </li>
                     <li>
-                      <Link to="#">Request</Link>
+                      <Link to="/inbox/decline">Decline</Link>
                     </li>
                     <li>
-                      <Link to="#">Sent</Link>
+                      <Link to="/inbox/sent">Sent</Link>
                     </li>
                   </ul>
                 </div>
@@ -252,10 +252,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
         </div>
       </div>
       <div className="headerButns dnone-but butt-pro-siz">
-        {/* <div class="headerRightMenuWrap">
-                 <a href="/#"><img src="assets/img/my-profile-img.png" alt=""> <img src="assets/img/icons/dropdown-arrow.svg" alt="down Icon" class="dropdownicon" style="margin-left: 5px;"></a> 
-                 
-              </div>   */}
+       
         <ul className="headerMenu">
           <li className="hasSub megaMenu" style={{padding:'0px'}}>
             <Link to="/dashboard" style={{ borderBottom: "none" }}>
@@ -265,7 +262,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 alt=""
               />
               <img
-                src="assets/img/icons/dropdown-arrow.svg"
+                src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                 alt="down Icon"
                 className="dropdownicon"
                 style={{ marginLeft: 5 }}
@@ -307,7 +304,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         <Link to="/my-profile" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
-                            src="assets/img/icons/user-alt-1_svgrepo.com.png"
+                            src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/user-alt-1_svgrepo.com.png`}
                             alt=""
                           />
                           View My Profile
@@ -317,7 +314,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         <Link to="#" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
-                            src="assets/img/icons/setting-1_svgrepo.com.png"
+                            src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/setting-1_svgrepo.com.png`}
                             alt=""
                           />
                           Setting
@@ -327,7 +324,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         <Link to="#" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
-                            src="assets/img/icons/key_svgrepo.com.png"
+                            src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/key_svgrepo.com.png`}
                             alt=""
                           />
                           Change Password
@@ -337,7 +334,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         <Link to="#" onClick={userLogoutButton} style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
-                            src="assets/img/icons/logout.png"
+                            src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/logout.png`}
                             alt=""
                           />
                           Logout
@@ -381,7 +378,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               <Link to="#" style={{ color: "#7C172B" }}>
                 My Vivashri{" "}
                 <img
-                  src="assets/img/icons/dropdown-arrow.svg"
+                  src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                   alt="down Icon"
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
@@ -419,7 +416,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               <Link to="#" style={{ color: "#7C172B" }}>
                 Matches{" "}
                 <img
-                  src="assets/img/icons/dropdown-arrow.svg"
+                  src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                   alt="down Icon"
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
@@ -444,7 +441,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               <Link to="#" style={{ color: "#7C172B" }}>
                 Search{" "}
                 <img
-                  src="assets/img/icons/dropdown-arrow.svg"
+                  src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                   alt="down Icon"
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
@@ -466,7 +463,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               <Link to="#" style={{ color: "#7C172B" }}>
                 Inbox{" "}
                 <img
-                  src="assets/img/icons/dropdown-arrow.svg"
+                  src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                   alt="down Icon"
                   className="dropdownicon"
                   style={{ marginLeft: 5 }}
@@ -514,7 +511,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                     <Link to="#" style={{ color: "#7C172B" }}>
                                       My Vivashri {" "}
                                       <img
-                                        src="assets/img/icons/dropdown-arrow.svg"
+                                        src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                                         alt="down Icon"
                                         className="dropdownicon"
                                         style={{ marginLeft: 5 }}
@@ -549,7 +546,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                     <Link to="#" style={{ color: "#7C172B" }}>
                                       Matches {" "}
                                       <img
-                                        src="assets/img/icons/dropdown-arrow.svg"
+                                        src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                                         alt="down Icon"
                                         className="dropdownicon"
                                         style={{ marginLeft: 5 }}
@@ -576,7 +573,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                     <Link to="#" style={{ color: "#7C172B" }}>
                                       Search {" "}
                                       <img
-                                        src="assets/img/icons/dropdown-arrow.svg"
+                                        src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                                         alt="down Icon"
                                         className="dropdownicon"
                                         style={{ marginLeft: 5 }}
@@ -601,7 +598,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                     <Link to="#" style={{ color: "#7C172B" }}>
                                       Inbox {" "}
                                       <img
-                                        src="assets/img/icons/dropdown-arrow.svg"
+                                        src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                                         alt="down Icon"
                                         className="dropdownicon"
                                         style={{ marginLeft: 5 }}
@@ -641,24 +638,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                               </div>
                             </div>
 
-      {/* <div class="dropdownmenu wow animate__fadeInDown">
-              <div class="headerNav">
-                  <ul class="headerMenu">
-                      <li class="hasSub megaMenu">
-                          <a href="get-reaport.html"><img src="assets/img/icons/astro-ser.svg" alt="chat" style="margin-right: 5px;"> Get Report</a>
-                      </li>
-                      <li class="hasSub megaMenu">
-                          <a href="about-us.html"><img src="assets/img/icons/astro-ser.svg" alt="chat" style="margin-right: 5px;"> About Us</a>
-                      </li>
-                      <li class="hasSub megaMenu">
-                          <a href="contact-us.html"><img src="assets/img/icons/astro-ser.svg" alt="chat" style="margin-right: 5px;"> Contact Us </a>
-                      </li>
-                      <li class="hasSub megaMenu">
-                          <a href="blogs.html"><img src="assets/img/icons/astro-ser.svg" alt="chat" style="margin-right: 5px;"> Blogs</a>
-                      </li>
-                  </ul>
-              </div>
-            </div> */}
+      
     </div>
   </div>
 </section>

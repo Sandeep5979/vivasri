@@ -654,8 +654,8 @@ const handleChange = (e) => {
                                 <li>
                                   <div className="defaultBtn">
                                     <a href="/#" class="loginbtn" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                    <img src="assets/img/free-gif.gif" alt="user icon" /> 
-                                    <span class="headerCareer">Login / Register </span>
+                                      <img src="assets/img/free-gif.gif" alt="user icon" /> 
+                                      <span class="headerCareer">Login / Register </span>
                                     </a>
                                   </div>
                                 </li>

@@ -5,6 +5,7 @@ import ReligionModel from "../../models/ReligionModel.js";
 import CasteModel from "../../models/CasteModel.js";
 import StateModel from "../../models/StateModel.js";
 import CityModel from "../../models/CityModel.js";
+import SentInterest from "../../models/SentInterest.js";
 
 function cmToFeetInches(cm) {
   const totalInches = cm / 2.54;
@@ -272,7 +273,7 @@ export const getAllSearchProfileList = async (req, res) => {
   try {
     //const data = await getAllOccupationList();
     //console.log(req.body)
-    const {looking, religion, caste, minAge, maxAge, searchMarital_status, searchGender, searchLanguage, searchManglik, searchCountry, searchState, searchCity, searchEducation, searchProfession, searchOccupation, searchAnnual_income, searchMinHeight, searchMaxHeight, searchProfile_id, searchOrganization, searchDiet, searchComplexion, searchManaged_by, searchHobbies} = req.body
+    const {looking, religion, caste, minAge, maxAge, searchMarital_status, searchGender, searchLanguage, searchManglik, searchCountry, searchState, searchCity, searchEducation, searchProfession, searchOccupation, searchAnnual_income, searchMinHeight, searchMaxHeight, searchProfile_id, searchOrganization, searchDiet, searchComplexion, searchManaged_by, searchHobbies, member_id} = req.body
     const arrLooking = looking?.split(',')
     //const arrReligion = religion?.split(',')
     const today = new Date();
@@ -692,6 +693,18 @@ const users = await UserModel.find(query).populate([
     
 ])
 
+   const memberId = member_id;
+  
+   let sentPartnerIds = [];
+    if (memberId) {
+      const sentInterests = await SentInterest.find({ member_id: memberId }).select("partner_id");
+      sentPartnerIds = sentInterests.map((i) => i.partner_id.toString());
+    }
+    users.forEach((user) => {
+      user._doc.interest_sent = memberId
+        ? sentPartnerIds.includes(user._id.toString())
+        : false;
+    });
 
     res.json({ status: true, data:users });
   } catch (err) {

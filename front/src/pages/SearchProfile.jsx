@@ -20,8 +20,7 @@ import { ageCalculate, decimalToFeetInches } from '../utils/utils'
 import ProfieSkeleton from '../components/skeleton/ProfieSkeleton'
 import HeaderUser from '../components/homePage/HeaderUser'
 import { useSelector } from 'react-redux'
-
-
+import Cookies from "js-cookie";
 
 function SearchProfile() {
   
@@ -63,7 +62,8 @@ function SearchProfile() {
 
 
   const searchList = async () => {
-      
+   
+
     //console.log('okkkkkkkkkkk')
     setIsLoader(true)
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/search-list`, {
@@ -93,8 +93,8 @@ function SearchProfile() {
           searchDiet:searchDiet,
           searchComplexion:searchComplexion,
           searchManaged_by:searchManaged_by,
-          searchHobbies:searchHobbies
-
+          searchHobbies:searchHobbies,
+          member_id : userDetailLogin?._id
          }),
          
         
@@ -197,7 +197,74 @@ function SearchProfile() {
   
   const windowReload = () => {
     window.location.reload();
-  }    
+  } 
+  
+  // send interest
+
+  const sendInterest = (id, index) => {
+      const authToken = Cookies.get("authTokenUserLogin");
+      
+      if (!authToken) {
+        const loginModal = new window.bootstrap.Modal(
+          document.getElementById("loginModal")
+        );
+        loginModal.show();
+        return; 
+      }
+
+      if (!id) {
+        console.log("No item selected.");
+        return;
+      }
+     
+      const base64Url = authToken.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const decodedData = JSON.parse(window.atob(base64));
+
+      const member_id = decodedData._id; 
+
+      interest(id, member_id, index);
+  }
+
+  // send interest API
+   const interest = async (partner_id, member_id, index) => {
+          try {
+            const response = await fetch(
+              `${process.env.REACT_APP_BASE_URL_API}/api/user/sent-interest`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  partner_id: partner_id,
+                  member_id : member_id 
+                }),
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // console.log("Interest sent successfully:", data);
+              setSearchData((prevData) => {
+                      const updated = [...prevData];
+                      updated[index] = {
+                        ...updated[index],
+                        interest_sent: true,
+                      };
+                      return updated;
+                    });
+
+            } else {
+              console.error("Failed to send interest:", data.message || data);
+            }
+          } catch (error) {
+            console.error("Error while sending interest:", error);
+          }
+        }
+
+   
   
   return (
     <>
@@ -490,13 +557,19 @@ function SearchProfile() {
 
                 <div className="profilelist-box d-md-flex align-items-md-start justify-content-md-start mb-2">
                   <div className="profilelist-img">
+                    <Link to={`/profile-details/${searchList._id}`}>
                     <img src={searchList.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${searchList.photo}` : 'assets/img/no-image.jpg'} alt="" width={223} />
+                    </Link>
                   </div>
                   <div className="profilelist-det">
                     <h2>
-                      {searchList.name}{" "}
+                      <Link to={`/profile-details/${searchList._id}`}>
+                       {searchList.name}{" "} 
+                       
+                      </Link>&nbsp;
+                     
                       <span>
-                        <img src="assets/img/icons/verified.png" alt="" />
+                         <img src="assets/img/icons/verified.png" alt="" />
                       </span>
                     </h2>
                     { /* <h6 className="pinkhd">Profile ID : 600155</h6> */ }
@@ -526,16 +599,31 @@ function SearchProfile() {
                       </div>
                       <div>
                         <div className="profilelist-pinkbox">
-                          <a href="/#" className="button expressint-btn mb-2">
-                            Express Interest
-                          </a>
-                          <a
+                            {searchList?.interest_sent ? (
+                                <span>
+                                 <p class="upgradepara text-center"><a href="">Upgrade</a> to Contact her directly</p>
+                                    <a href="#" class="button callnow-btn mb-2">
+                                    <i class="fa-solid fa-phone"></i> Call Now</a>
+                                    <a href="#" class="button callnow-btn"><i class="fa-regular fa-comment"></i> Chat Now</a>
+                                </span>
+                              ) : (
+                                <button
+                                  className="button expressint-btn mb-2"
+                                   onClick={() => sendInterest(searchList._id, index)}
+                                >
+                                  Express Interest
+                                </button>
+                              )}
+
+                          
+
+                          {/* <a
                             href="profile-details.html"
                             className="button viewpro-btn"
                           >
                             <img src="assets/img/icons/eye.png" alt="" /> View
                             Profile
-                          </a>
+                          </a> */}
                         </div>
                       </div>
                     </div>

@@ -13,7 +13,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
     <div className="site-width">
       <div className="text-center">
         <div className="footer-logo">
-          <img src="assets/img/logo-light.png" alt="" />
+          <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/logo-light.png`} alt="" />
         </div>
         <h5 className="text-center mt-3">
           India’s most trusted matrimonial platform{" "}
@@ -112,7 +112,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
               <li>
                 <a href="/#" target="_blank" title="Follow Us on Facebook">
                   <img
-                    src="assets/img/icons/facebook.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/facebook.png`}
                     alt="Facebook icon"
                   />
                 </a>
@@ -120,32 +120,32 @@ const { userDetailLogin } = useSelector((state) => state.auth);
               <li>
                 <a href="/#" target="_blank" title="Follow Us on Instagram">
                   <img
-                    src="assets/img/icons/instagram.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/instagram.png`}
                     alt="Instagram icon"
                   />
                 </a>
               </li>
               <li>
                 <a href="/#" target="_blank" title="Follow Us on X">
-                  <img src="assets/img/icons/x.png" alt="X icon" />
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/x.png`} alt="X icon" />
                 </a>
               </li>
               <li>
                 <a href="/#" target="_blank" title="Follow Us on linkedin">
                   <img
-                    src="assets/img/icons/linkedin.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/linkedin.png`}
                     alt="linkedin icon"
                   />
                 </a>
               </li>
               <li>
                 <a href="/#" target="_blank" title="Follow Us on threads">
-                  <img src="assets/img/icons/threads.png" alt="Threads icon" />
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/threads.png`} alt="Threads icon" />
                 </a>
               </li>
               <li>
                 <a href="/#" target="_blank" title="Follow Us on youtube">
-                  <img src="assets/img/icons/youtube.png" alt="Youtube icon" />
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/youtube.png`} alt="Youtube icon" />
                 </a>
               </li>
             </ul>
@@ -166,7 +166,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
               <li>
                 <a href="/#" target="_blank" title="Download App On Play Store">
                   <img
-                    src="assets/img/icons/playstore.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/playstore.png`}
                     alt="Facebook icon"
                   />
                 </a>
@@ -174,7 +174,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
               <li>
                 <a href="/#" target="_blank" title="Download App On Apple Store">
                   <img
-                    src="assets/img/icons/applestore.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/applestore.png`}
                     alt="Apple Store icon"
                   />
                 </a>
@@ -204,7 +204,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
                   title="AKS Websoft Consulting Pvt. Ltd."
                 >
                   <img
-                    src="assets/img/aks.png"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/aks.png`}
                     alt="AKS Websoft Consulting Pvt. Ltd."
                     title="AKS Websoft Consulting Pvt. Ltd."
                   />
