@@ -14,16 +14,8 @@ export const occupationCreate = async (req, res) => {
 
 export const occupationGetAll = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-
-    const result = await getAllOccupation(page, limit);
-
-    res.json({
-      status: true,
-      ...result,
-    });
-    
+    const data = await getAllOccupation();
+    res.json({ status: true, data });
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });
   }

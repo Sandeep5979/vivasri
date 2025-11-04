@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import UserModel from "../../models/UserModel.js";
 import HomeRegistrationModel from "../../models/HomeRegistrationModel.js";
+import SentInterest from "../../models/SentInterest.js";
+import fs from "fs";
 
 export const getAllUser = async () => {
   
@@ -8,9 +10,9 @@ export const getAllUser = async () => {
   return true;
 };
 
-export const getUserDetailAll = async (id) => {
+export const getUserDetailAll = async (id, member_id=null) => {
   
-  return await UserModel.find({_id:id}).populate([
+  const users = await UserModel.find({_id:id}).populate([
     { path: "highest_degree" },
     { path: "profile_for" },
     { path: "religion" },
@@ -46,17 +48,24 @@ export const getUserDetailAll = async (id) => {
     { path: "partner_sub_caste" },
     { path: "partner_complexion" },
     
-
-    
-
-
-    
-
-    
-    
     
   ]);
-  
+
+  const memberId = member_id;
+    //console.log(memberId)
+    let sentPartnerIds = [];
+      if (memberId) {
+        const sentInterests = await SentInterest.find({ member_id: memberId }).select("partner_id");
+        sentPartnerIds = sentInterests.map((i) => i.partner_id.toString());
+      }
+      users.forEach((user) => {
+        user._doc.interest_sent = memberId
+          ? sentPartnerIds.includes(user._id.toString())
+          : false;
+      });
+
+
+  return users
 };
 
 export const getUserDetail = async (id) => {
@@ -149,8 +158,9 @@ export const updatePartnerQualities = async (id,  data, selected) => {
  return await UserModel.findByIdAndUpdate({_id:id}, data, { new: true });
   
 };
-export const updatePartnerDetail = async (id,  data) => {
-  
+export const updatePartnerDetail = async (id,  data, searchMarital_status) => {
+// console.log(searchMarital_status)
+  data = {...data, partner_marital_status:searchMarital_status}
   
  return await UserModel.findByIdAndUpdate({_id:id}, data, { new: true });
   
@@ -164,5 +174,67 @@ export const createUserHome = async (data) => {
 export const getUserHomeDetail = async (id) => {
   
   return await HomeRegistrationModel.find({_id:id});
+  
+};
+export const updateSetProfilePhoto = async (id,  data) => {
+  
+  
+ return await UserModel.findByIdAndUpdate({_id:id}, data, { new: true });
+  
+};
+export const deletePhoto = async (id,  data) => {
+  
+  try {
+    const photo = await UserModel.findById(id);
+    if (!photo) return res.status(404).json({ message: "User not found" });
+
+
+    let profilePhoto;
+                    if(data === 1){
+                      profilePhoto = photo.photo
+                    } else if(data === 2){
+                      profilePhoto = photo.photo1
+                    } else if(data === 3){
+                      profilePhoto = photo.photo2
+                    } else if(data === 4){
+                      profilePhoto = photo.photo3
+                    } else if(data === 5){
+                      profilePhoto = photo.photo4
+                    }
+   if(profilePhoto){
+    const filePath = path.join("uploads", profilePhoto);
+    fs.unlink(filePath, (err) => {
+      if (err) console.error("Error deleting file:", err);
+    });
+
+                  if(data === 1){
+                      photo.photo = null;
+                      //return await photo.save();
+                    } else if(data === 2){
+                      photo.photo1 = null;
+                      //return await photo.save();
+                    } else if(data === 3){
+                      photo.photo2 = null;
+                      //return await photo.save();
+                    } else if(data === 4){
+                      photo.photo3 = null;
+                      //return await photo.save();
+                    } else if(data === 5){
+                      photo.photo4 = null;
+                      //return await photo.save();
+                    }
+                    return await photo.save();
+    
+  } else {
+    return null
+  }
+
+  } catch (error) {
+    //console.error(error);
+    //res.status(500).json({ message: "Server error" });
+    return null
+  }
+  
+ //return await UserModel.findByIdAndUpdate({_id:id}, data, { new: true });
   
 };

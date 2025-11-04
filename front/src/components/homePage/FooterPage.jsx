@@ -47,13 +47,17 @@ const { userDetailLogin } = useSelector((state) => state.auth);
                 <li>
                   <a href="/basic-search">Search</a>
                 </li>
-                {userDetailLogin?._id ? null : (
+                {
+                
+                /* userDetailLogin?._id ? null : (
                 <li>
                   <a href="/#">Login/Register</a>
                 </li>
-                )}
+                )
+                */
+                }
                 <li>
-                  <a href="/#">Packages</a>
+                  <Link to="/membership-plan">Membership Plan</Link>
                 </li>
                 <li>
                   <Link to="/contact-us">Contact Us</Link>
@@ -70,9 +74,7 @@ const { userDetailLogin } = useSelector((state) => state.auth);
           <div className="col-lg-12">
             <div className="ftr-link-bx">
               <ul>
-                <li>
-                  <a href="/#">Membership Plan</a>
-                </li>
+                
                 <li>
                   <a href="/#">Success Stories</a>
                 </li>

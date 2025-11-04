@@ -27,6 +27,7 @@ function BasicSearch() {
     const [religion, setReligion] = useState([])
     const [occupation, setOccupation] = useState([])
     const [height, setHeight] = useState([])
+    const [tabShow, setTabShow] = useState(true)
     
 
     const fetchMaritalStatusList = async () => {
@@ -298,6 +299,15 @@ const handleChange = (e) => {
 
     }
 
+    useEffect(() => {
+          //console.log(location.pathname)
+          if(location.pathname === '/advance-search'){
+            setTabShow(false)
+          } else {
+            setTabShow(true)
+          } 
+        }, [location])
+
 
   return (
     <>
@@ -323,7 +333,7 @@ const handleChange = (e) => {
           >
             <li className="nav-item" role="presentation">
               <button
-                className="nav-links active"
+                className={`nav-link ${tabShow ? 'active':''}`}
                 id="home-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#home"
@@ -338,7 +348,7 @@ const handleChange = (e) => {
             </li>
             <li className="nav-item" role="presentation">
               <button
-                className="nav-links"
+                className={`nav-link ${tabShow ? '':'active'}`}
                 id="profile-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#profile"
@@ -354,7 +364,7 @@ const handleChange = (e) => {
           </ul>
           <div className="tab-content" id="myTabContent">
             <div
-              className="tab-pane fade show active"
+              className={`tab-pane fade ${tabShow ? 'show active':''}`}
               id="home"
               role="tabpanel"
               aria-labelledby="home-tab"
@@ -789,7 +799,7 @@ const handleChange = (e) => {
               
             </div>
             <div
-              className="tab-pane fade"
+              className={`tab-pane fade ${tabShow ? '':'show active'}`}
               id="profile"
               role="tabpanel"
               aria-labelledby="profile-tab"

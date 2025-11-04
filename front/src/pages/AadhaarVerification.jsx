@@ -199,13 +199,31 @@ function AadhaarVerification() {
           <div className="col-lg-8 col-md-12 col-sm-12 ">
             <div className="con-reg">
                 <div class="step-container">
-                    <div class="step-info">
-                      <h2>Aadhaar Verification</h2>
-                      <p><span>Prev Step- Contact Details,</span> Next Step- OTP Verification</p>
-                    </div>
-                    <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 30%, pink 0)"}}>
-                        <span>3 of 11</span>
-                    </div>
+                    
+
+                    <div className="row">
+                                          
+                                          <div className="col-sm-4">
+                                               <div class="step-info">
+                                                  <h2>Aadhaar Verification</h2>
+                                                  <p><Link to="/contact-information"> <span>Prev Step- Contact Details</span></Link></p>
+                                                </div>
+                                          </div>
+                                          <div className="col-sm-8 text-right">
+                                              <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 75%, pink 0)"}}>
+                                                  <span>3 of 4</span>
+                                              </div>
+                                          </div>
+                                          { /* <div className="col-sm-4 text-sm-end">
+                                                <div class="step-info">
+                                                  <h2>&nbsp;</h2>
+                                                  <p><Link onClick={skipButton}>Next Step- OTP Verification</Link></p>
+                                                </div>
+                                          </div>
+                                          */ }
+                                          
+                    
+                                       </div>
                 </div>
                 
               
@@ -273,13 +291,11 @@ function AadhaarVerification() {
                                         <Link className="backbtn" style={{ color: "white" }} to="/contact-information">Back</Link>{" "}                          
                                       <button className="continue" type='submit' disabled={isLoading}>
                                       {isLoading ? "Wait..." : "Send OTP"}</button>
-                                                                  </div>
-                                    <br/>
-                                    <hr />
-                                    <div className="d-flex align-items-center justify-content-center">
-                                      <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
+                                    <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                          Skip
+                                                                        </Link>
                                     </div>
-                                    
+                                                                         
                                     
                                     
                                     

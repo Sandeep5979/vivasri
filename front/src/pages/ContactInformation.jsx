@@ -227,16 +227,37 @@ return (
       <div className="container-fluid con-flu-padd  ">
         <div className="container-fluid  bg-register ">
           <div className="row pb-50 pt-40">
-            <div className="col-md-8 ">
+            <div className="col-md-8">
               <div className="con-reg">
                 <div class="step-container">
-                  <div class="step-info">
-                    <h2>Contact Details</h2>
-                    <p><span>Prev Step- Basic Details,</span> Next Step- Aadhaar Verification</p>
-                  </div>
-                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 20%, pink 0)"}}>
-                       <span>2 of 11</span>
-                  </div>
+                   <div className="row">
+                      
+                      <div className="col-sm-4">
+                           <div class="step-info">
+                              <h2>Contact Details</h2>
+                              {location.pathname === '/contact-information-edit' ? null : 
+                              <p><Link to={`${location.pathname === '/contact-information-edit' ? '/my-profile' : '/basic-details'}`}> <span>Prev Step- Basic Details</span></Link></p>
+                              }
+                              </div>
+                      </div>
+                     {location.pathname === '/contact-information-edit' ? null:
+                      <>
+                      <div className="col-sm-4 text-center">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 50%, pink 0)"}}>
+                              <span>2 of 4</span>
+                          </div>
+                      </div>
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Aadhaar Verification</Link></p>
+                            </div>
+                      </div>
+                      </>
+}
+
+                   </div>                  
+
                 </div>
                 
                 <div className=" form-bas-de ">
@@ -365,23 +386,41 @@ return (
                       <div className="col-4" />
                       <div className="col-8">
                         <div className="maxwid">
-                              <div className="d-flex align-items-center justify-content-between">
+                              
+                                    
+                                    {location.pathname === '/contact-information-edit' ? 
+                                    <div className="d-flex align-items-center justify-content-end">
+                                    <button className="countiniue" type='submit' disabled={isLoading}>
+                                      {isLoading ? "Wait..." : "Save"}
+                                    </button>
+                                    </div>
+
+                                    :
+                                    <>
+                                    <div className="d-flex align-items-center justify-content-between">
                                     <Link className="backbtn"
                                       style={{ color: "white" }}
-                                      to="/basic-details"
+                                      to={`${location.pathname === '/contact-information-edit' ? '/my-profile' : '/basic-details'}`}
+                                     
                                     >
                                       Back
                                     </Link>{" "}                          
                                     <button className="countiniue" type='submit' disabled={isLoading}>
                                       {isLoading ? "Wait..." : "Continue"}
                                     </button>
-                              </div>
-<br/>
-                              <hr />
 
+                                    <Link className="backbtn skipbtn" style={{ color: "white" }} onClick={skipButton}>
+                                      Skip
+                                    </Link>
+                                    </div>
+                                    </>
+}
+                              
+
+                              {/* <br/><hr />
                               <div className="d-flex align-items-center justify-content-center">
                                     <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                              </div>
+                              </div> */}
                         </div>
 
                         

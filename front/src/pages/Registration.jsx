@@ -157,7 +157,7 @@ useEffect(() => {
             </div>
             <div className="col-md-5">
               <div className="con-reg">
-                <h3>Member Registration</h3>
+                <h3>New Registration</h3>
                 <div className="col-12">
                   <div className="line-bg" />
                 </div>

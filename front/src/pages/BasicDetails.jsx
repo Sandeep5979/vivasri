@@ -199,7 +199,7 @@ const fetchWeight = () => {
 }
 
 const years = [];
-  const currentYear = new Date().getFullYear() - 15;
+  const currentYear = new Date().getFullYear() - 18;
   for (let y = currentYear; y >= 1950; y--) {
     years.push(y);
   }
@@ -562,7 +562,7 @@ const handleSubmit = async (e) => {
 
      <>
   {/* hobbies Modal */}
-  <div
+  { /* <div
     className="modal fade"
     id="hobbiesModal"
     tabIndex={-1}
@@ -613,6 +613,7 @@ const handleSubmit = async (e) => {
       </div>
     </div>
   </div>
+  */ }
 </>
 
 
@@ -644,13 +645,22 @@ const handleSubmit = async (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-lg-8 ">
             <div className="con-reg">
-              <div class="step-container">
-                  <div class="step-info">
-                    <h2>Basic Details</h2>
-                    <p>Next Step- Contact Details</p>
-                  </div>
-                  <div class="progress-bar"  style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 10%, pink 0)"}}>
-                       <span>1 of 11</span>
+              <div class="step-container">                  
+
+                  <div className="row">
+                    <div className="col-sm-6">
+                          <div class="step-info">
+                            <h2 className='mt-sm-4'>Basic Details</h2>
+                            {/* <p><Link onClick={skipButton}><span>Next Step- Contact Details</span></Link></p> */}
+                          </div>
+                    </div>
+                    <div className="col-sm-6 text-end">
+                        {location.pathname === '/basic-details-edit' ? null:
+                        <div class="progress-bar"  style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 25%, pink 0)"}}>
+                            <span>1 of 4</span>
+                        </div>
+                        }                  
+                    </div>
                   </div>
               </div>
 
@@ -1203,40 +1213,50 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <div className="radio-wrapper-301s inputs-margs ">
-                          {hobbies && hobbies.map((hobbiesList, index)  => {
+                          <div className="hobies-overflow">
+                            <div className="radio-wrapper-301s inputs-margs mb-0">
+                              {hobbies && hobbies.map((hobbiesList, index)  => {
 
-                            if(index < 7){
-                              return (
+                                
+                                  return (
 
-                                <label htmlFor={hobbiesList._id} className='mb-3'>  
-                                <input
-                                  id={hobbiesList._id}
-                                  type="checkbox"
-                                  name={`hobbies`}
-                                  checked={selected.includes(hobbiesList._id)}
-                                  value={hobbiesList._id}
-                                  onChange={handleChange}
-                                  ref={hobbiesRef}
-                                />
-                                <span className="name">{hobbiesList.name}</span>
-                              </label>
-                            )
-                          }
+                                    <label htmlFor={hobbiesList._id} className='mb-3'>  
+                                    <input
+                                      id={hobbiesList._id}
+                                      type="checkbox"
+                                      name={`hobbies`}
+                                      checked={selected.includes(hobbiesList._id)}
+                                      value={hobbiesList._id}
+                                      onChange={handleChange}
+                                      ref={hobbiesRef}
+                                    />
+                                    <span className="name">{hobbiesList.name}</span>
+                                  </label>
+                                )
+                              
 
-                          })
-                        }
-                          
-                          
+                              })
+                            }
+                              
+                              
 
-                          
+                              
+                            </div>
+                          </div>
+
+                        {/* <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ More Hobbies</Link> */}
+
+                        { /* <div className='nam-inp pt-3'>
+       
+                            <input type="text" className="form-control" name="hobbies_other" 
+                        onChange={handleChange} value={formData.hobbies_other} placeholder="Add New Hobbies"/>
                         </div>
-
-                        <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ Add More Hobbies</Link>
-
-
-
+                        */ }
+                        
+                        
                         {error.hobbies && <p className="error">{error.hobbies}</p>}
+
+
                         
                         
 
@@ -1259,7 +1279,7 @@ const handleSubmit = async (e) => {
                         value={formData.diet}
                         ref={dietRef}
                         >
-                          <option>-- Select --</option>
+                          <option value="">-- Select --</option>
                           {diet && diet.map((dietList, index)  => 
                             dietList.name !== "Doesn't Matter" ? (
                        
@@ -1304,9 +1324,13 @@ const handleSubmit = async (e) => {
                     <div className="col-4" />
                     <div className="col-8">
                       <div className="maxwid">
-                        
+                        {location.pathname === '/basic-details-edit' ? 
+                        <button type='submit' disabled={isLoading}>
+                          {isLoading ? "Wait..." : "Save"}</button>
+                        :
                           <button type='submit' disabled={isLoading}>
                           {isLoading ? "Wait..." : "Continue"}</button>
+}
                         
                       </div>
                     </div>

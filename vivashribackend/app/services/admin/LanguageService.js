@@ -7,21 +7,8 @@ export const createLanguage = async (data) => {
   return await language.save();
 };
 
-export const getAllLanguage = async (page = 1, limit = 10) => {
-  const skip = (page - 1) * limit;
-  const data = await LanguageModel.find()
-                 .sort({ createdAt: -1 }) // descending order
-                 .skip(skip)
-                .limit(limit);
-
-                const total = await LanguageModel.countDocuments();
-  return {
-            data,
-            totalItems: total,
-            totalPages: Math.ceil(total / limit),
-            currentPage: page,
-          };
-
+export const getAllLanguage = async () => {
+  return await LanguageModel.find();
 };
 
 export const getLanguageById = async (id) => {

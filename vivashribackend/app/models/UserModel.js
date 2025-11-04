@@ -123,7 +123,8 @@ const UserSchema = new Schema(
     sub_caste: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SubCaste",
-      trim: true
+      trim: true,
+      set: v => (v === "" ? null : v)
     },
     gotra: {
       type: mongoose.Schema.Types.ObjectId,
@@ -376,11 +377,11 @@ const UserSchema = new Schema(
       ref: "Language",
       trim: true
     },
-    partner_marital_status: {
+    partner_marital_status: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "MaritalStatus",
       trim: true
-    },
+    }],
     partner_mother_tongue: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Language",
@@ -506,7 +507,23 @@ const UserSchema = new Schema(
       set: v => (v === "" ? null : v),
       
     },
+    profile_photo: {
+      type: Number,
+      trim: true
+    },
 
+    loc_landmark: {
+      type: String,
+      trim: true
+    },
+    loc_temp_landmark: {
+      type: String,
+      trim: true
+    },
+    partner_landmark: {
+      type: String,
+      trim: true
+    },
 
     status: {
       type: String,

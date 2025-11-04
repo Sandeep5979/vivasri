@@ -185,7 +185,7 @@ const skipButton = (e) => {
     <>
       { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
-      <div
+    { /*  <div
     className="modal fade"
     id="hobbiesModal"
     tabIndex={-1}
@@ -236,6 +236,7 @@ const skipButton = (e) => {
       </div>
     </div>
   </div>
+  */ }
 
         <>
   <section className="inrbnr">
@@ -273,13 +274,27 @@ const skipButton = (e) => {
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
               <div class="step-container">
-                <div class="step-info">
-                  <h2>Partner’s Qualities</h2>
-                  <p><span>Prev Step- Upload Photo,</span> Next Step- Partner’s Basic</p>
+
+                <div className="row">
+                  <div className="col-sm-4">
+                        <div class="step-info">
+                          <h2>Partner’s Qualities</h2>
+                          <p><Link to="/profile-photo"> <span>Prev Step- Upload Photo</span></Link></p>
+                        </div>
+                  </div>
+                  <div className="col-sm-4 text-center">
+                      <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
+                          <span>10 of 11</span>
+                      </div>                  
+                  </div>
+                  <div className="col-sm-4 text-sm-end">
+                        <div class="step-info">
+                          <h2>&nbsp;</h2>
+                          <p><Link onClick={skipButton}>Next Step- Partner’s Basic</Link></p>
+                        </div>
+                  </div>
                 </div>
-                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
-                    <span>10 of 11</span>
-                </div>
+
               </div>
 
               <div className="form-bas-de mt-4">
@@ -361,33 +376,35 @@ const skipButton = (e) => {
                         </label>
                       </div>
                       <div className="col-lg-8 col-md-12">
-                        <div className="radio-wrapper-301s inputs-margs">
-                          
-                          {hobbies && hobbies.map((hobbiesList, index)  => {
-                            if(index < 7){
-                            return (
+                        <div className='hobies-overflow'>
+                              <div className="radio-wrapper-301s inputs-margs">
+                                
+                                {hobbies && hobbies.map((hobbiesList, index)  => {
+                                  
+                                  return (
 
-                                <label htmlFor={hobbiesList._id} className='mb-3'>
-                                <input
-                                  id={hobbiesList._id}
-                                  type="checkbox"
-                                  name={`partner_hobbies`}
-                                  checked={selected.includes(hobbiesList._id)}
-                                  value={hobbiesList._id}
-                                  onChange={handleChange}
-                                />
-                                <span className="name">{hobbiesList.name}</span>
-                              </label>
-                            )
-                          }
+                                      <label htmlFor={hobbiesList._id} className='mb-3'>
+                                      <input
+                                        id={hobbiesList._id}
+                                        type="checkbox"
+                                        name={`partner_hobbies`}
+                                        checked={selected.includes(hobbiesList._id)}
+                                        value={hobbiesList._id}
+                                        onChange={handleChange}
+                                      />
+                                      <span className="name">{hobbiesList.name}</span>
+                                    </label>
+                                  )
+                                
 
-                          })
-                        }
+                                })
+                              }
 
 
+                              </div>
                         </div>
 
-                        <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ Add More Hobbies</Link>
+                        {/* <Link href="#" data-bs-toggle="modal" data-bs-target="#hobbiesModal" class="pinklink m-1">+ Add More Hobbies</Link> */}
 
                         {error.partner_hobbies && <p className="error">{error.partner_hobbies}</p>}
                         
@@ -402,23 +419,21 @@ const skipButton = (e) => {
                       <div className="maxwid">
                         
                         <div className="d-flex align-items-center justify-content-between">
-                                                                                    <Link className="backbtn"
-                                                                                      style={{ color: "white" }}
-                                                                                      to="/profile-photo"
-                                                                                    >
-                                                                                      Back
-                                                                                    </Link>{" "}                          
-                                                                                    <button className="countiniue" type='submit' disabled={isLoading}>
-                                                                                      {isLoading ? "Wait..." : "Continue"}
-                                                                                    </button>
-                                                                              </div>
-                                                <br/>
-                                                                              <hr />
-                                                
-                                                                              <div className="d-flex align-items-center justify-content-center">
-                                                                                    <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                                              </div>
-                        
+                              <Link className="backbtn"
+                                style={{ color: "white" }}
+                                to="/profile-photo"
+                              >
+                                Back
+                              </Link>{" "}                          
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Continue"}
+                              </button>
+
+                              <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                          Skip
+                                                                        </Link>
+                        </div>
+                      
                         
                         
                         

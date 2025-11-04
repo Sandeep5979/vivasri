@@ -8,22 +8,8 @@ export const createOccupation = async (data) => {
   return await occupation.save();
 };
 
-export const getAllOccupation = async (page = 1, limit = 10) => {
-  const skip = (page - 1) * limit;
-
-    const data = await OccupationModel.find()
-      .sort({ createdAt: -1 }) 
-      .skip(skip)
-      .limit(limit);
-
-    const total = await OccupationModel.countDocuments();
-
-    return {
-      data,
-      totalItems: total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    };
+export const getAllOccupation = async () => {
+  return await OccupationModel.find();
 };
 
 export const getOccupationById = async (id) => {

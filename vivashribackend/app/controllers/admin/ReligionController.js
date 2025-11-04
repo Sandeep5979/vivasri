@@ -14,13 +14,8 @@ export const religionCreate = async (req, res) => {
 
 export const religionGetAll = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;   // default page 1
-    const limit = parseInt(req.query.limit) || 10; // default 10 items per page
-
-    const result = await getAllReligion(page, limit);
-
-    res.json({ status: true, ...result });
-    
+    const data = await getAllReligion();
+    res.json({ status: true, data });
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });
   }

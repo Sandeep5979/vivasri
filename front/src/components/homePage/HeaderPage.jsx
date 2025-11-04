@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { registerUserLogin, userLogout } from '../../store/authActions';
 
 
 
 function HeaderPage() {
+
+  const location = useLocation()
 
   const { userDetailLogin } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -19,20 +21,19 @@ function HeaderPage() {
   const inputsRef = useRef([]);
   const [formDataLogin, setFormDataLogin] = useState({});
   const [loginShow, setLoginShow] = useState(false);
-
   const[isLoadingLogin, setIsLoadingLogin] = useState(false)
-
-
-const [isHeaderOpen, setHeaderOpen] = useState(false);
- 
+  const [isHeaderOpen, setHeaderOpen] = useState(false);
   const [openMegaMenu, setOpenMegaMenu] = useState(null);
-
+  const [casteMenu, setCasteMenu] = useState([])
+  
+  
   const toggleHeader = () => {
     
     
     if(isHeaderOpen){
       setOpenMegaMenu(false);
     }
+    setOpenMegaMenu(false);
     
     setHeaderOpen((prev) => !prev);
     
@@ -210,12 +211,51 @@ const handleChange = (e) => {
 
   }
 
+  const fetchMenuCasteList = async () => {
+      
+      const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/menu-caste-list`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          });
+  
+        const data = await res.json();
+       
+        if(data.status){
+          
+          setCasteMenu(data.data)
+  
+      } 
+  
+    }
+
+    useEffect(() => {
+      fetchMenuCasteList()
+
+    }, [])
+
+    const showButton = (e, name) => {
+      e.preventDefault()
+      if(location.search){
+        if(location.search.split('?').length){
+
+          document.location.href = `/search-profile/${name}`
+          return
+        }
+      }
+
+      navigate(`/search-profile/${name}`, { replace: true });
+      setOpenMegaMenu(false)
+      setHeaderOpen(false);
+      //toggleHeader()
+
+    }
+
   return (
     <>
       
       <div
   className="modal fade loginpop"
-  id="loginModal"
+  id="loginModal123"
   tabIndex={-1}
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
@@ -448,84 +488,28 @@ const handleChange = (e) => {
                           />
                         </a>
                         <div className="headerSubNav">
-                          <ul className="headerSubMenu">
-                            {/* <li><h5>Horoscope</h5></li> */}
+                          {casteMenu && casteMenu.map((casteList, index) => {
+                            
+                            return (
+                              
+                              <ul className="headerSubMenu">
+                            
                             <li>
-                              <Link to="#">Aggarwal</Link>
+                              <Link to="#" onClick={(e) => showButton(e, casteList.name)}> {casteList.name} </Link>
                             </li>
-                            <li>
-                              <Link to="#">Brahmin</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Khatri</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Arora</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Sunni</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Bania</Link>
-                            </li>
+                            
                           </ul>
-                          <ul className="headerSubMenu">
-                            <li>
-                              <Link to="#">Sikh jat</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Jat</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Vaishnav</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Kanyakubj</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Kanyakubj</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Yadava</Link>
-                            </li>
-                          </ul>
-                          <ul className="headerSubMenu">
-                            <li>
-                              <Link to="#">Teli</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Kshatriya</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Sindhi</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Shwetamber</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Scheduled Caste</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Digamber</Link>
-                            </li>
-                          </ul>
-                          <ul className="headerSubMenu">
-                            <li>
-                              <Link to="#">Gupta</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Kurmi Kshatriya</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Gaur Brahmin</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Kayastha</Link>
-                            </li>
-                            <li>
-                              <Link to="#">Maratha</Link>
-                            </li>
-                          </ul>
+                          
+                            )
+                            
+
+                          })
+                        }
+                          
+
+
+                          
+
                         </div>
                       </li>
                       <li>
@@ -653,7 +637,7 @@ const handleChange = (e) => {
                               <ul className="headerRightMenu">
                                 <li>
                                   <div className="defaultBtn">
-                                    <a href="/#" class="loginbtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                    <a href="/#" class="loginbtn" data-bs-toggle="modal" data-bs-target="#loginModal123">
                                       <img src="assets/img/free-gif.gif" alt="user icon" /> 
                                       <span class="headerCareer">Login / Register </span>
                                     </a>
@@ -703,82 +687,30 @@ const handleChange = (e) => {
         <div className={`headerSubNav ${openMegaMenu ? "openMegaMenu" : "openMegaMenuClosed"}`}>
           <ul className="headerSubMenu">
             {/* <li><h5>Horoscope</h5></li> */}
-            <li>
-              <Link to="#">Aggarwal</Link>
-            </li>
-            <li>
-              <Link to="#">Brahmin</Link>
-            </li>
-            <li>
-              <Link to="#">Khatri</Link>
-            </li>
-            <li>
-              <Link to="#">Arora</Link>
-            </li>
-            <li>
-              <Link to="#">Sunni</Link>
-            </li>
-            <li>
-              <Link to="#">Bania</Link>
-            </li>
+            
+            {casteMenu && casteMenu.map((casteList, index) => {
+                            
+                            return (
+                                                                                     
+                            <li>
+                              <Link to="#" onClick={(e) => showButton(e, casteList.name)}> {casteList.name} </Link>
+                            </li>
+                                                      
+                          
+                            )
+                            
+
+                          })
+                        }
+            
+            
+            
+            
           </ul>
-          <ul className="headerSubMenu">
-            <li>
-              <Link to="#">Sikh jat</Link>
-            </li>
-            <li>
-              <Link to="#">Jat</Link>
-            </li>
-            <li>
-              <Link to="#">Vaishnav</Link>
-            </li>
-            <li>
-              <Link to="#">Kanyakubj</Link>
-            </li>
-            <li>
-              <Link to="#">Kanyakubj</Link>
-            </li>
-            <li>
-              <Link to="#">Yadava</Link>
-            </li>
-          </ul>
-          <ul className="headerSubMenu">
-            <li>
-              <Link to="#">Teli</Link>
-            </li>
-            <li>
-              <Link to="#">Kshatriya</Link>
-            </li>
-            <li>
-              <Link to="#">Sindhi</Link>
-            </li>
-            <li>
-              <Link to="#">Shwetamber</Link>
-            </li>
-            <li>
-              <Link to="#">Scheduled Caste</Link>
-            </li>
-            <li>
-              <Link to="#">Digamber</Link>
-            </li>
-          </ul>
-          <ul className="headerSubMenu">
-            <li>
-              <Link to="#">Gupta</Link>
-            </li>
-            <li>
-              <Link to="#">Kurmi Kshatriya</Link>
-            </li>
-            <li>
-              <Link to="#">Gaur Brahmin</Link>
-            </li>
-            <li>
-              <Link to="#">Kayastha</Link>
-            </li>
-            <li>
-              <Link to="#">Maratha</Link>
-            </li>
-          </ul>
+
+
+          
+
         </div>
       </li>
       <li>
@@ -821,7 +753,7 @@ const handleChange = (e) => {
                 to="#"
                 className="loginbtn"
                 data-bs-toggle="modal"
-                data-bs-target="#loginModal"
+                data-bs-target="#loginModal123"
               >
                 <img src="assets/img/free-gif.gif" alt="user icon" />
                 <span className="headerCareer">Login / Register </span>

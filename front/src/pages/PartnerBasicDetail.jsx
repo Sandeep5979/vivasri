@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import HeaderUser from '../components/homePage/HeaderUser';
 import { registerUserLogin } from '../store/authActions';
+import MaritalStatus from '../components/profiePage/MaritalStatus';
+import MaritalStatusPartner from '../components/profiePage/MaritalStatusPartner';
 
 function PartnerBasicDetail() {
 
@@ -21,8 +23,8 @@ const [formData, setFormData] = useState({
   partner_weight_to:40,
   partner_height_from:4.1,
   partner_height_to:4.1,
-  partner_income_from:1,
-  partner_income_to:100000
+  //partner_income_from:100000,
+  //partner_income_to:100000
 
 });
 const [error, setError] = useState({})
@@ -46,6 +48,7 @@ const [diet, setDiet] = useState([])
 const [showChildren, setShowChildren] = useState(false)
 const [workingWith, setWorkingWith] = useState([])
 const [gotra, setGotra] = useState([])
+const [searchMarital_status, setSearchMarital_status] = useState([])
 
 const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,11 +74,7 @@ const handleChange = (e) => {
     }
     if(name === 'partner_marital_status'){
       
-      if (value === '68cbc2783946bd183864e28d') {
-      setShowChildren(false)
-      } else {
-        setShowChildren(true)
-      }
+      
     }
 
     if (error[name]) {
@@ -104,13 +103,20 @@ const handleChange = (e) => {
         fetchSubCaste(data.data[0].partner_caste)
         fetchGotra(data.data[0].partner_religion)
 
-        if (data.data[0].partner_marital_status === '68cbc2783946bd183864e28d') {
-          setShowChildren(false)
+        //console.log(data.data[0].partner_marital_status)
+        //.includes('unmarried')
+        if (data.data[0].partner_marital_status?.length === 1 && data.data[0].partner_marital_status?.includes('68cbc2783946bd183864e28d')) {
+          
+            setShowChildren(false)
+            
+          
           } else {
-            if(data.data[0].partner_marital_status){
-            setShowChildren(true)
-            }
+          setShowChildren(true)  
           }
+          //console.log(data.data[0].partner_marital_status)
+          setSearchMarital_status(data.data[0].partner_marital_status)
+
+          
 
       setFormData((prev) => ({
       ...prev,
@@ -148,6 +154,7 @@ const handleChange = (e) => {
       partner_smoking:data.data[0].partner_smoking,
       partner_managed_by:data.data[0].partner_managed_by,
       partner_complexion:data.data[0].partner_complexion,
+      partner_landmark:data.data[0].partner_landmark,
 
       
     }));
@@ -186,7 +193,7 @@ const fetchHeight = () => {
     if (inch === 0) {
       heights.push({
         label: `${ft} ft`,
-        value: `${ft}.0`,
+        value: `${ft}`,
       });
     } else {
       heights.push({
@@ -459,7 +466,7 @@ const validate = () => {
     if (!formData.partner_complexion) errs.partner_complexion = "Complexion is required";
     
     
-    if (!formData.partner_marital_status) errs.partner_marital_status = "Marital status is required";
+    //if (!formData.partner_marital_status) errs.partner_marital_status = "Marital status is required";
     // if (!formData.partner_have_children) errs.partner_have_children = "Have children is required";
     if (!formData.partner_mother_tongue) errs.partner_mother_tongue = "Mother tongue is required";
     if (!formData.partner_country) errs.partner_country = "Country is required";
@@ -475,6 +482,8 @@ const validate = () => {
     if (!formData.partner_drinking) errs.partner_drinking = "Drinking Habit is required";
     if (!formData.partner_smoking) errs.partner_smoking = "Smoking Habit is required";
     if (!formData.partner_managed_by) errs.partner_managed_by = "Profile Managed by is required";
+    if (!formData.partner_income_from) errs.partner_income_from = "Income from is required";
+    if (!formData.partner_income_to) errs.partner_income_to = "Income to is required";
 
     setError(errs);
     return Object.keys(errs).length === 0;
@@ -486,6 +495,8 @@ const handleSubmit = async (e) => {
         setIsScroll(true)
        return;
      }
+    // console.log(formData.partner_income_to)
+     
 
      setIsLoading(true)
 
@@ -498,10 +509,10 @@ const handleSubmit = async (e) => {
 
      }
     
-    const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/partner-basic-detail`, {
+     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/partner-basic-detail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData }),
+        body: JSON.stringify({ userDetail:userId, formData, searchMarital_status }),
         
       });
 
@@ -512,7 +523,7 @@ const handleSubmit = async (e) => {
         setShowMessage(true);
         setIsScroll(true)
         if(location.pathname === '/partner-basic-detail-edit'){
-            navigate('/my-profile')
+            navigate('/my-profile/partner')
         } else {
           
 
@@ -534,6 +545,7 @@ const handleSubmit = async (e) => {
         
         //setError(data.message)
       }
+        
 
       //console.log(data)
     
@@ -575,11 +587,30 @@ const handleSubmit = async (e) => {
   const skipButton = (e) => {
         e.preventDefault()
         if(location.pathname === '/partner-basic-detail-edit'){
-            navigate('/my-profile')
+            navigate('/my-profile/partner')
         } else {
         loginSubmitButton()
         }
   }
+
+  const maritalStatusButton = (value) => {
+    //console.log(value)
+    setSearchMarital_status(value)
+
+
+  }
+
+  useEffect(() => {
+  if (searchMarital_status.length > 0) {
+    if (searchMarital_status.length === 1 && searchMarital_status.includes('68cbc2783946bd183864e28d')) {
+      setShowChildren(false)
+      } else {
+        setShowChildren(true)
+        
+      }
+    setSearchMarital_status(searchMarital_status); // or whatever logic you need
+  }
+}, [searchMarital_status]);
   
   
   return (
@@ -625,12 +656,25 @@ const handleSubmit = async (e) => {
           <div className="col-md-10 col-lg 8 ">
             <div className="con-reg">
               <div class="step-container">
-                <div class="step-info">
-                  <h2>Partner’s Basic Details</h2>
-                  <p><span>Prev Step- Partner’s Qualities</span></p>
-                </div>
-                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 100%, pink 0)"}}>
-                    <span>11 of 11</span>
+                
+
+
+                <div className="row">
+                  <div className="col-sm-6">
+                        <div class="step-info">
+                          <h2>Partner’s Basic Details</h2>
+                          {location.pathname === '/partner-basic-detail-edit' ? null :
+                          <p><Link to={`${location.pathname === '/partner-basic-detail-edit' ? '/my-profile/partner' : '/partner-qualities'}`}> <span>Prev Step- Partner’s Qualities</span></Link></p>
+                          }
+                          </div>
+                  </div>
+                  <div className="col-sm-6 text-end">
+                      {location.pathname === '/partner-basic-detail-edit' ? null :
+                      <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 100%, pink 0)"}}>
+                          <span>11 of 11</span>
+                      </div>
+}                  
+                  </div>
                 </div>
               </div>
 
@@ -671,7 +715,7 @@ const handleSubmit = async (e) => {
                             
                             const age = i + parseInt(formData.partner_age_from || 25, 10);
                             return (
-                            <option key={age} value={i + 25}>
+                            <option key={age} value={age}>
                               {age} Years
                             </option>
                             )}
@@ -822,7 +866,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_language}
                         >
-                          <option>-- Select --</option>
+                          <option value="">-- Select --</option>
                           {language && language.map((languageList, index)  => {
 
                             return (
@@ -848,23 +892,12 @@ const handleSubmit = async (e) => {
                         </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
-                        <select className="form-select"
-                        name='partner_marital_status'
-                        onChange={handleChange}
-                        value={formData.partner_marital_status}
-                        >
-                          <option>-- Select --</option>
-                          {maritalStatus && maritalStatus.map((maritalList, index)  => {
+                        <div className='mulit-bordernone'>
 
-                            return (
+<MaritalStatusPartner maritalStatusButton={maritalStatusButton} searchMarital_status={searchMarital_status} />
 
-                                <option value={maritalList._id}>{maritalList.name}</option>
-                            )
-
-                          })
-                        }
-                        </select>
-                         {error.partner_marital_status && <p className="error">{error.partner_marital_status}</p>}
+                        </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -911,7 +944,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_mother_tongue}
                         >
-                          <option>-- Select --</option>
+                          <option value="">-- Select --</option>
                           {language && language.map((languageList, index)  => {
 
                             return (
@@ -1117,6 +1150,7 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
                 </div>
+                
                 <h3 className="pt-3">&nbsp;Partner’s Education &amp; Career</h3>
                 <div className="col-12">
                   <div className="line-bg" />
@@ -1262,6 +1296,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_income_from}
                         >
+                          <option value="">Select</option>
                           {incomeOptions.map((inc) => (
                           <option key={inc.value} value={inc.value}>
                             {inc.label}
@@ -1277,6 +1312,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_income_to}
                         >
+                          <option value="">Select</option>
                           {incomeOptions
                           .filter((inc) => {
                             
@@ -1589,23 +1625,35 @@ const handleSubmit = async (e) => {
                     <div className="col-8">
                       <div className="maxwid">
                         
-                        <div className="d-flex align-items-center justify-content-between">
-                                                                                              <Link className="backbtn"
-                                                                                                              style={{ color: "white" }}
-                                                                                                              to="/partner-qualities"
-                                                                                                            >
-                                                                                                              Back
-                                                                                                            </Link>{" "}                          
-                                                                                                            <button className="countiniue" type='submit' disabled={isLoading}>
-                                                                                                              {isLoading ? "Wait..." : "Continue"}
-                                                                                                            </button>
-                                                                                                      </div>
-                                                                        <br/>
-                                                                                                      <hr />
-                                                                        
-                                                                                                      <div className="d-flex align-items-center justify-content-center">
-                                                                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                                                                      </div>
+                        {location.pathname === '/partner-basic-detail-edit' ? 
+                        <div className="d-flex align-items-center justify-content-end">
+                                                  
+                                <button className="countiniue" type='submit' disabled={isLoading}>
+                                  {isLoading ? "Wait..." : "Save"}
+                                </button>
+
+                                
+
+
+                                </div>
+                        :
+                        <div className="d-flex align-items-center justify-content-between ps-sm-2">
+                        <Link className="backbtn"
+                            style={{ color: "white" }} to={`${location.pathname === '/partner-basic-detail-edit' ? '/my-profile/partner' : '/partner-qualities'}`}>
+                                    Back
+                        </Link>{" "}                          
+                                <button className="countiniue" type='submit' disabled={isLoading}>
+                                  {isLoading ? "Wait..." : "Continue"}
+                                </button>
+
+                                <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                                                          Skip
+                                                                                                        </Link>
+
+
+
+                                </div>
+}
                         
                         
                         

@@ -134,14 +134,33 @@ const skipButton = (e) => {
         <div className="row pb-50 pt-40">
           <div className="col-md-8 ">
             <div className="con-reg">
-              <div class="step-container">
-                    <div class="step-info">
-                      <h2>OTP Verification</h2>
-                      <p><span>Prev Step- Aadhaar Verification,</span> Next Step- Religion Details</p>
+              <div class="step-container">                   
+
+                    <div className="row">
+                      <div className="col-sm-4">
+                            <div class="step-info">
+                              <h2>OTP Verification</h2>
+                              <p><Link to="/aadhaar-verification"> <span>Prev Step- Aadhaar Verification</span></Link></p>
+                            </div>
+                      </div>
+                      <div className="col-sm-8 text-right">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 100%, pink 0)"}}>
+                              <span>4 of 4</span>
+                          </div>                  
+                      </div>
+                      { /* 
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Religion Details</Link></p>
+                            </div>
+                      </div>
+                      */ }
                     </div>
-                    <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 35%, pink 0)"}}>
-                        <span>4 of 11</span>
-                    </div>
+
+                    
+
+
                 </div>
 
               <div className=" form-bas-de ">

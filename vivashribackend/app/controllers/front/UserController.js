@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import UserModel from "../../models/UserModel.js";
-import { createUser, createUserHome, getUserDetail, getUserDetailAll, getUserHomeDetail, updateAadhaarVerification, updateBasicProfile, updateContactInformation, updateEducationDetail, updateFamilyDetail, updateLocationDetail, updatePartnerDetail, updatePartnerQualities, updateProfilePhoto, updateReligion } from "../../services/front/UserService.js";
+import { createUser, createUserHome, deletePhoto, getUserDetail, getUserDetailAll, getUserHomeDetail, updateAadhaarVerification, updateBasicProfile, updateContactInformation, updateEducationDetail, updateFamilyDetail, updateLocationDetail, updatePartnerDetail, updatePartnerQualities, updateProfilePhoto, updateReligion, updateSetProfilePhoto } from "../../services/front/UserService.js";
 import jwt from "jsonwebtoken";
 import { validationResult, body } from "express-validator";
 import mongoose from "mongoose";
@@ -9,6 +9,7 @@ import path from "path";
 import sharp from "sharp";
 import { writeFile } from "fs/promises";
 import ProfileCountModel from "../../models/ProfileCountModel.js";
+import fs from "fs";
 
 
 export const getUserDetailList = async (req, res) => {
@@ -28,13 +29,15 @@ export const getUserDetailList = async (req, res) => {
 
 }
 export const getUserDetailListAll = async (req, res) => {
-
+  
+  const { member_id } = req.query;
+  
   try {
       if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).json({ success: false, message: "User id not found" });
       }
   
-      const data = await getUserDetailAll(req.params.id);
+      const data = await getUserDetailAll(req.params.id, member_id);
       if (!data) return res.status(404).json({ status: false, message: "ID not found" });
       res.json({ status: true, data });
     } catch (err) {
@@ -416,8 +419,9 @@ export const userProfilePhoto = async (req, res) => {
       let finalBuffer = buffer;
       if (metadata.width > 576) {
         // finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+      finalBuffer = await sharp(buffer).resize({ width: 576, height:620 }).toBuffer();
       }
-      finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+      //finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
 
@@ -603,13 +607,14 @@ export const userPartnerQualities = async (req, res) => {
 
 export const userPartnerBasicDetail = async (req, res) => {
 
-
-  const { userDetail, formData } = req.body;
+//console.log(req.body)
+  const { userDetail, formData, searchMarital_status } = req.body;
+ // console.log('controllll', searchMarital_status)
 
   if (!userDetail._id) return res.status(404).json({ status:false, message: "User not found" });
     try{
     
-      const user = await updatePartnerDetail(userDetail._id, formData)
+      const user = await updatePartnerDetail(userDetail._id, formData, searchMarital_status)
 
     return res.json({ status:true, message: "Partner detail updated successfully", user: user });
     } catch(err) {
@@ -649,5 +654,89 @@ export const getUserHomeDetailList = async (req, res) => {
       res.status(500).json({ status: false, error: err.message });
     }
 
+
+}
+export const setProfilePhoto = async (req, res) => {
+
+  const { userDetail, formData } = req.body;
+
+  if (!userDetail._id) return res.status(404).json({ status:false, message: "User not found" });
+    try{
+    
+      const user = await updateSetProfilePhoto(userDetail._id, formData)
+
+    return res.json({ status:true, message: "Profile photo updated successfully", user: user });
+    } catch(err) {
+      return res.json({ status:false, message: "Profile photo not updated. Please try again" });
+
+    }
+
+}
+export const deleteProfilePhoto = async (req, res) => {
+
+  const { userDetail, formData } = req.body;
+
+  if (!userDetail._id) return res.status(404).json({ status:false, message: "User not found" });
+    try{
+
+      let data = formData;
+    
+      //const user = await deletePhoto(userDetail._id, formData)
+      const photo = await UserModel.findById(userDetail._id);
+          
+      
+      
+         let profilePhoto;
+                          if(data === 1){
+                            profilePhoto = photo.photo
+                          } else if(data === 2){
+                            profilePhoto = photo.photo1
+                          } else if(data === 3){
+                            profilePhoto = photo.photo2
+                          } else if(data === 4){
+                            profilePhoto = photo.photo3
+                          } else if(data === 5){
+                            profilePhoto = photo.photo4
+                          }
+         
+         
+         
+                          if(profilePhoto){
+          const filePath = profilePhoto;
+        
+          
+          /* fs.unlink(filePath, (err) => {
+            if (err) console.error("Error deleting file:", err);
+          });
+          */
+          
+      
+                        if(data === 1){
+                            photo.photo = null;
+                            //return await photo.save();
+                          } else if(data === 2){
+                            photo.photo1 = null;
+                            //return await photo.save();
+                          } else if(data === 3){
+                            photo.photo2 = null;
+                            //return await photo.save();
+                          } else if(data === 4){
+                            photo.photo3 = null;
+                            //return await photo.save();
+                          } else if(data === 5){
+                            photo.photo4 = null;
+                            //return await photo.save();
+                          }
+                           await photo.save();
+          
+        }
+    
+    
+    
+      return res.json({ status:true, message: "Photo deleted successfully" });
+    } catch(err) {
+      return res.json({ status:false, message: "Photo not deleted. Please try again" });
+
+    }
 
 }

@@ -8,6 +8,11 @@ const HobbiesSchema = new Schema(
       required: true,  
       trim: true     
     },
+    icon: {
+      type: String,
+      default: "",
+      trim: true     
+    },
     status: {
       type: String,
       enum: ["Active", "Deactive"],

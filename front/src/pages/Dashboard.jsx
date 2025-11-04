@@ -41,12 +41,27 @@ const [isLoading, setIsLoading] = useState(false)
           
         
           // console.log(data.data[0].name) 
+
+                    let profilePhoto;
+                    if(data.data[0].profile_photo === 1){
+                      profilePhoto = data.data[0].photo
+                    } else if(data.data[0].profile_photo === 2){
+                      profilePhoto = data.data[0].photo1
+                    } else if(data.data[0].profile_photo === 3){
+                      profilePhoto = data.data[0].photo2
+                    } else if(data.data[0].profile_photo === 4){
+                      profilePhoto = data.data[0].photo3
+                    } else if(data.data[0].profile_photo === 5){
+                      profilePhoto = data.data[0].photo4
+                    } else {
+                      profilePhoto = data.data[0].photo
+                    }
           
           
         setFormData({
             
           name:data.data[0].name,
-          photo:data.data[0].photo,
+          photo:profilePhoto,
             
   
         })

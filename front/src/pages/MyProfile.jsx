@@ -3,15 +3,19 @@ import HeaderUser from '../components/homePage/HeaderUser'
 import FooterPage from '../components/homePage/FooterPage'
 import { useSelector } from 'react-redux';
 import { ageCalculate, decimalToFeetInches } from '../utils/utils';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function MyProfile() {
+  const location = useLocation();
   
 const { userDetailLogin } = useSelector((state) => state.auth);
 
 const [formData, setFormData] = useState({})
 const [formDataPartner, setFormDataPartner] = useState({})
 const [isScroll, setIsScroll] = useState(false)
+const [tabShow, setTabShow] = useState(true)
+const [maritalStatus, setMaritalStatus] = useState([])
+
 
   const fetchUserDetail = async (userId) => {
       
@@ -37,9 +41,25 @@ const [isScroll, setIsScroll] = useState(false)
   
           
         //console.log(data.data[0].hobbies)
+
+        let profilePhoto;
+                    if(data.data[0].profile_photo === 1){
+                      profilePhoto = data.data[0].photo
+                    } else if(data.data[0].profile_photo === 2){
+                      profilePhoto = data.data[0].photo1
+                    } else if(data.data[0].profile_photo === 3){
+                      profilePhoto = data.data[0].photo2
+                    } else if(data.data[0].profile_photo === 4){
+                      profilePhoto = data.data[0].photo3
+                    } else if(data.data[0].profile_photo === 5){
+                      profilePhoto = data.data[0].photo4
+                    } else {
+                      profilePhoto = data.data[0].photo
+                    }
             
           
-          
+          setMaritalStatus(data.data[0].partner_marital_status)
+
         setFormData({
   
           profile_for:data.data[0].profile_for?.name,
@@ -63,9 +83,14 @@ const [isScroll, setIsScroll] = useState(false)
           birth_am:ampm,
           dobYear:ageCalculate(data.data[0].dob),
           religion:data.data[0].religion?.name,
+          caste:data.data[0].caste?.name,
+          sub_caste:data.data[0].sub_caste?.name,
+          gotra:data.data[0].gotra?.name,
+          gotra_other:data.data[0].gotra_other,
+          dosh:data.data[0].dosh,
           occupation:data.data[0].occupation?.name,
           education:data.data[0].highest_degree?.name,
-          photo:data.data[0].photo,
+          photo:profilePhoto,
           loc_state:data.data[0].loc_state?.name,
           loc_city:data.data[0].loc_city?.name,
           health_information:data.data[0].health_information,
@@ -160,6 +185,16 @@ const [isScroll, setIsScroll] = useState(false)
         setIsScroll(false)
       
     }, [isScroll]);
+
+
+    useEffect(() => {
+      //console.log(location.pathname)
+      if(location.pathname === '/my-profile/partner'){
+        setTabShow(false)
+      } else {
+        setTabShow(true)
+      } 
+    }, [location])
   
   
   
@@ -297,7 +332,7 @@ const [isScroll, setIsScroll] = useState(false)
               <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
                   <button
-                    className="nav-link active"
+                    className={`nav-link ${tabShow ? 'active':''}`}
                     id="home-tab"
                     data-bs-toggle="tab"
                     data-bs-target="#home"
@@ -311,7 +346,7 @@ const [isScroll, setIsScroll] = useState(false)
                 </li>
                 <li className="nav-item" role="presentation">
                   <button
-                    className="nav-link"
+                    className={`nav-link ${tabShow ? '':'active'}`}
                     id="profile-tab"
                     data-bs-toggle="tab"
                     data-bs-target="#profile"
@@ -329,7 +364,7 @@ const [isScroll, setIsScroll] = useState(false)
             <div className="col-12">
               <div className="tab-content " id="myTabContent">
                 <div
-                  className="tab-pane fade show active"
+                  className={`tab-pane fade ${tabShow ? 'show active':''}`}
                   id="home"
                   role="tabpanel"
                   aria-labelledby="home-tab"
@@ -546,11 +581,12 @@ const [isScroll, setIsScroll] = useState(false)
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-12 bg-col-pro bor mt-3">
+
+                 <div className="col-md-12 bg-col-pro bor mt-3">
                     <div className="head-but">
-                      <h3>Educational Details</h3>
+                      <h3>Contact Details</h3>
                       <div className="buttons-eddit">
-                        <Link to="/education-detail-edit">
+                        <Link to="/contact-information-edit">
                           <button>
                             <img
                               src="assets/img/edit-3_svgrepo.com.png"
@@ -567,10 +603,42 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span> Highest Qualification</span>
+                                <span>Contact Number</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.education}</strong>
+                                <strong>: {formData.contact_no ? '+91'+formData.contact_no : null}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Contact Email Address</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.contact_email}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Instagram ID</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.instagram}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Facebook ID</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.facebook}</strong>
                               </div>
                             </div>
                           </div>
@@ -578,11 +646,13 @@ const [isScroll, setIsScroll] = useState(false)
                       </div>
                     </div>
                   </div>
+
+
                   <div className="col-md-12 bg-col-pro bor mt-3">
                     <div className="head-but">
-                      <h3>Professional Details</h3>
+                      <h3>Religion Details</h3>
                       <div className="buttons-eddit">
-                        <Link to="/education-detail-edit">
+                        <Link to="/religion-edit">
                           <button>
                             <img
                               src="assets/img/edit-3_svgrepo.com.png"
@@ -599,94 +669,30 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Annual Income</span>
+                                <span>Religion</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.annual_income}</strong>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-6">
-                                <span>Occupation</span>
-                              </div>
-                              <div className="col-6">
-                                <strong>: {formData.occupation}</strong>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-6">
-                                <span>Working With</span>
-                              </div>
-                              <div className="col-6">
-                                <strong>: {formData.working_with}</strong>
+                                <strong>: {formData.religion}</strong>
                               </div>
                             </div>
                           </div>
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Organization Name</span>
+                                <span>Caste</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.organization_name}</strong>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-12 bg-col-pro bor mt-3">
-                    <div className="head-but">
-                      <h3>Family Details</h3>
-                      <div className="buttons-eddit">
-                        <Link to="/family-detail-edit">
-                          <button>
-                            <img
-                              src="assets/img/edit-3_svgrepo.com.png"
-                              alt=""
-                            />
-                            Edit
-                          </button>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="col-12 pt-4">
-                      <div className="row span-col">
-                        <div className="col-md-6">
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-6">
-                                <span>Family Type</span>
-                              </div>
-                              <div className="col-6">
-                                <strong>: {formData.family_type}</strong>
+                                <strong>: {formData.caste}</strong>
                               </div>
                             </div>
                           </div>
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Family Value</span>
+                                <span>Sub Caste</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.family_value}</strong>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-6">
-                                <span>Sister</span>
-                              </div>
-                              <div className="col-6">
-                                <strong>: {formData.no_of_sister}</strong>
+                                <strong>: {formData.sub_caste}</strong>
                               </div>
                             </div>
                           </div>
@@ -695,30 +701,21 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Brother</span>
+                                <span>Gotra</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.no_of_brother}</strong>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-12">
-                            <div className="row">
-                              <div className="col-6">
-                                <span>Brother in Law</span>
-                              </div>
-                              <div className="col-6">
-                                <strong>: {formData.no_of_brother_in_law}</strong>
+                                <strong>: {formData.gotra?formData.gotra:formData.gotra_other}</strong>
                               </div>
                             </div>
                           </div>
+                          
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Sister in Law</span>
+                                <span>Dosh</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.no_of_sister_in_law}</strong>
+                                <strong>: {formData.dosh}</strong>
                               </div>
                             </div>
                           </div>
@@ -882,9 +879,9 @@ const [isScroll, setIsScroll] = useState(false)
                   </div>
                   <div className="col-md-12 bg-col-pro bor mt-3">
                     <div className="head-but">
-                      <h3>Contact Details</h3>
+                      <h3>Family Details</h3>
                       <div className="buttons-eddit">
-                        <Link to="/contact-information-edit">
+                        <Link to="/family-detail-edit">
                           <button>
                             <img
                               src="assets/img/edit-3_svgrepo.com.png"
@@ -901,20 +898,30 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Contact Number</span>
+                                <span>Family Type</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.contact_no ? '+91'+formData.contact_no : null}</strong>
+                                <strong>: {formData.family_type}</strong>
                               </div>
                             </div>
                           </div>
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Contact Email Address</span>
+                                <span>Family Value</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.contact_email}</strong>
+                                <strong>: {formData.family_value}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Sister</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.no_of_sister}</strong>
                               </div>
                             </div>
                           </div>
@@ -923,20 +930,30 @@ const [isScroll, setIsScroll] = useState(false)
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Instagram ID</span>
+                                <span>Brother</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.instagram}</strong>
+                                <strong>: {formData.no_of_brother}</strong>
                               </div>
                             </div>
                           </div>
                           <div className="col-12">
                             <div className="row">
                               <div className="col-6">
-                                <span>Facebook ID</span>
+                                <span>Brother in Law</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formData.facebook}</strong>
+                                <strong>: {formData.no_of_brother_in_law}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Sister in Law</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.no_of_sister_in_law}</strong>
                               </div>
                             </div>
                           </div>
@@ -944,6 +961,109 @@ const [isScroll, setIsScroll] = useState(false)
                       </div>
                     </div>
                   </div>
+
+
+
+
+                  <div className="col-md-12 bg-col-pro bor mt-3">
+                    <div className="head-but">
+                      <h3>Educational Details</h3>
+                      <div className="buttons-eddit">
+                        <Link to="/education-detail-edit">
+                          <button>
+                            <img
+                              src="assets/img/edit-3_svgrepo.com.png"
+                              alt=""
+                            />
+                            Edit
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="col-12 pt-4">
+                      <div className="row span-col">
+                        <div className="col-md-6">
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span> Highest Qualification</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.education}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12 bg-col-pro bor mt-3">
+                    <div className="head-but">
+                      <h3>Professional Details</h3>
+                      <div className="buttons-eddit">
+                        <Link to="/education-detail-edit">
+                          <button>
+                            <img
+                              src="assets/img/edit-3_svgrepo.com.png"
+                              alt=""
+                            />
+                            Edit
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="col-12 pt-4">
+                      <div className="row span-col">
+                        <div className="col-md-6">
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Annual Income</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.annual_income}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Occupation</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.occupation}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Working With</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.working_with}</strong>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-12">
+                            <div className="row">
+                              <div className="col-6">
+                                <span>Organization Name</span>
+                              </div>
+                              <div className="col-6">
+                                <strong>: {formData.organization_name}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+                  
                   <div className="col-md-12 bg-col-pro bor mt-3">
                     <div className="head-but">
                       <h3>Hobbies &amp; Interests</h3>
@@ -983,7 +1103,7 @@ const [isScroll, setIsScroll] = useState(false)
                   </div>
                 </div>
                 <div
-                  className="tab-pane fade"
+                  className={`tab-pane fade ${tabShow ? '':'show active'}`}
                   id="profile"
                   role="tabpanel"
                   aria-labelledby="profile-tab"
@@ -1032,7 +1152,11 @@ const [isScroll, setIsScroll] = useState(false)
                                 <span>Marital Status</span>
                               </div>
                               <div className="col-6">
-                                <strong>: {formDataPartner.partner_marital_status}</strong>
+                                <strong>: 
+                                  {
+                                    maritalStatus && maritalStatus?.map(item => item.name).join(", ")
+                                  }
+                                  </strong>
                               </div>
                             </div>
                           </div>

@@ -1,5 +1,5 @@
 import express from "express";
-import { aadhaarVerification, basicProfile, contactInformation, getUserDetailList, getUserDetailListAll, getUserHomeDetailList, userEducationDetail, userFamilyDetail, userHomeRegistration, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, validateBasicProfile } from "../controllers/front/UserController.js";
+import { aadhaarVerification, basicProfile, contactInformation, deleteProfilePhoto, getUserDetailList, getUserDetailListAll, getUserHomeDetailList, setProfilePhoto, userEducationDetail, userFamilyDetail, userHomeRegistration, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, validateBasicProfile } from "../controllers/front/UserController.js";
 import { authJwt } from "../middlewares/index.js";
 import { sendInterest, getInbox, cancelRequest } from "../controllers/front/UserActivityController.js"
 const router = express.Router();
@@ -25,6 +25,8 @@ router.post("/partner-basic-detail", userPartnerBasicDetail);
 router.route("/registration-login").post(userRegistrationLogin);
 router.route("/home-registration").post(userHomeRegistration);
 router.route("/user-home-detail/:id").get(getUserHomeDetailList);
+router.route("/set-profile-photo").post(setProfilePhoto);
+router.route("/delete-photo").post(deleteProfilePhoto);
 router.route("/sent-interest").post(sendInterest);
 router.route("/inbox").post(getInbox);
 router.route("/cancel-request").post(cancelRequest);

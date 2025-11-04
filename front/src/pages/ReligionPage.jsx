@@ -56,6 +56,15 @@ useEffect(() => {
   fetchUserDetail(userDetail._id)
   }
 
+  if(location.pathname === '/religion-edit'){
+    if(userDetailLogin?._id){
+      fetchUserDetail(userDetailLogin._id)
+    } else {
+      navigate('/')
+    }
+
+  }
+
 }, [userDetail])
 
 const fetchReligion = async () => {
@@ -171,10 +180,20 @@ const handleSubmit = async (e) => {
        return;
      }
     setIsLoading(true)
+
+     let userId;
+     if(location.pathname === '/religion-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/religion`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail, formData }),
+        body: JSON.stringify({ userDetail:userId, formData }),
         
       });
 
@@ -182,8 +201,13 @@ const handleSubmit = async (e) => {
       setIsLoading(false)
       if(data.status){
       //dispatch(verifyOtp(data));
+      if(location.pathname === '/religion-edit'){
+        navigate('/my-profile')
+        } else {
+          navigate('/location-detail')
+        }
 
-       navigate('/location-detail')
+       
       } else {
         
         if (data.errors) {
@@ -254,14 +278,36 @@ const handleSubmit = async (e) => {
           <div className="col-lg-8 col-md-12">
             <div className="con-reg">
               <div class="step-container">
-                  <div class="step-info">
-                    <h2>Religion Details</h2>
-                    <p><span>Prev Step- OTP Verification,</span> Next Step- Location Details</p>
-                  </div>
-                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 50%, pink 0)"}}>
-                      <span>5 of 11</span>
-                  </div>
-              </div>
+                 
+
+                  <div className="row">
+                                        
+                                        <div className="col-sm-4">
+                                             <div class="step-info">
+                                                <h2>Religion Details</h2>
+                                                {location.pathname === '/religion-edit'?null:
+                                                <p><Link to="/aadhaar-verification"> <span>Prev Step- Aadhaar Verification</span></Link></p>
+                                                }
+                                                </div>
+                                        </div>
+                                        {location.pathname === '/religion-edit'?null:
+                                        <>
+                                        <div className="col-sm-4 text-center">
+                                            <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 50%, pink 0)"}}>
+                                              <span>5 of 11</span>
+                                          </div>
+                                        </div>
+                                        <div className="col-sm-4 text-sm-end">
+                                              <div class="step-info">
+                                                <h2>&nbsp;</h2>
+                                                <p><Link onClick={skipButton}>Next Step- Location Details</Link></p>
+                                              </div>
+                                        </div>
+                                        </>
+}
+                  
+                                     </div>
+                    </div>
 
 
 
@@ -403,7 +449,10 @@ const handleSubmit = async (e) => {
                   <div className="col-12  align-items-center p-0">
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
-                        
+                        <label htmlFor="">
+                          Other{" "}
+                          
+                        </label>
                       </div>
                       <div className="col-md-8 col-sm-12">
                         
@@ -442,23 +491,33 @@ const handleSubmit = async (e) => {
                     <div className="col-8">
                       <div className="maxwid">
                         
+                        {location.pathname === '/religion-edit'?
+                        <div className="d-flex align-items-center justify-content-end">
+                                                        
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Save"}
+                              </button>
+
+                                                      </div>
+                        :
                         <div className="d-flex align-items-center justify-content-between">
-                                                            <Link className="backbtn"
-                                                              style={{ color: "white" }}
-                                                              to="/registration-success"
-                                                            >
-                                                              Back
-                                                            </Link>{" "}                          
-                                                            <button className="countiniue" type='submit' disabled={isLoading}>
-                                                              {isLoading ? "Wait..." : "Continue"}
-                                                            </button>
-                                                      </div>
-                        <br/>
-                                                      <hr />
+                              <Link className="backbtn"
+                                style={{ color: "white" }}
+                                to="/aadhaar-verification"
+                              >
+                                Back
+                              </Link>{" "}                          
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Continue"}
+                              </button>
+
+                              <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                                                        Skip
+                                                                                                      </Link>
+                        </div>
+}
                         
-                                                      <div className="d-flex align-items-center justify-content-center">
-                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                      </div>
+                        
                         
                         
                         

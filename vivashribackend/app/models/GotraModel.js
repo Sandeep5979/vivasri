@@ -13,6 +13,16 @@ const GotraSchema = new Schema(
       ref: "Religion",
       required: true,
     },
+    caste_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Caste",
+      required: true,
+    },
+    sub_caste_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCaste",
+      required: true,
+    },
     status: {
       type: String,
       enum: ["Active", "Deactive"],

@@ -29,6 +29,16 @@ export const decimalToFeetInches = (decimalFeet) => {
   }
 }
 
+export const decimalToFeetInchesWithoutWord = (decimalFeet) => {
+  if(decimalFeet){
+  const feet = Math.floor(decimalFeet);
+  const inches = Math.round((decimalFeet - feet) * 12);
+  return `${feet}' ${inches}"`;
+  } else {
+    return 
+  }
+}
+
 
 export function formatNumber(num) {
   if (num >= 10000000) return `${num / 10000000} Crore`;
@@ -98,5 +108,47 @@ return totalCm + " cm";
 //console.log(totalCm.toFixed(2) + " cm");
 
 }
+export const decimaltoWithoutcm = (value) => {
+  if (!value) return "";
+  let feet = Math.floor(value);
+  let inches = (value - feet) * 10;
+
+let totalCm = Math.round((feet * 30.48) + (inches * 2.54));
+return totalCm;
+//console.log(totalCm.toFixed(2) + " cm");
+
+}
+
+
+function parseIncomeRange(range) {
+  console.log('range', range)
+  if (!range || range.toLowerCase() === "Not Applicable") {
+    return { min: 0, max: Infinity, applicable: false };
+  }
+
+  range = range?.toLowerCase().trim();
+
+  if (range.startsWith("Above")) {
+    const min = Number(range.replace(/[^\d]/g, ""));
+    return { min, max: Infinity, applicable: true };
+  }
+
+  const [minStr, maxStr] = range.split("-").map(v => v.trim());
+  const min = Number(minStr.replace(/[^\d]/g, ""));
+  const max = Number(maxStr.replace(/[^\d]/g, ""));
+
+  return { min, max, applicable: true };
+}
+
+export const isIncomeRangeCompatible = (partnerRange, matchRange) => {
+  const partner = parseIncomeRange(partnerRange);
+  const match = parseIncomeRange(matchRange);
+
+  if (!partner.applicable || !match.applicable) return true;
+  
+  const overlap = match.max >= partner.min && match.min <= partner.max;
+  return overlap;
+}
+
 
 

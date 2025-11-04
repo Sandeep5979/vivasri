@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { ageCalculate } from '../../utils/utils';
 import { Link } from 'react-router-dom';
 import { userLogout } from '../../store/authActions';
 
@@ -75,7 +74,20 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
           }
   
           
-        
+        let profilePhoto;
+                    if(data.data[0].profile_photo === 1){
+                      profilePhoto = data.data[0].photo
+                    } else if(data.data[0].profile_photo === 2){
+                      profilePhoto = data.data[0].photo1
+                    } else if(data.data[0].profile_photo === 3){
+                      profilePhoto = data.data[0].photo2
+                    } else if(data.data[0].profile_photo === 4){
+                      profilePhoto = data.data[0].photo3
+                    } else if(data.data[0].profile_photo === 5){
+                      profilePhoto = data.data[0].photo4
+                    } else {
+                      profilePhoto = data.data[0].photo
+                    }
             
           
           
@@ -83,7 +95,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
   
           
           name:data.data[0].name,
-          photo:data.data[0].photo,
+          photo:profilePhoto,
             
   
         })
@@ -151,7 +163,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/dashboard">Dashboard</Link>
                     </li>
                     <li>
-                      <Link to="#">Partner Preferences</Link>
+                      <Link to="/my-profile/partner">Partner Preferences</Link>
                     </li>
                   </ul>
                   <ul className="headerSubMenu">
@@ -186,13 +198,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                   <ul className="headerSubMenu headerSubMenuss ">
                     {/* <li><h5>Horoscope</h5></li> */}
                     <li>
-                      <Link to="#">My Matches</Link>
+                      <Link to="/my-matches">My Matches</Link>
                     </li>
                     <li>
-                      <Link to="#">Today Matches</Link>
+                      <Link to="/today-matches">Today Matches</Link>
                     </li>
                     <li>
-                      <Link to="#">Near Me</Link>
+                      <Link to="/near-me">Near Me</Link>
                     </li>
                   </ul>
                 </div>
@@ -214,7 +226,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                       <Link to="/basic-search">Basic Search</Link>
                     </li>
                     <li>
-                      <Link to="/basic-search">Advance Search</Link>
+                      <Link to="/advance-search">Advance Search</Link>
                     </li>
                   </ul>
                 </div>
@@ -269,7 +281,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
               />
             </Link>
             <div className="headerSubNav headerSubNavsssss">
-              <ul className="headerSubMenu">
+              <ul className="headerSubMenu" style={{width:'100%'}}>
                 {/* <li><h5>Horoscope</h5></li> */}
                 <li
                   style={{ backgroundColor: "#FFF9F0", padding: "15px 30px" }}
@@ -391,7 +403,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link to="/dashboard">Dashboard</Link>
                   </li>
                   <li>
-                    <Link to="#">Partner Preferences</Link>
+                    <Link to="/my-profile/partner">Partner Preferences</Link>
                   </li>
                 </ul>
                 <ul className="headerSubMenu">
@@ -426,7 +438,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <ul className="headerSubMenu headerSubMenuss">
                   {/* <li><h5>Horoscope</h5></li> */}
                   <li>
-                    <Link to="#">My Matches</Link>
+                    <Link to="/my-matches">My Matches</Link>
                   </li>
                   <li>
                     <Link to="#">Today Matches</Link>
@@ -454,7 +466,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link href="/basic-search">Basic Search</Link>
                   </li>
                   <li>
-                    <Link to="#">Advance Search</Link>
+                    <Link to="/advance-search">Advance Search</Link>
                   </li>
                 </ul>
               </div>
@@ -530,7 +542,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                           <Link to="/profile-photo-edit">My Photos</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Partner Preference</Link>
+                                          <Link to="/my-profile/partner">Partner Preference</Link>
                                         </li>
                                         <li>
                                           <Link to="#">Setting</Link>
@@ -556,7 +568,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                       <ul className="headerSubMenu">
                                         {/* <li><h5>Horoscope</h5></li> */}
                                         <li>
-                                          <Link to="#">My Matches</Link>
+                                          <Link to="/my-matches">My Matches</Link>
                                         </li>
                                         <li>
                                           <Link to="#">Today Matches</Link>
@@ -586,7 +598,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                           <Link to="/basic-search">Basic Search</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Advance Search</Link>
+                                          <Link to="/advance-search">Advance Search</Link>
                                         </li>
                                         
                                         

@@ -72,10 +72,11 @@ const handleChange = (e) => {
         reader.readAsDataURL(file);
       }
 
-      setFormData((prevData) => ({
+       setFormData((prevData) => ({
         ...prevData,
         [name]:files[0],
       }));
+      
       return;
     }
     
@@ -108,6 +109,7 @@ const handleChange = (e) => {
         photo2:data.data[0].photo2,
         photo3:data.data[0].photo3,
         photo4:data.data[0].photo4,
+        profile_photo:data.data[0].profile_photo,
 
       })
 
@@ -237,6 +239,62 @@ const handleSubmit = async (e) => {
         }
 
   }
+
+  const chooseProfilePhoto = async (e, value) => {
+    e.preventDefault()
+    let userId;
+     if(location.pathname === '/profile-photo-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+
+     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/set-profile-photo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:{profile_photo:value} }),
+        
+      });
+
+      const data = await res.json();
+      if(data.status){
+        fetchUserDetail(userId._id)
+      }
+
+
+
+  }
+  const deletePhoto = async (e, value) => {
+    e.preventDefault()
+    if (window.confirm("Are you sure you want to delete this photo?")) {
+    
+    let userId;
+     if(location.pathname === '/profile-photo-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+
+     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/delete-photo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:value }),
+        
+      });
+
+      const data = await res.json();
+      if(data.status){
+        fetchUserDetail(userId._id)
+      }
+
+    }
+
+
+  }
   
   return (
     <>
@@ -276,19 +334,42 @@ const handleSubmit = async (e) => {
               {/* <h3 className='text-center'>Upload Profile Photo</h3> */}
 
               <div class="step-container">
-                <div class="step-info">
-                  <h2>Upload Photo</h2>
-                  <p><span>Prev Step- Educational Details,</span> Next Step- Partner’s Qualities</p>
+                
+                <div className="row">
+                      <div className="col-sm-4">
+                            <div class="step-info">
+                              <h2>Upload Photo</h2>
+                              {location.pathname === '/profile-photo-edit'? null :
+                              <p><Link to={`${location.pathname === '/profile-photo-edit' ? '/my-profile' : '/education-detail'}`}> <span>Prev Step- Educational Details</span></Link></p>
+                              }
+                              </div>
+                      </div>
+                      {location.pathname === '/profile-photo-edit'? null :
+                      <>
+                      <div className="col-sm-4 text-center">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
+                              <span>9 of 11</span>
+                          </div>                      
+                      </div>
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Partner’s Qualities</Link></p>
+                            </div>
+                      </div>
+                      </>
+                      }
+                      
+
                 </div>
-                <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 90%, pink 0)"}}>
-                    <span>9 of 11</span>
-                </div>
+
+
               </div>
 
               <div className="restrictions py-3">
                 <ul className="justify-content-center">
                   <li>1. Maximum image upload size:&nbsp;10 MB.</li>
-                  <li>2. Recommended dimensions:&nbsp;576 x 709 px.</li>
+                  <li>2. Recommended dimensions:&nbsp;576 x 620 px.</li>
                   <li>3. Photo Upload:&nbsp;JPG, JPEG, PNG Only.</li>
                   <li>📌 Photo 1 is mandatory to upload.</li>
                 </ul>
@@ -296,10 +377,17 @@ const handleSubmit = async (e) => {
               <div className="images-boxes uploadimage">
                 <div className="row ">
                   <div className="col-md-2 img-box m-3 po-rel-new">
-                    { /* <div class="del-icon">
-                        <img src="assets/img/delete.png" alt="" />
-                      </div>
-                      */ }
+                    
+                    {  formData.profile_photo === 1 ? null : 
+                    formData.photo ?
+                    previewUrl ? null : 
+                    <div class="del-icon">
+                        <Link href="#" onClick={(e) => deletePhoto(e, 1)}><img src="assets/img/delete.png" alt="" /></Link>
+                    </div>
+                    : null
+                    
+                    }
+                      
                     
                     <img
                       src={previewUrl ? previewUrl : formData.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo}`:`assets/img/register/image-picture_svgrepo.com.png`}
@@ -331,13 +419,38 @@ const handleSubmit = async (e) => {
                       </div>
                       {/* <button><img src="assets/img/upload_svgrepo.com.png" alt="">Select image </button> */}
                     </div>
-                    <p>width : 576px, Height : 709px.</p>
-                    { /* <p class="pro-pho-p">Profile Photo</p>
-                    <p class="pro-pho-p-2">Choose your profile photo</p>
-                    */ }
+                    <p>width : 576px, Height : 620px.</p>
+                    {
+                      formData.profile_photo === 1 ? (
+                        <p class="pro-pho-p">Profile Photo</p>
+                      )
+                      :
+                      (
+                        formData.photo ? 
+                        previewUrl ? null :
+                        <Link href="#" onClick={(e) => chooseProfilePhoto(e,1)}><p class="pro-pho-p-2">Choose your profile photo</p></Link>
+                        : null
+                      )
+                    }
+                    
+                    
+                    
+                    
                     {error.photo && <p className="error">{error.photo}</p>}
                   </div>
-                  <div className=" col-md-2 img-box m-3 ">
+                  <div className=" col-md-2 img-box m-3 po-rel-new ">
+                    
+                    {  formData.profile_photo === 2 ? null : 
+                    formData.photo1 ?
+                    previewUrl1 ? null :
+                    <div class="del-icon">
+                        
+                        <Link href="#" onClick={(e) => deletePhoto(e, 2)}><img src="assets/img/delete.png" alt="" /></Link>
+                    </div>
+                    : null
+                    
+                    }
+                    
                     <img
                       src={previewUrl1 ? previewUrl1 : formData.photo1 ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo1}` :`assets/img/register/image-picture_svgrepo.com.png`}
                       alt=""
@@ -365,9 +478,31 @@ const handleSubmit = async (e) => {
                         ref={ImageRef1}
                       />
                     </div>
-                    <p>width : 576px, Height : 709px.</p>
+                    <p>width : 576px, Height : 620px.</p>
+                    {
+                      formData.profile_photo === 2 ? (
+                        <p class="pro-pho-p">Profile Photo</p>
+                      )
+                      :
+                      (
+                        formData.photo1 ?
+                        previewUrl ? null :
+                        <Link href="#" onClick={(e) => chooseProfilePhoto(e,2)}><p class="pro-pho-p-2">Choose your profile photo</p></Link>
+                        : null
+                      )
+                    }
                   </div>
-                  <div className=" col-md-2 img-box m-3  ">
+                  <div className=" col-md-2 img-box m-3  po-rel-new">
+                    {  formData.profile_photo === 3 ? null : 
+                    formData.photo2 ?
+                    previewUrl2 ? null :
+                    <div class="del-icon">
+                        <Link href="#" onClick={(e) => deletePhoto(e, 3)}><img src="assets/img/delete.png" alt="" /></Link>
+                    </div>
+                    : null
+                    
+                    }
+                    
                     <img
                       src={previewUrl2 ? previewUrl2 : formData.photo2 ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo2}` : `assets/img/register/image-picture_svgrepo.com.png`}
                       alt=""
@@ -395,9 +530,32 @@ const handleSubmit = async (e) => {
                         ref={ImageRef2}
                       />
                     </div>
-                    <p>width : 576px, Height : 709px.</p>
+                    <p>width : 576px, Height : 620px.</p>
+                    {
+                      formData.profile_photo === 3 ? (
+                        <p class="pro-pho-p">Profile Photo</p>
+                      )
+                      :
+                      (
+                        formData.photo2 ?
+                        previewUrl2 ? null :
+                        <Link href="#" onClick={(e) => chooseProfilePhoto(e,3)}><p class="pro-pho-p-2">Choose your profile photo</p></Link>
+                        : null
+                      )
+                    }
                   </div>
-                  <div className="col-md-2 img-box m-3 im-boxes-b2 ">
+                  <div className="col-md-2 img-box m-3 im-boxes-b2 po-rel-new">
+                    
+                    {  formData.profile_photo === 4 ? null : 
+                    formData.photo3 ?
+                    previewUrl3 ? null :
+                    <div class="del-icon">
+                        <Link href="#" onClick={(e) => deletePhoto(e, 4)}><img src="assets/img/delete.png" alt="" /></Link>
+                    </div>
+                    : null
+                    
+                    }
+                    
                     <img
                       src={previewUrl3 ? previewUrl3 : formData.photo3 ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo3}` : `assets/img/register/image-picture_svgrepo.com.png`}
                       alt=""
@@ -425,9 +583,32 @@ const handleSubmit = async (e) => {
                         ref={ImageRef3}
                       />
                     </div>
-                    <p>width : 576px, Height : 709px.</p>
+                    <p>width : 576px, Height : 620px.</p>
+                    {
+                      formData.profile_photo === 4 ? (
+                        <p class="pro-pho-p">Profile Photo</p>
+                      )
+                      :
+                      (
+                        formData.photo3 ?
+                        previewUrl3 ? null :
+                        <Link href="#" onClick={(e) => chooseProfilePhoto(e,4)}><p class="pro-pho-p-2">Choose your profile photo</p></Link>
+                        : null
+                      )
+                    }
                   </div>
-                  <div className="col-md-2 img-box m-3 ">
+                  <div className="col-md-2 img-box m-3 po-rel-new">
+                    
+                    {  formData.profile_photo === 5 ? null : 
+                    formData.photo4 ?
+                    previewUrl4 ? null :
+                    <div class="del-icon">
+                        <Link href="#" onClick={(e) => deletePhoto(e, 5)}><img src="assets/img/delete.png" alt="" /></Link>
+                    </div>
+                    : null
+                    
+                    }
+                    
                     <img
                       src={previewUrl4 ? previewUrl4 : formData.photo4 ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo4}` : `assets/img/register/image-picture_svgrepo.com.png`}
                       alt=""
@@ -455,16 +636,39 @@ const handleSubmit = async (e) => {
                         ref={ImageRef4}
                       />
                     </div>
-                    <p>width : 576px, Height : 709px.</p>
+                    <p>width : 576px, Height : 620px.</p>
+                    {
+                      formData.profile_photo === 5 ? (
+                        <p class="pro-pho-p">Profile Photo</p>
+                      )
+                      :
+                      (
+                        formData.photo4 ?
+                        previewUrl4 ? null :
+                        <Link href="#" onClick={(e) => chooseProfilePhoto(e,5)}><p class="pro-pho-p-2">Choose your profile photo</p></Link>
+                        : null
+                      )
+                    }
                   </div>
                 </div>
                 <div className="col-12">
                   <div className="btn-uplod text-center">
                     
+                    {location.pathname === '/profile-photo-edit'? 
+                    
+                    <div className="d-flex align-items-center justify-content-center">
+                                                    
+                          <button className="countiniue" type='submit' disabled={isLoading}>
+                            {isLoading ? "Wait..." : "Upload"}
+                          </button>
+                    </div>
+                    
+                    :
                     <div className="d-flex align-items-center justify-content-center">
                           <Link className="backbtn mt-3"
                             style={{ color: "white" }}
-                            to="/education-detail"
+                            to={`${location.pathname === '/profile-photo-edit' ? '/my-profile' : '/education-detail'}`}
+                            
                           >
                             Back
                           </Link>{" "}                          
@@ -472,6 +676,7 @@ const handleSubmit = async (e) => {
                             {isLoading ? "Wait..." : "Upload"}
                           </button>
                     </div>
+}
                     { /* <br/>
                     <hr />
 

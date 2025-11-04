@@ -189,6 +189,8 @@ const fetchUserDetail = async (userId) => {
         loc_relation_name:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_name,
         loc_relation_email:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_email,
         loc_relation_mobile:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_mobile,
+        loc_landmark:data.data[0].loc_landmark,
+        loc_temp_landmark:data.data[0].loc_temp_landmark,
 
       })
 
@@ -367,13 +369,36 @@ const handleSubmit = async (e) => {
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
               <div class="step-container">
-                  <div class="step-info">
-                    <h2>Location Details</h2>
-                    <p><span>Prev Step- Religion Details,</span> Next Step- Family & More Detail</p>
-                  </div>
-                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 60%, pink 0)"}}>
-                      <span>6 of 11</span>
-                  </div>
+                  
+
+                  <div className="row">
+                      
+                      <div className="col-sm-4">
+                           <div class="step-info">
+                              <h2>Location Details</h2>
+                              {location.pathname === '/location-detail-edit'? null:
+                              <p><Link to={`${location.pathname === '/location-detail-edit' ? '/my-profile' : '/religion'}`}> <span>Prev Step- Religion Details</span></Link></p>
+                              }
+                              </div>
+                              
+                      </div>
+                      {location.pathname === '/location-detail-edit'? null:
+                      <>
+                      <div className="col-sm-4 text-center">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 60%, pink 0)"}}>
+                              <span>6 of 11</span>
+                          </div>
+                      </div>
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Family & More Detail</Link></p>
+                            </div>
+                      </div>
+                      </>
+}
+
+                   </div>
               </div>
               <div className=" form-bas-de ">
                 <form onSubmit={handleSubmit}>
@@ -487,7 +512,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.loc_state}
                         >
-                          <option>-- Select State --</option>
+                          <option value="">-- Select State --</option>
                           {state && state.map((stateList, index)  => {
 
                             return (
@@ -517,7 +542,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.loc_city}
                         >
-                          <option>-- Select City --</option>
+                          <option value="">-- Select City --</option>
                           {city && city.map((cityList, index)  => {
 
                             return (
@@ -529,6 +554,25 @@ const handleSubmit = async (e) => {
                         }
                         </select>
                         {error.loc_city && <p className="error">{error.loc_city}</p>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row  inputs-margs nam-inp  ">
+                  <div className="col-12  align-items-center p-0">
+                    <div className="row">
+                      <div className="col-md-4 col-sm-12">
+                        <label htmlFor="">
+                          Landmark/Remarks
+                        </label>
+                      </div>
+                      <div className="col-md-8 col-sm-12">
+                        <input type="text" 
+                        name='loc_landmark'
+                        onChange={handleChange}
+                        value={formData.loc_landmark}
+                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -603,7 +647,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.loc_temp_state}
                         >
-                          <option>-- Select State --</option>
+                          <option value="">-- Select State --</option>
                           {tempState && tempState.map((stateList, index)  => {
 
                             return (
@@ -633,7 +677,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.loc_temp_city}
                         >
-                          <option>-- Select City --</option>
+                          <option value="">-- Select City --</option>
                           {tempCity && tempCity.map((cityList, index)  => {
 
                             return (
@@ -645,6 +689,25 @@ const handleSubmit = async (e) => {
                         }
                         </select>
                         {error.loc_temp_city && <p className="error">{error.loc_temp_city}</p>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row  inputs-margs nam-inp  ">
+                  <div className="col-12  align-items-center p-0">
+                    <div className="row">
+                      <div className="col-md-4 col-sm-12">
+                        <label htmlFor="">
+                          Landmark/Remarks
+                        </label>
+                      </div>
+                      <div className="col-md-8 col-sm-12">
+                        <input type="text" 
+                        name='loc_temp_landmark'
+                        onChange={handleChange}
+                        value={formData.loc_temp_landmark}
+                        />
+                        
                       </div>
                     </div>
                   </div>
@@ -688,7 +751,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.loc_relation}
                         >
-                          <option>-- Select Relation --</option>
+                          <option value="">-- Select Relation --</option>
                           {relation && relation.map((relationList, index)  => {
                             
                             return (
@@ -776,25 +839,35 @@ const handleSubmit = async (e) => {
                   <div className="col-12 d-flex text-right p-0">
                     <div className="col-4" />
                     <div className="col-8">
-                      <div className="maxwid">
-                        
+                      <div className="maxwid ps-sm-2">
+                        {location.pathname === '/location-detail-edit'? 
+                        <div className="d-flex align-items-center justify-content-end">
+                                                        
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Save"}
+                              </button>
+
+                              
+                        </div>
+                        :
                         <div className="d-flex align-items-center justify-content-between">
-                                                            <Link className="backbtn"
-                                                              style={{ color: "white" }}
-                                                              to="/religion"
-                                                            >
-                                                              Back
-                                                            </Link>{" "}                          
-                                                            <button className="countiniue" type='submit' disabled={isLoading}>
-                                                              {isLoading ? "Wait..." : "Continue"}
-                                                            </button>
-                                                      </div>
-                                                      <br/>
-                                                      <hr />
-                        
-                                                      <div className="d-flex align-items-center justify-content-center">
-                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                      </div>
+                              <Link className="backbtn"
+                                style={{ color: "white" }}
+                                to={`${location.pathname === '/location-detail-edit' ? '/my-profile' : '/religion'}`}
+                                
+                              >
+                                Back
+                              </Link>{" "}                          
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Continue"}
+                              </button>
+
+                              <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                            Skip
+                                          </Link>
+                        </div>
+}
+
                         
                         
 

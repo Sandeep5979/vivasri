@@ -17,6 +17,7 @@ const [error, setError] = useState({})
 const [isLoading, setIsLoading] = useState(false)
 const [isScroll, setIsScroll] = useState(false)
 const [disabilityShow, setDisabilityShow] = useState(false)
+const [totalFamily, setTotalFamily] = useState("")
 
 const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +45,56 @@ const handleChange = (e) => {
       });
     }
     
+    if(value){  
+    totalFamilyCount(name, value)
+    } else {
+      totalFamilyCount(name, 0)
+    }
+    
+    
   };
+
+
+  const totalFamilyCount = (name, value) => {
+      let totalCount = 0;
+      //console.log(formData.no_of_sister)
+      if(name === 'no_of_sister'){
+        //totalCount += parseInt(value);
+        setTotalFamily((prev) => prev + parseInt(value) - Number(formData.no_of_sister?formData.no_of_sister:0))
+      }
+      if(name === 'no_of_brother'){
+        //totalCount += parseInt(value);
+        setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.no_of_brother?formData.no_of_brother:0))
+      }
+      if(name === 'married_sister'){
+        //totalCount += parseInt(value);
+        // setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.married_sister?formData.married_sister:0))
+      }
+      if(name === 'married_brother'){
+        //totalCount += parseInt(value);
+        // setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.married_brother?formData.married_brother:0))
+      }
+      if(name === 'no_of_sister_in_law'){
+        //totalCount += parseInt(value);
+        setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.no_of_sister_in_law?formData.no_of_sister_in_law:0))
+      }
+
+      if(name === 'married_sister_in_law'){
+        //totalCount += parseInt(value);
+        // setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.married_sister_in_law?formData.married_sister_in_law:0))
+      }
+      if(name === 'no_of_brother_in_law'){
+        //totalCount += parseInt(value);
+        setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.no_of_brother_in_law?formData.no_of_brother_in_law:0))
+      }
+      if(name === 'married_brother_in_law'){
+        //totalCount += parseInt(value);
+        //setTotalFamily((prev) => Number(prev) + parseInt(value)  - Number(formData.married_brother_in_law?formData.married_brother_in_law:0))
+      }
+      //totalCount = totalCount + parseInt(value);
+      
+
+  }
 
   useEffect(() => {
       
@@ -70,6 +120,34 @@ const handleChange = (e) => {
         if(data.data[0].disability === "Physical Disability"){
             setDisabilityShow(true)
         }
+        let totalCount = 0;
+        if(data.data[0].no_of_sister){
+          totalCount += Number(data.data[0].no_of_sister) 
+        }
+        if(data.data[0].married_sister){
+         // totalCount += Number(data.data[0].married_sister) 
+        }
+        if(data.data[0].no_of_brother){
+          totalCount += Number(data.data[0].no_of_brother) 
+        }
+        if(data.data[0].married_brother){
+         // totalCount += Number(data.data[0].married_brother) 
+        }
+        if(data.data[0].no_of_sister_in_law){
+          totalCount += Number(data.data[0].no_of_sister_in_law) 
+        }
+        if(data.data[0].married_sister_in_law){
+         // totalCount += Number(data.data[0].married_sister_in_law) 
+        }
+        if(data.data[0].no_of_brother_in_law){
+          totalCount += Number(data.data[0].no_of_brother_in_law) 
+        }
+        if(data.data[0].married_brother_in_law){
+         // totalCount += Number(data.data[0].married_brother_in_law) 
+        }
+
+
+        setTotalFamily(totalCount)
         
       setFormData({
         family_type:data.data[0].family_type,
@@ -228,13 +306,36 @@ const handleSubmit = async (e) => {
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
               <div class="step-container">
-                  <div class="step-info">
-                    <h2>Family & More Detail</h2>
-                    <p><span>Prev Step- Location Details,</span> Next Step- Educational Details</p>
-                  </div>
-                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 70%, pink 0)"}}>
-                      <span>7 of 11</span>
-                  </div>
+                
+
+                  <div className="row">
+                      
+                      <div className="col-sm-4">
+                           <div class="step-info">
+                              <h2>Family & More Detail</h2>
+                              {location.pathname === '/family-detail-edit'? null : 
+                              <p><Link to={`${location.pathname === '/family-detail-edit' ? '/my-profile' : '/location-detail'}`}> <span>Prev Step- Location Details</span></Link></p>
+                              }
+                              </div>
+                      </div>
+                      {location.pathname === '/family-detail-edit'? null :
+                      <>
+                      <div className="col-sm-4 text-center">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 70%, pink 0)"}}>
+                              <span>7 of 11</span>
+                          </div>
+                      </div>
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Educational Details</Link></p>
+                            </div>
+                      </div>
+                      </>
+}
+                      
+
+                   </div>
               </div>
 
 
@@ -243,6 +344,7 @@ const handleSubmit = async (e) => {
                 <form onSubmit={handleSubmit}>
                 <div className="row inputs-marg">
                   <div className="col-12  align-items-center p-0">
+                  
                     <div className="row">
                       <div className="col-md-4 col-sm-12">
                         <label htmlFor="">Family Type </label>
@@ -370,9 +472,11 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
+                            i <= formData.no_of_sister ?
                             <option key={i} value={i}>
                               {i}
                             </option>
+                            :null
                           ))}
                         </select>
                       </div>
@@ -416,9 +520,11 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
+                            i <= formData.no_of_brother ?
                             <option key={i} value={i}>
                               {i}
                             </option>
+                            :null
                           ))}
                         </select>
                       </div>
@@ -440,6 +546,7 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
+                            
                             <option key={i} value={i}>
                               {i}
                             </option>
@@ -463,9 +570,11 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
+                            i <= formData.no_of_sister_in_law ?
                             <option key={i} value={i}>
                               {i}
                             </option>
+                            :null
                           ))}
                         </select>
                       </div>
@@ -509,16 +618,53 @@ const handleSubmit = async (e) => {
                         >
                           <option value="">-- Select --</option>
                            {[...Array(10)].map((_, i) => (
+                            i <= formData.no_of_brother_in_law ?
                             <option key={i} value={i}>
                               {i}
                             </option>
+                            :null
                           ))}
                         </select>
                       </div>
                     </div>
                   </div>
                 </div>
-                <h3>Family &amp; More Detail</h3>
+
+                <div className="row inputs-margs">
+                                  <div className="col-12   p-0">
+                                    <div className="row">
+                                      <div className="col-md-4 col-sm-12">
+                                        <label htmlFor="">
+                                          Total Family Member{" "}
+                                          
+                                        </label>
+                                      </div>
+                                      <div className="col-md-8 col-sm-12">
+                                        
+                                         <div className='nam-inp'>
+                       
+                                            <input type="text" className="form-control" name="total_family" 
+                                         value={totalFamily} placeholder="Total Family Member" readOnly/>
+                                        </div>
+                                        
+                                        
+                                        
+                               
+                
+                
+                                        
+                                        
+                
+                
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+
+
+
+                <h3>More Detail</h3>
                 <div className="col-12">
                   <div className="line-bg" />
                 </div>
@@ -648,27 +794,36 @@ const handleSubmit = async (e) => {
                     <div className="col-8">
                       <div className="maxwid">
                         
-                        <div className="d-flex align-items-center justify-content-between">
-                                                                                    <Link className="backbtn"
-                                                                                      style={{ color: "white" }}
-                                                                                      to="/location-detail"
-                                                                                    >
-                                                                                      Back
-                                                                                    </Link>{" "}                          
-                                                                                    <button className="countiniue" type='submit' disabled={isLoading}>
-                                                                                      {isLoading ? "Wait..." : "Continue"}
-                                                                                    </button>
-                                                                              </div>
-                                                                              <br/>
-                                                                              <hr />
-                                                
-                                                                              <div className="d-flex align-items-center justify-content-center">
-                                                                                    <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                                              </div>
-                        
-                        
+                        {location.pathname === '/family-detail-edit'? 
+                        <div className="d-flex align-items-center justify-content-end">
+                                       
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Save"}
+                              </button>
+
+                              
+                        </div>
+                        :
+                        <div className="d-flex align-items-center justify-content-between ps-sm-2">
+                              <Link className="backbtn"
+                                style={{ color: "white" }}
+                                to={`${location.pathname === '/family-detail-edit' ? '/my-profile' : '/location-detail'}`}
+                                
+                              >
+                                Back
+                              </Link>{" "}                          
+                              <button className="countiniue" type='submit' disabled={isLoading}>
+                                {isLoading ? "Wait..." : "Continue"}
+                              </button>
+
+                              <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                          Skip
+                                                                        </Link>
+                        </div>
+}
                         
 
+                        
 
 
                       </div>

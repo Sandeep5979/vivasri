@@ -14,12 +14,8 @@ export const languageCreate = async (req, res) => {
 
 export const languageGetAll = async (req, res) => {
   try {
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
-
-      const result = await getAllLanguage(page, limit);
-      res.json({ status: true, ...result });
-      
+    const data = await getAllLanguage();
+    res.json({ status: true, data });
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });
   }

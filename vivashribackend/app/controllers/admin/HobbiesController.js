@@ -24,7 +24,11 @@ export const hobbiesCreate = async (req, res) => {
       }
 
       const fileName = `${Date.now()}-${icon.name}`;
-      const uploadPath = path.join(process.cwd(), "public/upload/icon", fileName);
+      const uploadPath = path.join(process.cwd(), "public/uploads/icon", fileName);
+      
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
 
       const buffer = icon.data;
       const finalBuffer = await sharp(buffer)
@@ -32,6 +36,7 @@ export const hobbiesCreate = async (req, res) => {
         .toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
+      
       iconPath = `/uploads/icon/${fileName}`;
     }
 
@@ -124,6 +129,8 @@ export const hobbiesUpdate = async (req, res) => {
       const fileName = `${Date.now()}-${icon.name}`;
       const uploadPath = path.join(process.cwd(), "public/uploads", fileName);
 
+      
+
       const buffer = icon.data;
       const finalBuffer = await sharp(buffer)
         .resize(40, 40) // ✅ Resize to 40x40 pixels
@@ -138,12 +145,12 @@ export const hobbiesUpdate = async (req, res) => {
       icon: iconPath,
     };
 
-    // const data = await updateHobbies(id, updatedData);
+    const data = await updateHobbies(id, updatedData);
 
     res.json({
       status: true,
       message: "Hobby updated successfully",
-      updatedData,
+      data,
     });
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });

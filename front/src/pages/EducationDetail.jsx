@@ -358,13 +358,38 @@ const handleSubmit = async (e) => {
           <div className="col-md-12 col-lg-8">
             <div className="con-reg">
               <div class="step-container">
-                  <div class="step-info">
-                    <h2>Educational Details</h2>
-                    <p><span>Prev Step- Family & More Detail,</span> Next Step- Upload Photo</p>
-                  </div>
-                  <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 80%, pink 0)"}}>
-                      <span>8 of 11</span>
-                  </div>
+                
+                  
+                  
+                  <div className="row">
+                      
+                      <div className="col-sm-4">
+                           <div class="step-info">
+                              <h2>Educational Details</h2>
+                              {location.pathname === '/education-detail-edit' ? null :
+                              <p><Link to={`${location.pathname === '/education-detail-edit' ? '/my-profile' : '/family-detail'}`}> <span>Prev Step- Family & More Detail</span></Link></p>
+                              }
+                              </div>
+                      </div>
+                      {location.pathname === '/education-detail-edit' ? null :
+                      <>
+                      <div className="col-sm-4 text-center">
+                          <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 80%, pink 0)"}}>
+                              <span>8 of 11</span>
+                          </div>                      
+                      </div>
+                      <div className="col-sm-4 text-sm-end">
+                            <div class="step-info">
+                              <h2>&nbsp;</h2>
+                              <p><Link onClick={skipButton}>Next Step- Upload Photo</Link></p>
+                            </div>
+                      </div>
+                      </>
+}
+
+                   </div>
+
+
               </div>
 
               <div className=" form-bas-de ">
@@ -727,23 +752,33 @@ const handleSubmit = async (e) => {
                     <div className="col-8">
                       <div className="maxwid">
                         
-                        <div className="d-flex align-items-center justify-content-between">
-                                                            <Link className="backbtn"
-                                                              style={{ color: "white" }}
-                                                              to="/family-detail"
-                                                            >
-                                                              Back
-                                                            </Link>{" "}                          
-                                                            <button className="countiniue" type='submit' disabled={isLoading}>
-                                                              {isLoading ? "Wait..." : "Continue"}
-                                                            </button>
-                                                      </div>
-                        <br/>
-                                                      <hr />
+                        {location.pathname === '/education-detail-edit' ? 
+                        <div className="d-flex align-items-center justify-content-end">
+                                                          
+                                <button className="countiniue" type='submit' disabled={isLoading}>
+                                  {isLoading ? "Wait..." : "Save"}
+                                </button>
+
+                                
+                          </div>
+                        :
+                        <div className="d-flex align-items-center justify-content-between ps-sm-2">
+                                <Link className="backbtn"
+                                  style={{ color: "white" }}
+                                  to={`${location.pathname === '/education-detail-edit' ? '/my-profile' : '/family-detail'}`}
+                                >
+                                  Back
+                                </Link>{" "}                          
+                                <button className="countiniue" type='submit' disabled={isLoading}>
+                                  {isLoading ? "Wait..." : "Continue"}
+                                </button>
+
+                                <Link className="backbtn skipbtn" style={{ color: "white", marginLeft: "2%", paddingLeft: "5px", paddingRight: "5px", float: "right" }} onClick={skipButton}>
+                                                                                                          Skip
+                                                                                                        </Link>
+                          </div>
+}
                         
-                                                      <div className="d-flex align-items-center justify-content-center">
-                                                            <Link to="#" className="skipbtn" onClick={skipButton}>Skip</Link>
-                                                      </div>
                         
                         
                     

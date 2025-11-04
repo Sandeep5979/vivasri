@@ -63,7 +63,7 @@ const handleSubmitOTPButton = async (e) => {
            
            dispatch(registerUserLogin(data));
             
-          document.location.href=`/my-profile`
+          document.location.href=`/dashboard`
           
             
     

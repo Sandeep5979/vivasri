@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import NumberStats from '../components/homePage/NumberStats'
 import MinAge from '../components/homePage/MinAge'
 import GroomList from '../components/homePage/GroomList'
@@ -12,6 +12,7 @@ import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import HeaderUser from '../components/homePage/HeaderUser'
 import { useSelector } from 'react-redux'
+import LoginPopup from '../components/homePage/LoginPopup'
 
 function HomePage() {
 
@@ -33,6 +34,11 @@ function HomePage() {
 
    }
    */
+
+   
+   const [loginProps, setLoginProps] = useState(null);
+   const modalBrideRef = useRef(null);
+    const modalInstance = useRef(null);
 
    const fetchCreateProfileFor = async () => {
 
@@ -80,8 +86,8 @@ function HomePage() {
 
 
 
-   const searchSubmitButton = () => {
-
+   const searchSubmitButton = (e) => {
+    e.preventDefault();
    //console.log(searchLookingFor, searchReligion, searchMinAge, searchMaxAge)
    let url = '/search-profile?' 
    if(searchLookingFor){
@@ -184,6 +190,31 @@ function HomePage() {
    fetchReligion()
    
    }, [])
+
+   useEffect(() => {
+       // Initialize Bootstrap modal once (after first render)
+       const modalEl = document.getElementById("loginModal");
+       if (modalEl) {
+         modalInstance.current = new window.bootstrap.Modal(modalEl);
+       }
+     }, []);
+   
+     
+   
+      const loginDetailPopup = (e, url) => {
+       e.preventDefault();
+       setLoginProps(url); 
+       if(userDetailLogin?._id){
+         document.location.href=url;
+       } else {
+         
+       modalInstance.current?.show();
+           
+       return;
+   
+         }
+   
+      }
    
 
   return (
@@ -191,6 +222,9 @@ function HomePage() {
     <>
     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
   {/* start of hero */}
+  
+  <LoginPopup ref={modalBrideRef} url={loginProps} />
+  
   <section className="bannerSection wow animate__fadeIn" data-wow-delay="0.2s">
     <div className="bannerWrapperSection">
       <div className="hero-slider hero-style">
@@ -319,13 +353,14 @@ function HomePage() {
           </div>
           <div className="col-lg-3">
             <div className="hormformrow">
-              <label htmlFor="">Age</label>
               <div className="row">
                 <div className="col-6 agefield">
+                  <label htmlFor="">Age</label>
                   {/* Dropdown 1 */}
                   <MinAge searchMinAgeButton={searchMinAgeButton} minValue={1} placeholder="Min Age" />
                 </div>
                 <div className="col-6 agefield">
+                  <label htmlFor="">To</label>
                   {/* Dropdown 2 */}
                   <MinAge searchMaxAgeButton={searchMaxAgeButton} minValue={2} placeholder="Max Age" min={searchMinAge || 18} />
                 </div>
@@ -373,7 +408,7 @@ function HomePage() {
               <h2>Grooms</h2>
             </div>
             {/* groom carousal start */}
-            <GroomList />
+            <GroomList loginDetailPopup={loginDetailPopup} />
             {/* groom carousal end */}
           </div>
         </div>
@@ -383,7 +418,7 @@ function HomePage() {
               <h2>Brides</h2>
             </div>
             {/* bride carousal start */}
-            <BrideList />
+            <BrideList loginDetailPopup={loginDetailPopup} />
             {/* bride carousal end */}
           </div>
         </div>
