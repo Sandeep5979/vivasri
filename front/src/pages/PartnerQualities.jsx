@@ -94,6 +94,7 @@ function PartnerQualities() {
   
           partner_qualities:data.data[0].partner_qualities,
           gender:data.data[0].gender,
+          step:data.data[0].step
          
   
         })
@@ -128,10 +129,15 @@ function PartnerQualities() {
        return;
      }
       setIsLoading(true)
+     let formDataNew = formData
+     if(formData.step >= 10){ } else {
+      formDataNew = {...formData, step:10}
+      }
+
       const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/partner-qualities`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userDetail, formData, selected }),
+          body: JSON.stringify({ userDetail, formData:formDataNew, selected }),
           
         });
   
@@ -167,9 +173,34 @@ function PartnerQualities() {
         
       }, [isScroll]);
 
-const skipButton = (e) => {
+const skipButton = async (e) => {
         e.preventDefault()
         
+        //--------------------
+     let userId;
+     if(location.pathname === '/partner-qualities-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 10){ 
+      } else {
+      let formDataNew = {step:10}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
+
+
         if(location.pathname === '/partner-qualities-edit'){
           navigate('/my-profile')
         } else {

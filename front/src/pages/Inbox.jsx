@@ -5,11 +5,17 @@ import InboxLeftSideBar from '../components/inbox/InboxLeftSideBar'
 import { useSelector } from 'react-redux';
 import { ageCalculate, decimalToFeetInches } from '../utils/utils'
 import { Link } from 'react-router-dom';
+import ConfirmPopup from '../components/homePage/ConfirmPopup';
 
 function Inbox() {
     const [pageTitle, setPageTitle] = useState("");
     const { userDetailLogin } = useSelector((state) => state.auth);
     const [meneberList, setMemberList] = useState([]);
+    const modalConfirmRef = useRef(null)
+    const modalInstanceConfirm = useRef(null);
+    const [popupMessage, setPopupMessage] = useState("")
+    const [partnerValueId, setPartnerValueId] = useState("")
+    const [memberValueId, setMenberValueId] = useState("")
 
     const endpoint = window.location.pathname.split("/").filter(Boolean).pop();
 
@@ -47,8 +53,8 @@ function Inbox() {
         };
 
 
-    //cancel request 
-    const cancelRequest = async (partnerId) => {
+    //cancel request
+    const cancelRequestButton = async (partnerId) => {
         try {
             const response = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/cancel-request`, {
             method: "POST",
@@ -64,8 +70,9 @@ function Inbox() {
             const data = await response.json();
 
             if (response.ok) {
+            setPartnerValueId("")
             setMemberList((prevList) =>
-                    prevList.filter((member) => member?.partner_id?._id !== partnerId)
+            prevList.filter((member) => member?.partner_id?._id !== partnerId)
             );
             console.log("Cancel successful:", data);
             } else {
@@ -74,7 +81,13 @@ function Inbox() {
         } catch (error) {
             console.error("Fetch failed:", error);
         }
-        };
+    } 
+    const cancelRequest = async (partnerId) => {
+        //console.log(partnerId)
+        setPartnerValueId(partnerId)
+        setPopupMessage('are you sure you want to cancel request?')   
+        modalInstanceConfirm.current?.show();    
+    };
 
 
     useEffect(() => {
@@ -86,9 +99,79 @@ function Inbox() {
     }, [endpoint]);
 
 
+    useEffect(() => {
+             // Initialize Bootstrap modal once (after first render)
+             const modalConfirmEl = document.getElementById("confirmPopupId");
+             if (modalConfirmEl) {
+               modalInstanceConfirm.current = new window.bootstrap.Modal(modalConfirmEl);
+             }
+    
+                
+           }, []);
+
+    const yesNoButton = (value) => {
+    
+    //console.log('confirm', value)
+    if(value === 'Yes'){
+    //console.log('yes', partnerValueId)
+    cancelRequestButton(partnerValueId)
+    }
+    modalInstanceConfirm.current?.hide();
+  }
+
+  const chageStatusRequestButton = async (id, status) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/status-change`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: id,
+                status:status,
+            }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+            setPartnerValueId("")
+            setMemberList((prevList) =>
+            prevList.filter((member) => member?._id !== id)
+            );
+            console.log("Change request successful:", data);
+            } else {
+            console.error("Error fetching request:", data.error || data.message);
+            }
+        } catch (error) {
+            console.error("Fetch failed:", error);
+        }
+    }
+  
+  const chnageStatus = (id, status) => {
+        if(status === 'Accepted'){
+            chageStatusRequestButton(id, status)
+        } else {
+
+        }
+
+  }
+
+  const yesNoStatusButton = (value) => {
+    
+    //console.log('confirm', value)
+    if(value === 'Yes'){
+    //console.log('yes', partnerValueId)
+    cancelRequestButton(partnerValueId)
+    }
+    modalInstanceConfirm.current?.hide();
+  }
+
+
     return (
         <>
             <HeaderUser />
+            <ConfirmPopup ref={modalConfirmRef} message={popupMessage} yesNoButton={yesNoButton} />
             
             <div
               className="modal fade success-alert pinkalert"
@@ -292,23 +375,23 @@ function Inbox() {
                                                                     {pageTitle === "Received" && (
                                                                         <div className="butt-res-acc">
                                                                             <button className="accept">
-                                                                                <a href="javascript:void(0);">
+                                                                                <Link to="#" onClick={() => chnageStatus(member._id, 'Accepted')}>
                                                                                     <img
                                                                                         src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/check-circle_svgrepo.com.png`}
                                                                                         alt=""
                                                                                     />
                                                                                     Accept
-                                                                                </a>
+                                                                                </Link>
                                                                             </button>
                                                                             <br />
                                                                             <button className="delet">
-                                                                                <a href="javascript:void(0);">
+                                                                                <Link to="#" onClick={() => chnageStatus(member._id, 'Declined')}>
                                                                                     <img
                                                                                         src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/delete_svgrepo.com.png`}
                                                                                         alt=""
                                                                                     />
                                                                                     Delete
-                                                                                </a>
+                                                                                </Link>
                                                                             </button>
                                                                         </div>
                                                                     )}

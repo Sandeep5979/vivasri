@@ -113,12 +113,28 @@ export const userRegistration = async (req, res) => {
     }
   );
       
-      if(userDetail.aadhaar_no){
-        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
-      } else if(userDetail.contact_no){
-        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
-      } else if(userDetail.profile_for){
+      if(userDetail.step === 1){
         return res.json({ status:true, message: "", page:'contact-information', token:tokenNew });    
+      } else if(userDetail.step === 2){
+        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+      } else if(userDetail.step === 3){
+        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+      } else if(userDetail.step === 4){
+        return res.json({ status:true, message: "", page:'religion', token:tokenNew });    
+      } else if(userDetail.step === 5){
+        return res.json({ status:true, message: "", page:'location-detail', token:tokenNew });    
+      } else if(userDetail.step === 6){
+        return res.json({ status:true, message: "", page:'family-detail', token:tokenNew });    
+      } else if(userDetail.step === 7){
+        return res.json({ status:true, message: "", page:'education-detail', token:tokenNew });    
+      } else if(userDetail.step === 8){
+        return res.json({ status:true, message: "", page:'profile-photo', token:tokenNew });    
+      } else if(userDetail.step === 9){
+        return res.json({ status:true, message: "", page:'partner-qualities', token:tokenNew });    
+      } else if(userDetail.step === 10){
+        return res.json({ status:true, message: "", page:'partner-basic-detail', token:tokenNew });    
+      } else if(userDetail.step === 11){
+        return res.json({ status:true, message: "", page:'dashboard', token:tokenNew });    
       } else {
         return res.json({ status:true, message: "", page:'basic-details', token:tokenNew });
       }

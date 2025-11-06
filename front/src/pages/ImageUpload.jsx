@@ -110,6 +110,7 @@ const handleChange = (e) => {
         photo3:data.data[0].photo3,
         photo4:data.data[0].photo4,
         profile_photo:data.data[0].profile_photo,
+        step:data.data[0].step
 
       })
 
@@ -163,6 +164,8 @@ const handleSubmit = async (e) => {
 
      }
 
+     
+
     const formDataToSubmit = new FormData();
     formDataToSubmit.append("id", userId);
      if (formData.photo) formDataToSubmit.append("photo", formData.photo);
@@ -170,7 +173,8 @@ const handleSubmit = async (e) => {
      if (formData.photo2) formDataToSubmit.append("photo2", formData.photo2);
      if (formData.photo3) formDataToSubmit.append("photo3", formData.photo3);
      if (formData.photo4) formDataToSubmit.append("photo4", formData.photo4);
-    
+     
+
      const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/profile-photo`, {
         method: "POST",
         body: formDataToSubmit,
@@ -181,6 +185,30 @@ const handleSubmit = async (e) => {
       setIsLoading(false)
       if(data.status){
       //dispatch(verifyOtp(data));
+
+      //--------------------
+     let userId;
+     if(location.pathname === '/profile-photo-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 9){ 
+      } else {
+      let formDataNew = {step:9}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
 
       if (ImageRef.current) {
           ImageRef.current = null;
@@ -229,8 +257,32 @@ const handleSubmit = async (e) => {
       
     }, [isScroll]);
 
-    const skipButton = (e) => {
+    const skipButton = async (e) => {
         e.preventDefault()
+
+        //--------------------
+     let userId;
+     if(location.pathname === '/profile-photo-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 9){ 
+      } else {
+      let formDataNew = {step:9}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
         
         if(location.pathname === '/profile-photo-edit'){
           navigate('/dashboard')

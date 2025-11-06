@@ -151,3 +151,26 @@ export const cancelRequest = async(req, res) => {
     return res.status(500).json({ status: false, error: err.message });
   }
 }
+export const changeStatusRequest = async(req, res) => {
+  try {
+    const { id, status } = req.body;
+
+      const statusRequest = await InterestModel.findByIdAndUpdate({_id:id}, {status:status}, { new: false });
+    
+      if (!statusRequest) {
+        return res.status(404).json({
+          status: false,
+          message: "No request found to change"
+        });
+      }
+
+
+    return res.status(200).json({
+      status: true,
+      message: "Request change successfully."
+    });
+
+  } catch (err) {
+    return res.status(500).json({ status: false, error: err.message });
+  }
+}

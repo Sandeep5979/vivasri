@@ -53,11 +53,19 @@ if(user){
     if (value && index < inputsRef.current.length - 1) {
       inputsRef.current[index + 1].focus();
     }
+
+    setError("")
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fullOtp = otp.join("");
+    if(!fullOtp){
+      setError("OTP is required")
+      return 
+    }
+    
+    
     setIsLoading(true)
     //console.log(user)
     

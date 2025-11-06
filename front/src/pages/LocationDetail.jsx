@@ -191,6 +191,7 @@ const fetchUserDetail = async (userId) => {
         loc_relation_mobile:data.data[0].loc_relation === 'Self' ? null : data.data[0].loc_relation_mobile,
         loc_landmark:data.data[0].loc_landmark,
         loc_temp_landmark:data.data[0].loc_temp_landmark,
+        step:data.data[0].step,
 
       })
 
@@ -250,6 +251,7 @@ const handleSubmit = async (e) => {
     setIsLoading(true)
 
     let userId;
+    let formDataNew = formData
      if(location.pathname === '/location-detail-edit'){
       
       userId = userDetailLogin
@@ -257,10 +259,15 @@ const handleSubmit = async (e) => {
       userId = userDetail
 
      }
+
+     if(formData.step >= 6){ } else {
+      formDataNew = {...formData, step:6}
+      }
+
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/location-detail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData }),
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
         
       });
 
@@ -304,6 +311,7 @@ const handleSubmit = async (e) => {
       'loc_temp_state': formData.loc_state,
       'loc_temp_city': formData.loc_city,
       'loc_temp_pincode': formData.loc_pincode,
+      'loc_temp_landmark': formData.loc_landmark,
     }));
     } else {
       setFormData((prev) => ({
@@ -311,6 +319,7 @@ const handleSubmit = async (e) => {
       'loc_temp_state': "",
       'loc_temp_city': "",
       'loc_temp_pincode': "",
+      'loc_temp_landmark': "",
     }));
     }
 
@@ -323,8 +332,32 @@ const handleSubmit = async (e) => {
       
     }, [isScroll]);
 
-    const skipButton = (e) => {
+    const skipButton = async (e) => {
         e.preventDefault()
+
+        //--------------------
+     let userId;
+     if(location.pathname === '/location-detail-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 6){ 
+      } else {
+      let formDataNew = {step:6}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
         
         if(location.pathname === '/location-detail-edit'){
           navigate('/my-profile')

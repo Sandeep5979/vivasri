@@ -374,6 +374,7 @@ const fetchUserDetail = async (userId) => {
         birth_hour:hour,
         birth_minute:dob.getMinutes(),
         birth_am:ampm,
+        step:data.data[0].step,
        
 
       })
@@ -510,18 +511,25 @@ const handleSubmit = async (e) => {
      setIsLoading(true)
      
      let userId;
+     let formDataNew = formData
      if(location.pathname === '/basic-details-edit'){
       
       userId = userDetailLogin
      } else {
       userId = userDetail
 
+      //console.log(formDataNew)
+      if(formData.step >= 1){ } else {
+      formDataNew = {...formData, step:1}
+      }
+      
+      //console.log(formDataNew)
      }
     
      const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/basic-profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData, selected }),
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew, selected }),
         
       });
 
@@ -550,6 +558,7 @@ const handleSubmit = async (e) => {
         
         //setError(data.message)
       }
+        
 
     //  console.log(data)
     

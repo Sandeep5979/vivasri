@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage';
 import FooterPage from '../components/homePage/FooterPage'
 import { useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { ageCalculate, decimaltocm, decimalToFeetInches, decimaltoWithoutcm, isI
 import { Link, useParams } from 'react-router-dom';
 import HeaderUser from '../components/homePage/HeaderUser';
 import ProfileDetailImage from '../components/profiePage/ProfileDetailImage';
+import SuccessPopup from '../components/homePage/SuccessPopup';
 
 
 function ProfileDetail() {
@@ -21,6 +22,8 @@ const [showPartner, setShowPartner] = useState(true)
 const [copied, setCopied] = useState(false);
 const [partnerMaritalStatus, setPartnerMaritalStatus] = useState([])
 const [totalMatchValue, setTotalMatchValue] = useState("")
+const modalSuccessRef = useRef(null)
+const modalInstanceSuccess = useRef(null);
 
   const fetchUserDetail = async (userId) => {
       
@@ -433,6 +436,10 @@ const [totalMatchValue, setTotalMatchValue] = useState("")
             
             if (response.ok) {
               // console.log("Interest sent successfully:", data);
+              modalInstanceSuccess.current?.show();
+              setTimeout(() => {
+                modalInstanceSuccess.current?.hide();
+              }, 2000)
               fetchUserDetail(partner_id)
 
             } else {
@@ -442,6 +449,16 @@ const [totalMatchValue, setTotalMatchValue] = useState("")
             console.error("Error while sending interest:", error);
           }
         }
+
+
+        useEffect(() => {
+                         
+                 const modalSuccessEl = document.getElementById("successPopup");
+                 if (modalSuccessEl) {
+                   modalInstanceSuccess.current = new window.bootstrap.Modal(modalSuccessEl);
+                 }
+        
+               }, []);
 
   
   return (
@@ -453,7 +470,7 @@ const [totalMatchValue, setTotalMatchValue] = useState("")
     <>
     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
-
+    <SuccessPopup ref={modalSuccessRef} message="Your interest has been sent!" />
 
     <>
   <section className="inrbnr inrbnr-minhgt">

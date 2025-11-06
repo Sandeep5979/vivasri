@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from "../store/authActions";
+import { registerUser, registerUserLogin } from "../store/authActions";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import HeaderUser from '../components/homePage/HeaderUser';
 
@@ -61,7 +61,13 @@ if(otpSent){
             if(data.page){
              // console.log('okkkkkkkkkkkkkkkk', data)
              //navigate(`/${data.page}`)
+             if(data.page === 'dashboard'){
+
+              handleSubmitOTPButton(formData)
+             } else {
              document.location.href=`/${data.page}`
+             }
+            
             } else {
               if(userId){
               navigate(`/send-otp/${userId}`)
@@ -79,6 +85,35 @@ if(otpSent){
 
     
   };
+
+  const handleSubmitOTPButton = async (formData) => {
+    
+    //e.preventDefault();
+      //dispatch(registerUser(formData));
+      
+      const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/registration-login`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+              credentials: "include"
+  
+          });
+      
+            const data = await res.json();
+            setIsLoading(false)
+            //console.log(data)
+             
+             dispatch(registerUserLogin(data));
+              
+            document.location.href=`/dashboard`
+            
+              
+      
+             
+            
+  
+      
+    };
 
 useEffect(() => {
     if(userDetailLogin?._id){

@@ -17,12 +17,12 @@ function PartnerBasicDetail() {
 const { userDetail } = useSelector((state) => state.auth);
 const navigate = useNavigate();
 const [formData, setFormData] = useState({
-  partner_age_from:18,
-  partner_age_to:25,
-  partner_weight_from:40,
-  partner_weight_to:40,
-  partner_height_from:4.1,
-  partner_height_to:4.1,
+  //partner_age_from:18,
+  //partner_age_to:25,
+  //partner_weight_from:40,
+  //partner_weight_to:40,
+  //partner_height_from:4.1,
+  //partner_height_to:4.1,
   //partner_income_from:100000,
   //partner_income_to:100000
 
@@ -155,6 +155,7 @@ const handleChange = (e) => {
       partner_managed_by:data.data[0].partner_managed_by,
       partner_complexion:data.data[0].partner_complexion,
       partner_landmark:data.data[0].partner_landmark,
+      step:data.data[0].step
 
       
     }));
@@ -461,7 +462,14 @@ const validate = () => {
     const errs = {};
     //console.log('incom', formData.partner_income_from)
     //if (!formData.partner_income_from) errs.partner_income_from = "Annual income range is required";
-    //if (!formData.partner_income_to) errs.partner_income_to = "Annual income range is required"; 
+    //if (!formData.partner_income_to) errs.partner_income_to = "Annual income range is required";
+    
+    if (!formData.partner_age_from) errs.partner_age_from = "Age from is required";
+    if (!formData.partner_age_to) errs.partner_age_to = "Age to is required";
+    if (!formData.partner_weight_from) errs.partner_weight_from = "Weight from is required";
+    if (!formData.partner_weight_to) errs.partner_weight_to = "Weight to is required";
+    if (!formData.partner_height_from) errs.partner_height_from = "Height from is required";
+    if (!formData.partner_height_to) errs.partner_height_to = "Height to is required";
     if (!formData.partner_language) errs.partner_language = "Language is required";
     if (!formData.partner_complexion) errs.partner_complexion = "Complexion is required";
     
@@ -501,6 +509,7 @@ const handleSubmit = async (e) => {
      setIsLoading(true)
 
      let userId;
+     let formDataNew = formData
      if(location.pathname === '/partner-basic-detail-edit'){
       
       userId = userDetailLogin
@@ -508,11 +517,15 @@ const handleSubmit = async (e) => {
       userId = userDetail
 
      }
+
+     if(formData.step >= 11){ } else {
+      formDataNew = {...formData, step:11}
+      }
     
      const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/partner-basic-detail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData, searchMarital_status }),
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew, searchMarital_status }),
         
       });
 
@@ -584,8 +597,35 @@ const handleSubmit = async (e) => {
   }
 
 
-  const skipButton = (e) => {
+  const skipButton = async (e) => {
         e.preventDefault()
+        
+        //--------------------
+     let userId;
+     if(location.pathname === '/partner-basic-detail-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 11){ 
+      } else {
+      let formDataNew = {step:11}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
+        
+        
+        
         if(location.pathname === '/partner-basic-detail-edit'){
             navigate('/my-profile/partner')
         } else {
@@ -696,6 +736,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_age_from}
                         >
+                          <option value="">-- Select --</option>
                           {[...Array(61)].map((_, i) => (
                             <option key={i + 18} value={i + 18}>
                               {i + 18} Years
@@ -711,6 +752,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_age_to}
                         >
+                          <option value="">-- Select --</option>
                           {[...Array(61)].map((_, i) => {
                             
                             const age = i + parseInt(formData.partner_age_from || 25, 10);
@@ -723,6 +765,21 @@ const handleSubmit = async (e) => {
                         </select>
                       </div>
                     </div>
+
+                          <div className='row'>
+                          <div className="col-md-4 col-sm-12"></div>
+                          <div className="col-md-8 col-sm-12">
+                          <div className='row'>
+                              <div className="col-md-6 col-sm-12">
+                              {error.partner_age_from && <p className="error">{error.partner_age_from}</p>}
+                            </div>
+                            <div className="col-md-6 col-sm-12">
+                            {error.partner_age_to && <p className="error">{error.partner_age_to}</p>}
+                          </div>
+                          </div>
+                          </div>
+                          </div>
+
                   </div>
                 </div>
                 <div className="row inputs-marg ">
@@ -740,6 +797,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_weight_from}
                         >
+                          <option value="">-- Select --</option>
                           {[...Array(111)].map((_, i) => (
                             <option key={i + 40} value={i + 40}>
                               {i + 40} Kg
@@ -754,6 +812,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_weight_to}
                         >
+                          <option value="">-- Select --</option>
                           {[...Array(111)].map((_, i) => {
                             const weight = i + parseInt(formData.partner_weight_from || 40, 10);
                             
@@ -767,6 +826,20 @@ const handleSubmit = async (e) => {
                         </select>
                       </div>
                     </div>
+
+                    <div className='row'>
+                          <div className="col-md-4 col-sm-12"></div>
+                          <div className="col-md-8 col-sm-12">
+                          <div className='row'>
+                              <div className="col-md-6 col-sm-12">
+                              {error.partner_weight_from && <p className="error">{error.partner_weight_from}</p>}
+                            </div>
+                            <div className="col-md-6 col-sm-12">
+                            {error.partner_weight_to && <p className="error">{error.partner_weight_to}</p>}
+                          </div>
+                          </div>
+                          </div>
+                          </div>
                   </div>
                 </div>
                 <div className="row inputs-marg ">
@@ -784,6 +857,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_height_from}
                         >
+                          <option value="">-- Select --</option>
                           {height && height.map((heightList, index)  => {
                             
                             return (
@@ -802,6 +876,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_height_to}
                         >
+                          <option value="">-- Select --</option>
                           {height &&
                             height
                               .filter(
@@ -817,6 +892,19 @@ const handleSubmit = async (e) => {
                         </select>
                       </div>
                     </div>
+                    <div className='row'>
+                          <div className="col-md-4 col-sm-12"></div>
+                          <div className="col-md-8 col-sm-12">
+                          <div className='row'>
+                              <div className="col-md-6 col-sm-12">
+                              {error.partner_height_from && <p className="error">{error.partner_height_from}</p>}
+                            </div>
+                            <div className="col-md-6 col-sm-12">
+                            {error.partner_height_to && <p className="error">{error.partner_height_to}</p>}
+                          </div>
+                          </div>
+                          </div>
+                          </div>
                   </div>
                 </div>
                         <div className="row inputs-margs ">
@@ -1296,7 +1384,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_income_from}
                         >
-                          <option value="">Select</option>
+                          <option value="">-- Select --</option>
                           {incomeOptions.map((inc) => (
                           <option key={inc.value} value={inc.value}>
                             {inc.label}
@@ -1312,7 +1400,7 @@ const handleSubmit = async (e) => {
                         onChange={handleChange}
                         value={formData.partner_income_to}
                         >
-                          <option value="">Select</option>
+                          <option value="">-- Select --</option>
                           {incomeOptions
                           .filter((inc) => {
                             
@@ -1326,10 +1414,27 @@ const handleSubmit = async (e) => {
                           ))}
                         </select>
 
-                         {error.partner_income_from && <p className="error">{error.partner_income_from}</p>}
-                         {error.partner_income_to && <p className="error">{error.partner_income_to}</p>}
+                         
+                         
                       </div>
+                          
+
                     </div>
+
+                    <div className='row'>
+                          <div className="col-md-4 col-sm-12"></div>
+                          <div className="col-md-8 col-sm-12">
+                          <div className='row'>
+                              <div className="col-md-6 col-sm-12">
+                              {error.partner_income_from && <p className="error">{error.partner_income_from}</p>}
+                            </div>
+                            <div className="col-md-6 col-sm-12">
+                            {error.partner_income_to && <p className="error">{error.partner_income_to}</p>}
+                          </div>
+                          </div>
+                          </div>
+                          </div>
+
                   </div>
                 </div>
                 <h3 className="pt-3">&nbsp;Partner’s Religion &amp; Caste</h3>

@@ -524,6 +524,10 @@ const UserSchema = new Schema(
       type: String,
       trim: true
     },
+    step: {
+      type: Number,
+      trim: true
+    },
 
     status: {
       type: String,

@@ -31,7 +31,7 @@ const casteRef = useRef(null);
         });
 
       const data = await res.json();
-      //console.log(data)
+      console.log(data)
       if(data.status){
         fetchCaste(data.data[0].religion)
         fetchSubCaste(data.data[0].caste)
@@ -43,7 +43,8 @@ const casteRef = useRef(null);
         sub_caste:data.data[0].sub_caste,
         gotra:data.data[0].gotra,
         gotra_other:data.data[0].gotra_other,
-        dosh:data.data[0].dosh
+        dosh:data.data[0].dosh,
+        step:data.data[0].step,
 
       })
 
@@ -182,6 +183,7 @@ const handleSubmit = async (e) => {
     setIsLoading(true)
 
      let userId;
+     let formDataNew = formData
      if(location.pathname === '/religion-edit'){
       
       userId = userDetailLogin
@@ -190,10 +192,14 @@ const handleSubmit = async (e) => {
 
      }
 
+     if(formData.step >= 5){ } else {
+      formDataNew = {...formData, step:5}
+      }
+
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/religion`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData }),
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
         
       });
 
@@ -235,8 +241,33 @@ const handleSubmit = async (e) => {
     }, [isScroll]);
 
 
-    const skipButton = (e) => {
+    const skipButton = async (e) => {
         e.preventDefault()
+        
+        //--------------------
+     let userId;
+     if(location.pathname === '/religion-edit'){
+      
+      userId = userDetailLogin
+     } else {
+      userId = userDetail
+
+     }
+    if(formData.step >= 5){ 
+      } else {
+      let formDataNew = {step:5}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      
+    }
+    //-----------------
+        
         
         if(location.pathname === '/religion-edit'){
               navigate('/my-profile')

@@ -25,6 +25,7 @@ import CasteWiseSearchList from './CasteWiseSearchList'
 import SearchProfileList from '../components/homePage/SearchProfileList'
 import LoginPopup from '../components/homePage/LoginPopup'
 import ConfirmPopup from '../components/homePage/ConfirmPopup'
+import SuccessPopup from '../components/homePage/SuccessPopup'
 
 
 
@@ -82,6 +83,8 @@ function SearchProfile() {
 
   const modalConfirmRef = useRef(null)
   const modalInstanceConfirm = useRef(null);
+  const modalSuccessRef = useRef(null)
+  const modalInstanceSuccess = useRef(null);
   const [popupMessage, setPopupMessage] = useState("")
   const [userProfileId, setUserProfileId] = useState("")
   const [userProfileIndex, setUserProfileIndex] = useState("")
@@ -95,6 +98,7 @@ function SearchProfile() {
    
 
     //console.log('okkkkkkkkkkk')
+    setSearchData([])
     setIsLoader(true)
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/front/search-list`, {
         method: "POST",
@@ -145,14 +149,14 @@ function SearchProfile() {
         setTotalValue(data.usersBride?.length)
         setShowPartner(true)
       } else {
-        setTotalValue(data.data?.length)
+        setTotalValue(data.total)
       }
       
       setIsScroll(true)
       //console.log('total page', data.totalPages)
-      //setTotalPages(data.totalPages);
+      setTotalPages(data.totalPages);
        // append, don’t overwrite
-      setHasMore(data.data.hasMore);
+      //setHasMore(data.data.hasMore);
 
   }
 
@@ -265,7 +269,7 @@ function SearchProfile() {
   } 
 
   useEffect(() => {
-         // Initialize Bootstrap modal once (after first render)
+         // Initialize Bootstrap modal once (after first render) loginModal
          const modalEl = document.getElementById("loginModal");
          if (modalEl) {
            modalInstance.current = new window.bootstrap.Modal(modalEl);
@@ -278,6 +282,12 @@ function SearchProfile() {
          if (modalConfirmEl) {
            modalInstanceConfirm.current = new window.bootstrap.Modal(modalConfirmEl);
          }
+
+         const modalSuccessEl = document.getElementById("successPopup");
+         if (modalSuccessEl) {
+           modalInstanceSuccess.current = new window.bootstrap.Modal(modalSuccessEl);
+         }
+
        }, []);
   
   // send interest
@@ -286,11 +296,12 @@ function SearchProfile() {
      
     setLoginProps('reload');
     if(userDetailLogin?._id){
-      setUserProfileId(id)
+      /* setUserProfileId(id)
       setUserProfileIndex(index)
       setPopupMessage('are you sure you want to express interest?')
-      modalInstanceConfirm.current?.show();  
-      // interest(id, userDetailLogin?._id, index);
+      modalInstanceConfirm.current?.show();
+      */  
+      interest(id, userDetailLogin?._id, index);
        
         } else {
          
@@ -324,7 +335,7 @@ function SearchProfile() {
     
     //console.log('confirm', value)
     if(value === 'Yes'){
-    interest(userProfileId, userDetailLogin?._id, userProfileIndex);
+    //interest(userProfileId, userDetailLogin?._id, userProfileIndex);
     }
     modalInstanceConfirm.current?.hide();
   }
@@ -350,6 +361,10 @@ function SearchProfile() {
 
             if (response.ok) {
               // console.log("Interest sent successfully:", data);
+              modalInstanceSuccess.current?.show();
+              setTimeout(() => {
+                modalInstanceSuccess.current?.hide();
+              }, 2000)
               setSearchData((prevData) => {
                       const updated = [...prevData];
                       updated[index] = {
@@ -473,10 +488,11 @@ function SearchProfile() {
 
     <LoginPopup ref={modalBrideRef} url={loginProps} />
     <ConfirmPopup ref={modalConfirmRef} message={popupMessage} yesNoButton={yesNoButton} />
+    <SuccessPopup ref={modalSuccessRef} message="Your interest has been sent!" />
     
     <>
 
-    
+      
 
 
 
@@ -812,7 +828,13 @@ function SearchProfile() {
               }
 
 
-             { /* <div className="flex gap-2 mt-4">
+            {isLoader && 
+              
+              <ProfieSkeleton /> 
+              
+              }
+
+           { /*   <div className="flex gap-2 mt-4">
         <button
           disabled={page === 1}
           onClick={() => setPage(page - 1)}
@@ -837,15 +859,8 @@ function SearchProfile() {
           Next
         </button>
       </div>
-      */ }
-
-              {isLoader && 
-              
-              <ProfieSkeleton /> 
-              
-              }
                 
-                
+      */ }                
 
 
 

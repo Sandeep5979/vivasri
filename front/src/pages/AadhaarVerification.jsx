@@ -63,7 +63,7 @@ function AadhaarVerification() {
           });
   
         const data = await res.json();
-        console.log('adddhar', data.data[0].aadhaar_no)
+       // console.log('adddhar', data.data[0])
         if(data.status){
           const aadhaar = data?.data?.[0]?.aadhaar_no;
           const newOtp = []
@@ -77,6 +77,7 @@ function AadhaarVerification() {
         
           setFormData({
           aadhaar_no:data.data[0].aadhaar_no,
+          step:data.data[0].step
          
   
         })
@@ -125,10 +126,16 @@ function AadhaarVerification() {
      //console.log(formData)
      const fullOtp = otp.join("");
       setIsLoading(true)
+      
+      let formDataNew = {aadhaar_no:fullOtp}
+      if(formData.step >= 3){ } else {
+        formDataNew = {...formDataNew, step:3}
+      }
+      
       const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/aadhaar-verification`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userDetail, formData:{aadhaar_no:fullOtp} }),
+          body: JSON.stringify({ userDetail, formData:formDataNew }),
           
         });
   
@@ -157,11 +164,34 @@ function AadhaarVerification() {
       
     };
 
-    const skipButton = (e) => {
+    const skipButton = async (e) => {
       e.preventDefault()
       
+      //--------------------
+     if(formData.step >= 4){ 
+      navigate('/registration-success')
+
+     } else {
+      let formDataNew = {step:4}
       
-        navigate('/registration-success')
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      if(data.status){
+         
+          navigate('/registration-success')
+        
+      }
+    }
+    //-----------------
+        
+      
+      
+      
             
 
 }

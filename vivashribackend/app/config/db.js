@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 export const dbConnect = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      // dbName: "vivashriDB",
-      dbName: "vivashriDevelopementDB",
+      // vivashriDevelopementDB
+      dbName: "vivashriDB",
     });
     console.log("Database connected successfully.");
   } catch (error) {

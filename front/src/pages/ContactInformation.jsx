@@ -59,7 +59,8 @@ const handleChange = (e) => {
         instagram:data.data[0].instagram,
         facebook:data.data[0].facebook,
         reference:data.data[0].reference,
-        reference_other:data.data[0].reference_other
+        reference_other:data.data[0].reference_other,
+        step:data.data[0].step
 
       })
 
@@ -136,6 +137,7 @@ const handleSubmit = async (e) => {
     setIsLoading(true)
 
      let userId;
+     let formDataNew = formData
      if(location.pathname === '/contact-information-edit'){
       
       userId = userDetailLogin
@@ -144,10 +146,14 @@ const handleSubmit = async (e) => {
 
      }
 
+     if(formData.step >= 2){ } else {
+      formDataNew = {...formData, step:2}
+      }
+
     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userDetail:userId, formData }),
+        body: JSON.stringify({ userDetail:userId, formData:formDataNew }),
         
       });
 
@@ -186,13 +192,36 @@ const handleSubmit = async (e) => {
       
     }, [isScroll]);
 
-const skipButton = (e) => {
+const skipButton = async (e) => {
   e.preventDefault()
   
   if(location.pathname === '/contact-information-edit'){
         navigate('/my-profile')
         } else {
+          
+      
+     //--------------------
+     if(formData.step >= 2){ 
+      navigate('/aadhaar-verification')
+
+     } else {
+      let formDataNew = {step:2}
+      
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/contact-information`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userDetail, formData:formDataNew }),
+        
+      });
+      const data = await res.json();
+      if(data.status){
+         
           navigate('/aadhaar-verification')
+        
+      }
+    }
+    //-----------------
+        
         }
 
 }

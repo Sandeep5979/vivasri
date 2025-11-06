@@ -525,12 +525,12 @@ function HomePage() {
               finding a partner—it’s about discovering your true companion for
               life”.
             </p>
-            <a
-              href="/#"
+            <Link
+              to="/about-us"
               className="button homeform-btn d-inline px-4 py-3 mt-5"
             >
               About Us <i className="fa-solid fa-arrow-right-long" />{" "}
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -595,9 +595,9 @@ function HomePage() {
             Join thousands of happy couples who found love through Vivashri.
           </p>
         </div>
-        <a href="/#" className="button d-inline px-5 py-3">
+        <Link to="/registration" className="button d-inline px-5 py-3">
           Register Now - It’s Free{" "}
-        </a>
+        </Link>
       </div>
     </div>
   </section>
