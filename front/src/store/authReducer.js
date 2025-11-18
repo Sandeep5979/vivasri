@@ -19,7 +19,7 @@ if(rawCookie && rawCookie !== undefined && rawCookie !=='undefined'){
 const parsedData = rawCookie ? JSON.parse(decodeURIComponent(rawCookie)) : null;
 
 //console.log("Parsed cookie:", parsedData);
-userValue = parsedData
+userValue = JSON.parse(base64UrlDecode(parsedData?.split(".")[1]));
 
 }
 const rawCookieAuth = Cookies.get("authTokenUser");
@@ -56,6 +56,7 @@ const initialState = {
   isVerified: false,
   email: null,
   error: null,
+  planChangeStatus:false
 };
 
 function authReducer(state = initialState, action) {
@@ -83,6 +84,9 @@ function authReducer(state = initialState, action) {
       
     case "LOGOUT_SUCCESS":
       return { ...state, loading: false,  user: action.payload };
+
+    case "PLAN_CHANGE":
+      return { ...state, loading: false,  planChangeStatus:action.payload };
 
     case "LOGOUT_FAILURE":
       return { ...state, loading: false, error: action.error };  

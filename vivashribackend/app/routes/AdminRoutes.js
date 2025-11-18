@@ -18,6 +18,8 @@ import { professionalEducationCreate, professionalEducationGetAll, professionalE
 import { occupationCreate, occupationGetAll, occupationGetById, occupationRemove, occupationUpdate } from "../controllers/admin/OccupationController.js";
 import { workingWithCreate, workingWithGetAll, workingWithGetById, workingWithRemove, workingWithUpdate } from "../controllers/admin/WorkingWithController.js";
 import { memberEnquiryCreate, memberEnquiryGetAll, memberEnquiryGetById, memberEnquiryUpdate, memberEnquiryRemove } from "../controllers/admin/MemberEnquiryController.js";
+import { membershipPlanCreate, membershipPlanGetAll, membershipPlanGetById, membershipPlanRemove, membershipPlanUpdate } from "../controllers/admin/MembershipPlanController.js";
+import { userGetAllList, userGetAllPaidList, userRemove, userUpdate } from "../controllers/admin/UserController.js";
 
 
 const router = express.Router();
@@ -141,5 +143,15 @@ router.route("/member-enquiry/create").post(memberEnquiryCreate);
 router.route("/member-enquiry/update/:id").post(memberEnquiryUpdate); 
 router.route("/member-enquiry/delete/:id").delete(memberEnquiryRemove);
 
+router.route("/membership-plan").get(membershipPlanGetAll);
+router.route("/membership-plan/:id").get(membershipPlanGetById);
+router.route("/membership-plan/create").post(membershipPlanCreate);
+router.route("/membership-plan/update/:id").post(membershipPlanUpdate); 
+router.route("/membership-plan/delete/:id").delete(membershipPlanRemove);
+
+router.route("/user-list").get(userGetAllList);
+router.route("/user-list/update/:id").post(userUpdate);
+router.route("/user-list/delete/:id").delete(userRemove);
+router.route("/user-paid-list").get(userGetAllPaidList);
 
 export default router;

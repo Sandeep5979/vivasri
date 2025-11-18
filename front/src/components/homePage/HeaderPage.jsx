@@ -469,13 +469,13 @@ const handleChange = (e) => {
                     <ul className="headerMenu">
                       <li>
                         {" "}
-                        <a href="/">
+                        <Link to="/">
                           <img
                             src="assets/img/icons/home-icon.svg"
                             alt="Home Icon"
                             style={{ marginRight: 5 }}
                           />
-                        </a>
+                        </Link>
                       </li>
                       <li className="hasSub megaMenu">
                         <a href="/#">

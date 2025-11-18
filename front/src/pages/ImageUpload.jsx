@@ -2,15 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import HeaderUser from '../components/homePage/HeaderUser';
+import { planChange } from '../store/authActions';
 
 function ImageUpload() {
 
   const location = useLocation();
-  const { userDetailLogin } = useSelector((state) => state.auth);
+  const { userDetailLogin, planChangeStatus } = useSelector((state) => state.auth);
   
   const { userDetail } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
 const navigate = useNavigate();
 const [formData, setFormData] = useState({});
 const [error, setError] = useState({})
@@ -313,6 +315,7 @@ const handleSubmit = async (e) => {
       const data = await res.json();
       if(data.status){
         fetchUserDetail(userId._id)
+        dispatch(planChange(!planChangeStatus));
       }
 
 

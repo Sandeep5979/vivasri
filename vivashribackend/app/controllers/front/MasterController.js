@@ -6,6 +6,9 @@ import CasteModel from "../../models/CasteModel.js";
 import StateModel from "../../models/StateModel.js";
 import CityModel from "../../models/CityModel.js";
 import SentInterest from "../../models/SentInterest.js";
+import MembershipPlanModel from "../../models/MembershipPlanModel.js"
+import { getUserDetailAll } from "../../services/front/UserService.js";
+import UserPlanModel from "../../models/UserPlanModel.js";
 
 function cmToFeetInches(cm) {
   const totalInches = cm / 2.54;
@@ -1017,6 +1020,375 @@ const memberId = member_id;
   }
 };
 
+
+export const getAllMatchProfileList = async (req, res) => {
+  try {
+    const {user_id, totalResult} = req.body
+    const data = await getUserDetailAll(user_id, user_id);
+    //console.log(data[0].email)
+   
+    const formDataMatch =  {
+            partner_age_from:data[0].partner_age_from,
+             partner_age_to:data[0].partner_age_to,
+             partner_height_from:data[0].partner_height_from,
+             partner_height_to:data[0].partner_height_to,
+             partner_marital_status:data[0].partner_marital_status, 
+             partner_religion:data[0].partner_religion,
+             partner_caste:data[0].partner_caste, 
+             partner_mother_tongue:data[0].partner_mother_tongue,
+             partner_education:data[0].partner_education,
+             partner_occupation:data[0].partner_occupation, 
+             partner_diet:data[0].partner_diet,
+             partner_country:data[0].partner_country,
+             partner_state:data[0].partner_state,
+             partner_city:data[0].partner_city,
+             gender:data[0].gender,
+             city:data[0].loc_city?._id,
+            }
+
+            //console.log(formDataMatch.gender)
+
+
+let heightExpr = null;
+let dobCondition = null;
+let incomeExpr = {};
+const hasAnyValue = Object.values(formDataMatch).some(value => {
+      if (Array.isArray(value)) return value.length > 0;
+      if (value === null || value === undefined) return false;
+      if (typeof value === 'string') return value.trim() !== '';
+      return true;
+    });   
+    
+if(hasAnyValue){
+
+   let query = {
+    status: 'Active',
+    
+  };
+
+  if (formDataMatch.gender && formDataMatch.gender !== '') {
+   
+    if (formDataMatch.gender == 'Male') {
+      query.gender = 'Female';
+    } else {
+      query.gender = 'Male';
+    }
+}
+if (formDataMatch.today && formDataMatch.today == 1) {
+   const { start, end } = getYesterdayRange();
+   query.createdAt = {
+    $gte: start,
+    $lte: end
+  }
+    
+}
+if (formDataMatch.near_me && formDataMatch.near_me == 1) {
+  query.loc_city = formDataMatch.city
+}
+
+
+
+
+if (formDataMatch?.partner_age_from && formDataMatch?.partner_age_to) {
+      const currentYear = new Date().getFullYear();
+
+      const fromYear = currentYear - Number(formDataMatch.partner_age_to);
+      const toYear = currentYear - Number(formDataMatch.partner_age_from);
+
+      const fromDate = new Date(`${fromYear}-01-01`);
+      const toDate = new Date(`${toYear}-12-31`);
+
+      query.dob = { $gte: fromDate, $lte: toDate };
+     // dobCondition = { dob: { $gte: fromDate, $lte: toDate } };
+    }
+    
+    if (formDataMatch?.partner_height_from && formDataMatch?.partner_height_to) {
+      const heightFromInches = parseHeightToInches(formDataMatch.partner_height_from);
+      const heightToInches = parseHeightToInches(formDataMatch.partner_height_to);         
+
+    heightExpr = {
+      $and: [
+        {
+          $gte: [
+            {
+              $add: [
+                {
+                  $multiply: [
+                    { $toInt: { $arrayElemAt: [{ $split: [{ $toString: "$height" }, "."] }, 0] } },
+                    12
+                  ]
+                },
+                {
+                  $toInt: {
+                    $ifNull: [
+                      { $arrayElemAt: [{ $split: [{ $toString: "$height" }, "."] }, 1] },
+                      0
+                    ]
+                  }
+                }
+              ]
+            },
+            heightFromInches
+          ]
+        },
+        {
+          $lte: [
+            {
+              $add: [
+                {
+                  $multiply: [
+                    { $toInt: { $arrayElemAt: [{ $split: [{ $toString: "$height" }, "."] }, 0] } },
+                    12
+                  ]
+                },
+                {
+                  $toInt: {
+                    $ifNull: [
+                      { $arrayElemAt: [{ $split: [{ $toString: "$height" }, "."] }, 1] },
+                      0
+                    ]
+                  }
+                }
+              ]
+            },
+            heightToInches
+          ]
+        }
+      ]
+    };
+
+
+  }
+
+  const partnerMaritalIds = (formDataMatch.partner_marital_status || [])
+      .filter(Boolean)
+      .map(list => new mongoose.Types.ObjectId(list._id));
+
+
+      
+   const partnerReligionId = formDataMatch.partner_religion?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_religion?._id)
+      : null;
+      
+   const partnerCasteId = formDataMatch.partner_caste?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_caste?._id)
+      : null;
+
+  const partnerMotherTongueId = formDataMatch.partner_mother_tongue?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_mother_tongue?._id)
+      : null;
+const partnerEducationId = formDataMatch.partner_education?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_education?._id)
+      : null;
+
+const partnerOccupationId = formDataMatch.partner_occupation?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_occupation?._id)
+      : null;      
+
+const partnerDietId = formDataMatch.partner_diet?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_diet?._id)
+      : null;
+
+const partnerCountryId = formDataMatch.partner_country?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_country?._id)
+      : null;
+      
+      
+const partnerStateId = formDataMatch.partner_state?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_state?._id)
+      : null;
+      
+const partnerCityId = formDataMatch.partner_city?._id
+      ? new mongoose.Types.ObjectId(formDataMatch.partner_city?._id)
+      : null; 
+      
+      
+      //annual income
+      const partnerIncomeFrom = formDataMatch.partner_income_from || "";
+      const partnerIncomeTo = formDataMatch.partner_income_to || "";
+
+if (
+  partnerIncomeFrom.toLowerCase().includes("Not Applicable") ||
+  partnerIncomeTo.toLowerCase().includes("Not Applicable")
+) {
+  incomeExpr = { $ne: null }; // always true for any record
+}
+
+
+else if (
+  partnerIncomeFrom.toLowerCase().includes("Above") ||
+  partnerIncomeTo.toLowerCase().includes("Above")
+) {
+  const minVal = extractNumber(partnerIncomeFrom || partnerIncomeTo);
+
+  incomeExpr = {
+    $or: [
+      // user also has “Above …”
+      { $regexMatch: { input: "$annual_income", regex: /Above/i } },
+      // or user’s upper income bound >= partner’s “Above …” minimum
+      {
+        $expr: {
+          $gte: [
+            {
+              $toInt: {
+                $arrayElemAt: [
+                  { $split: [{ $toString: "$annual_income" }, "-"] },
+                  1,
+                ],
+              },
+            },
+            minVal,
+          ],
+        },
+      },
+    ],
+  };
+}
+
+
+else {
+  const incomeFrom = extractNumber(partnerIncomeFrom);
+  const incomeTo =
+    extractNumber(partnerIncomeTo) || Number.MAX_SAFE_INTEGER;
+
+  incomeExpr = {
+    $and: [
+      {
+        $lte: [
+          {
+            $toInt: {
+              $arrayElemAt: [
+                { $split: [{ $toString: "$annual_income" }, "-"] },
+                0,
+              ],
+            },
+          },
+          incomeTo,
+        ],
+      },
+      {
+        $gte: [
+          {
+            $toInt: {
+              $arrayElemAt: [
+                { $split: [{ $toString: "$annual_income" }, "-"] },
+                1,
+              ],
+            },
+          },
+          incomeFrom,
+        ],
+      },
+    ],
+  };
+}
+
+      //end annual income
+   
+    query.$or = [
+              { dob: query.dob },
+              { $expr: heightExpr },
+              { marital_status: { $in: partnerMaritalIds } },
+              ...(partnerReligionId ? [{ religion: partnerReligionId }] : []),
+              ...(partnerCasteId ? [{ caste: partnerCasteId }] : []),
+              ...(partnerMotherTongueId ? [{ partner_mother_tongue: partnerMotherTongueId }] : []),
+              ...(partnerEducationId ? [{ education: partnerEducationId }] : []),
+              ...(partnerOccupationId ? [{ occupation: partnerOccupationId }] : []),
+              ...(partnerDietId ? [{ diet: partnerDietId }] : []),
+              ...(partnerCountryId ? [{ loc_nationality: partnerCountryId }] : []),
+              ...(partnerStateId ? [{ loc_state: partnerStateId }] : []),
+              ...(partnerCityId ? [{ loc_city: partnerCityId }] : []),
+              { $expr: incomeExpr },
+            ];
+
+
+            
+    
+    delete query.dob; 
+
+          
+
+          //const pageNew = parseInt(page) || 1;
+          //const limit = 5;
+          //const skip = (pageNew - 1) * limit;
+          const total = await UserModel.find(query).countDocuments();
+
+
+let users = await UserModel.find(query).populate([
+    { path: "highest_degree" },
+    { path: "profile_for" },
+    { path: "religion" },
+    { path: "loc_state" },
+    { path: "loc_city" },
+    { path: "occupation" },
+    
+])
+//.skip(0).limit(totalResult);
+users = users.sort(() => 0.5 - Math.random());
+
+const memberId = user_id;
+  //console.log(memberId)
+  let sentPartnerIds = [];
+  let planIds = [];
+    if (memberId) {
+      const sentInterests = await SentInterest.find({ member_id: memberId }).select("partner_id");
+      sentPartnerIds = sentInterests.map((i) => i.partner_id.toString());
+    }
+    
+    
+
+    
+  const usersWithPlans = await Promise.all(users.map(async (user) => {
+  const planDetail = await UserPlanModel.findOne({ user_id: user._id }).populate("plan_id");
+
+  const plainUser = user.toObject();
+
+  plainUser.interest_sent = memberId
+    ? sentPartnerIds.includes(user._id.toString())
+    : false;
+
+  plainUser.plan_detail = memberId
+    ? planDetail
+    : null;
+
+  return plainUser;
+}));
+
+
+// console.log(usersWithPlans[0].plan_detail, usersWithPlans[0].interest_sent);
+
+const usersFree = usersWithPlans.filter(list => (list.plan_detail?.plan_id?.name != 'Premium' && list.plan_detail?.plan_id?.name != 'Gold' && list.plan_detail?.plan_id?.name != 'VIP'))
+const usersPremium = usersWithPlans.filter(list => list.plan_detail?.plan_id?.name == 'Premium')
+
+// console.log(usersPremium[0].interest_sent);
+
+res.json({ status: true, usersFree:usersFree?.slice(0, totalResult), usersPremium:usersPremium.slice(0, totalResult) 
+      //total,
+      //page:pageNew,
+      //totalPages: Math.ceil(total / limit),
+      //hasMore: pageNew * limit < total, 
+    
+    });
+
+
+} else {
+res.json({ status: true, usersFree:[], usersPremium:[], 
+      //total,
+      //page:pageNew,
+      //totalPages: Math.ceil(total / limit),
+      //hasMore: pageNew * limit < total, 
+    
+    });
+
+}
+
+
+
+  } catch (err) {
+    res.status(500).json({ status: false, error: err.message });
+  }
+};
+
 function getYesterdayRange() {
   const now = new Date();
   const start = new Date(now);
@@ -1104,6 +1476,24 @@ export const getHomeMenuCasteList = async (req, res) => {
 //users = users.sort(() => 0.5 - Math.random()).slice(0, 6);
 
   res.json({ status: true, data:caste });
+
+  } catch (err) {
+    res.status(500).json({ status: false, error: err.message });
+  }
+
+
+}
+export const getMembershipPlanList = async (req, res) => {
+  
+  try {
+    let query = {
+    status: 'Active',
+    
+  };
+  
+  let  plan = await MembershipPlanModel.find()
+
+  res.json({ status: true, data:plan });
 
   } catch (err) {
     res.status(500).json({ status: false, error: err.message });

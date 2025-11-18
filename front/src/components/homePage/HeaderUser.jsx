@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { userLogout } from '../../store/authActions';
 
 function HeaderUser() {
   
-  const { userDetailLogin } = useSelector((state) => state.auth);
+  const { userDetailLogin, planChangeStatus } = useSelector((state) => state.auth);
   const dispatch = useDispatch()
 
 const [formData, setFormData] = useState({})
+const location = useLocation()
 
 
 const [isHeaderOpen, setHeaderOpen] = useState(false);
@@ -96,6 +97,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
           
           name:data.data[0].name,
           photo:profilePhoto,
+          planDetail:data.data[0].plan_detail,
             
   
         })
@@ -105,14 +107,14 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
     }
   
   useEffect(() => {
-    
+    //console.log('header', planChangeStatus)
     if(userDetailLogin?._id){
     fetchUserDetail(userDetailLogin._id)
     } else {
       document.location.href='/';
     }
   
-  }, [userDetailLogin])
+  }, [userDetailLogin, planChangeStatus])
 
 
   const userLogoutButton = () => {
@@ -121,6 +123,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
       document.location.href=`/`
   
     }
+
+    useEffect(() => {
+      
+      setOpenMegaMenu(false)
+      setHeaderOpen(false);
+
+    }, [location.pathname])
   
   
   return (
@@ -146,8 +155,8 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
         <div className="mainHeaderSection">
           <div className="headerNav">
             <ul className="headerMenu">
-              <li className="hasSub megaMenu">
-                <a href="/#">
+              <li className="hasSub megaMenu megaMenu2">
+                <Link to="#">
                   My Vivashri{" "}
                   <img
                     src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
@@ -155,7 +164,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     className="dropdownicon"
                     style={{ marginLeft: 5 }}
                   />
-                </a>
+                </Link>
                 <div className="headerSubNav headerSubNavs">
                   <ul className="headerSubMenu">
                     {/* <li><h5>Horoscope</h5></li> */}
@@ -263,20 +272,21 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
           </div>
         </div>
       </div>
-      <div className="headerButns dnone-but butt-pro-siz">
+
+      
+      <div className="headerButns dnone-but butt-pro-siz myprof-menu">
        
         <ul className="headerMenu">
           <li className="hasSub megaMenu" style={{padding:'0px'}}>
             <Link to="/dashboard" style={{ borderBottom: "none" }}>
-              <img
-                className="size-togle-pro"
-                src={formData.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo}` : 'assets/img/no-image.jpg'}
-                alt=""
-              />
+                <div className='myprof-img'>
+                  <img className="size-togle-pro" src={formData.photo ? `${process.env.REACT_APP_BASE_URL_IMAGE}${formData.photo}` : 'assets/img/no-image.jpg'}
+                alt=""/>
+                </div>
               <img
                 src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/dropdown-arrow.svg`}
                 alt="down Icon"
-                className="dropdownicon"
+                className="dropdownicon d-none d-lg-inline"
                 style={{ marginLeft: 5 }}
               />
             </Link>
@@ -296,7 +306,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <div className="row">
                       <div className="col-7">
                         <h6 style={{ fontSize: 14 }}>
-                          Active Plan: Standard Plan
+                          Active Plan: {formData.planDetail?.plan_id?.name === 'VIP'? 'VIP Shaadi':formData.planDetail?.plan_id?.name ? formData.planDetail?.plan_id?.name+' Plan':'Basic Plan'}
                         </h6>
                       </div>
                       <div className="col-5">
@@ -333,13 +343,13 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                         </Link>
                       </div>
                       <div className="col-6">
-                        <Link to="#" style={{ border: "none", fontSize: 13 }}>
+                        <Link to="/profile-photo-edit" style={{ border: "none", fontSize: 13 }}>
                           <img
                             style={{ marginRight: 5 }}
                             src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/key_svgrepo.com.png`}
                             alt=""
                           />
-                          Change Password
+                          My Photos
                         </Link>
                       </div>
                       <div className="col-6">
@@ -441,10 +451,10 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <Link to="/my-matches">My Matches</Link>
                   </li>
                   <li>
-                    <Link to="#">Today Matches</Link>
+                    <Link to="/today-matches">Today Matches</Link>
                   </li>
                   <li>
-                    <Link to="#">Near Me</Link>
+                    <Link to="/near-me">Near Me</Link>
                   </li>
                 </ul>
               </div>
@@ -485,16 +495,16 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                 <ul className="headerSubMenu headerSubMenuss">
                   {/* <li><h5>Horoscope</h5></li> */}
                   <li>
-                    <Link to="#">Received</Link>
+                    <Link to="/inbox/received">Received</Link>
                   </li>
                   <li>
-                    <Link to="#">Accepted</Link>
+                    <Link to="/inbox/accepted">Accepted</Link>
                   </li>
                   <li>
-                    <Link to="#">Request</Link>
+                    <Link to="/inbox/decline">Decline</Link>
                   </li>
                   <li>
-                    <Link to="#">Sent</Link>
+                    <Link to="/inbox/sent">Sent</Link>
                   </li>
                 </ul>
               </div>
@@ -571,10 +581,10 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                           <Link to="/my-matches">My Matches</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Today Matches</Link>
+                                          <Link to="/today-matches">Today Matches</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Near Me</Link>
+                                          <Link to="/near-me">Near Me</Link>
                                         </li>
                                         
                                       </ul>
@@ -620,16 +630,16 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                                       <ul className="headerSubMenu">
                                         {/* <li><h5>Horoscope</h5></li> */}
                                         <li>
-                                          <Link to="#">Received</Link>
+                                          <Link to="/inbox/received">Received</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Accepted</Link>
+                                          <Link to="/inbox/accepted">Accepted</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Request</Link>
+                                          <Link to="/inbox/decline">Decline</Link>
                                         </li>
                                         <li>
-                                          <Link to="#">Sent</Link>
+                                          <Link to="/inbox/sent">Sent</Link>
                                         </li>
                                         
                                         

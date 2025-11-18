@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import HeaderPage from '../components/homePage/HeaderPage'
 import FooterPage from '../components/homePage/FooterPage'
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, registerUserLogin } from "../store/authActions";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import HeaderUser from '../components/homePage/HeaderUser';
+import LoginPopup from '../components/homePage/LoginPopup';
 
 
 function Registration() {
@@ -16,6 +17,11 @@ function Registration() {
   const { otpSent, loading, error } = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setError] = useState("");
+  const [existShow, setExistShow] = useState(false)
+  const [loginProps, setLoginProps] = useState(null);
+  const modalLoginRef = useRef(null);
+  const modalInstance = useRef(null);
+  const [showEmail, setShowEmail] = useState("")
   
 
 useEffect(() => {
@@ -80,7 +86,15 @@ if(otpSent){
     
            
           } else {
+            if(data.show === 1){
+              setExistShow(true)
+              setLoginProps(`/${data.page}`)
+              setShowEmail(formData.email)
+            } else {
+            
             setError(data.message)
+
+            }
           }
 
     
@@ -151,9 +165,25 @@ useEffect(() => {
 
    }, [userId])
 
+   useEffect(() => {
+            // Initialize Bootstrap modal once (after first render) loginModal
+            const modalEl = document.getElementById("loginModal");
+            if (modalEl) {
+              modalInstance.current = new window.bootstrap.Modal(modalEl);
+            }
+          }, []);
+
+   const showLogin = (e) => {
+      
+    modalInstance.current?.show();
+
+   }
+
   return (
     <>
       { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
+
+      <LoginPopup ref={modalLoginRef} url={loginProps} email={showEmail} />
         <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -202,6 +232,12 @@ useEffect(() => {
                   
                     <input type="text" placeholder="Mobile No. / Email Id" name="email" onChange={handleChange} value={formData.email} required />
                   {
+                    existShow && <p className='error preag-not'>Mobile No. / Email Id is already registered. Please click here to <Link to="#" onClick={showLogin}>Login</Link></p>
+                  }
+                  
+                  {
+                    
+                  
                   error && <p className='error'>{error}</p>
                   
                   }
@@ -233,7 +269,7 @@ useEffect(() => {
                     <img src="assets/img/register/file-search_.png" alt="" />
                   </div>
                   <div className="ic-cons">
-                    <span>Lots of Genuine Profilesfor Marriage</span>
+                    <span>Lots of Genuine Profiles for Marriage</span>
                   </div>
                 </div>
               </div>

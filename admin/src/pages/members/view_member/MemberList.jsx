@@ -1,10 +1,112 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../../layout/Sidebar";
 import Header from "../../../layout/Header";
 import Footer from "../../../layout/Footer";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { ageCalculate } from "../../../utils/utils.js";
 
 export default function MemberList(){
     const pageTitle = "Member List";
+    
+    //const [active, setActive] = useState(true);
+    const { register, handleSubmit } = useForm();
+    const [userList, setUserList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [page, setPage] = useState(1);
+    const [searchVal, setSearchVal] = useState({})
+    const PAGE_SIZE = 25; 
+    const API_URL = process.env.REACT_APP_BASE_URL_API || "";
+    const token = localStorage.getItem("adminToken");
+    
+    const fetchUserList = async (search = null, page = 1) => {
+        setLoading(true);
+        
+        try {
+             const url = `${API_URL.replace(/\/$/, "")}/api/admin/user-list?page=${page}&limit=${PAGE_SIZE}${
+                        search ? `&name=${encodeURIComponent(search.name || "")}&mobile=${encodeURIComponent(search.mobile || "")}` : ""
+                        }`;
+
+             
+             const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`, 
+                            }
+                        });
+
+            const result = await response.json();
+            if (result.status) {
+              //console.log(result.data)
+              setLoading(false);  
+              setUserList(result.data);
+              setTotalPages(result.totalPages || 1);
+            }
+
+        } catch (error) {
+          setLoading(false);
+            console.error("Error fetching member enquiries:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserList(null ,page);
+    }
+    , [page]);
+    
+    // search submit handler
+    const onSubmit = (search) => {
+         fetchUserList(search);
+         setSearchVal(search)
+    }
+
+    const statusChange = async (e, id, status) => {
+      e.preventDefault();
+      if (!window.confirm("Are you sure you want to change status?")) return;  
+      const url = `${API_URL.replace(/\/$/, "")}/api/admin/user-list/update/${id}`;
+             const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`, 
+                          },
+                body:JSON.stringify({status:status === 'Active' ? 'Deactive':'Active'})          
+              });
+
+            const result = await response.json();
+            if (result.status) {
+
+              fetchUserList(searchVal ,page);
+            }
+
+    }
+
+    const deleteUser = async (e, id) => {
+      e.preventDefault();
+      if (!window.confirm("Are you sure you want to delete user?")) return;  
+      const url = `${API_URL.replace(/\/$/, "")}/api/admin/user-list/delete/${id}`;
+             const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`, 
+                          },
+                        
+                          });
+
+            const result = await response.json();
+            if (result.status) {
+
+              fetchUserList(searchVal ,page);
+            }
+
+    }
+    
+    
     return (
        <div class="container body">
                 <div class="main_container">
@@ -37,9 +139,9 @@ export default function MemberList(){
       <h2>New Member List</h2>
       <ul className="nav navbar-right panel_toolbox" style={{ minWidth: 1 }}>
         <li>
-          <a className="collapse-link">
+          <Link to="#" className="collapse-link">
             <i className="fa fa-chevron-up" />
-          </a>
+          </Link>
         </li>
         {/* <li class="dropdown">
                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
@@ -49,264 +151,144 @@ export default function MemberList(){
                    </div>
                 </li> */}
         <li>
-          <a className="close-link">
+          <Link to="#" className="close-link">
             <i className="fa fa-close" />
-          </a>
+          </Link>
         </li>
       </ul>
       <div className="clearfix" />
     </div>
-    <div className="x_content">
-      <div className="row">
-        <div className="col-sm-12">
-          {/* filter start */}
-          <div className="filtercont">
-            <div className="row">
-              <div className="col-lg-9">
-                <div className="row">
-                  <div className="col-12 col-sm-4 pr-lg-0">
-                    <label>Filter By Name</label>
-                    <input type="text" className="form-control" />
-                  </div>
-                  <div className="col-12 col-sm-4 pr-lg-0">
-                    <label>Email ID</label>
-                    <input type="text" className="form-control" />
-                  </div>
-                  <div className="col-12 col-sm-4 pr-lg-0">
-                    <label>Mobile</label>
-                    <input type="text" className="form-control" />
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3">
-                <label>&nbsp;</label>
-                <a className="btn btn-default submit sitebtn" href="#">
-                  Submit
-                </a>
-              </div>
-            </div>
-          </div>
-          {/* filter end */}
-          <div className="card-box table-responsive nolengthtable">
-            <table
-              id="datatable-checkbox"
-              className="table table-striped table-bordered bulk_action mytable"
-              style={{ width: "100%" }}
-              cellPadding={0}
-              cellSpacing={0}
-            >
-              <thead>
-                <tr>
-                  <th style={{ width: 30 }}>S.No</th>
-                  <th style={{ width: 120 }}>Name</th>
-                  <th style={{ width: 100 }}>Email</th>
-                  <th style={{ width: 30 }}>Age</th>
-                  <th style={{ width: 30 }}>Gender</th>
-                  <th style={{ width: 40 }}>Mobile</th>
-                  <th style={{ width: 80 }}>Location</th>
-                  <th style={{ width: 80 }}>Status</th>
-                  <th style={{ width: 30 }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>
-                    <img src="images/boy-icon.png" alt="girl-icon" /> Anant
-                    Sharma
+    
+          <div className="x_content">
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    {/* filter start */}
+                                    <div className="filtercont">
+                                         <form onSubmit={handleSubmit(onSubmit)}>
+                                            <div className="row">
+                                                <div className="col-lg-9">
+                                                    <div className="row">
+                                                        <div className="col-12 col-sm-4 pr-lg-0">
+                                                            <label>Filter By Name</label>
+                                                            <input type="text" {...register("name")} className="form-control" />
+                                                        </div>
+                                                        
+                                                        <div className="col-12 col-sm-4 pr-lg-0">
+                                                            <label>Email / Mobile</label>
+                                                            <input  type="text" {...register("mobile")} className="form-control" />
+                                                        </div>
+
+                                                        <div className="col-12 col-sm-4 pr-lg-0">
+                                                            <label>&nbsp;</label>
+                                                            <button className="btn btn-default submit sitebtn" >
+                                                                Search
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {/* filter end */}
+                                    <div className="card-box table-responsive nolengthtable">
+                                        <table
+                                            id="datatable-checkbox"
+                                            className="table table-striped table-bordered bulk_action mytable"
+                                            style={{ width: "100%" }}
+                                            cellPadding={0}
+                                            cellSpacing={0}
+                                        >
+                                            <thead>
+                                                <tr>
+                                                <th style={{ width: 30 }}>S.No</th>
+                                                <th style={{ width: 120 }}>Name</th>
+                                                <th style={{ width: 100 }}>Email</th>
+                                                <th style={{ width: 30 }}>Age</th>
+                                                <th style={{ width: 30 }}>Gender</th>
+                                                <th style={{ width: 40 }}>Mobile</th>
+                                                <th style={{ width: 80 }}>Location</th>
+                                                <th style={{ width: 80 }}>Status</th>
+                                                <th style={{ width: 30 }}>Action</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+
+                                              
+
+                                                { userList.length > 0 ? (
+                                                    userList.map((list, index) => (
+                                                        <tr key={list._id}>
+                                                            <td>{(page - 1) * PAGE_SIZE + index + 1}</td>
+                                                            <td>
+                    { /* <img src="images/boy-icon.png" alt="girl-icon" /> */ } 
+                    {list.name}
                   </td>
-                  <td>tinkaldds8@gmail.com</td>
-                  <td>24 Yrs.</td>
-                  <td>Male</td>
-                  <td>95*64*61*9</td>
-                  <td>Mirzapur</td>
+                  <td>{list.email}</td>
+                  <td> {list.dob ? `${ageCalculate(list.dob)} yrs.`:''}</td>
+                  <td>{list.gender}</td>
+                  <td>{list.mobile}</td>
+                  <td>{list.loc_city?.name}</td>
                   <td>
                     <div className="checkbox-wrapper-8">
                       <input
                         className="tgl tgl-skewed"
-                        id="cb3-11"
+                        id={`cb3-${list._id}`}
                         type="checkbox"
-                        defaultChecked=""
+                        checked={list.status=== 'Active' ? true:false}
+                        onClick={(e) => statusChange(e, list._id, list.status)}
                       />
                       <label
                         className="tgl-btn"
-                        data-tg-off="Inactive"
+                        data-tg-off="Deactive"
                         data-tg-on="Active"
-                        htmlFor="cb3-11"
+                        htmlFor={`cb3-${list._id}`}
                       />
                     </div>
                   </td>
                   <td className="p-0">
                     <ul className="actionlist">
                       <li>
-                        <a
-                          href="#"
-                          className=""
-                          data-toggle="modal"
-                          data-target="#basicModal"
-                          title="Quick View"
-                        >
-                          <i className="fa fa-eye" />
-                        </a>
+                        &nbsp;
                       </li>
                       <li>
-                        <a href="#" className="" title="Remove">
+                        <Link to="#" className="" title="Remove" onClick={(e) => deleteUser(e, list._id)}>
                           <i className="fa fa-trash" />
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>
-                    <img src="images/girl-icon.png" alt="girl-icon" /> Tinkal
-                  </td>
-                  <td>tinkaldds8@gmail.com</td>
-                  <td>24 Yrs.</td>
-                  <td>Female</td>
-                  <td>95*64*61*9</td>
-                  <td>Mirzapur</td>
-                  <td>
-                    <div className="checkbox-wrapper-8">
-                      <input
-                        className="tgl tgl-skewed"
-                        id="cb3-12"
-                        type="checkbox"
-                        defaultChecked=""
-                      />
-                      <label
-                        className="tgl-btn"
-                        data-tg-off="Inactive"
-                        data-tg-on="Active"
-                        htmlFor="cb3-12"
-                      />
-                    </div>
-                  </td>
-                  <td className="p-0">
-                    <ul className="actionlist">
-                      <li>
-                        <a
-                          href="#"
-                          className=""
-                          data-toggle="modal"
-                          data-target="#basicModal"
-                          title="Quick View"
-                        >
-                          <i className="fa fa-eye" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" className="" title="Remove">
-                          <i className="fa fa-trash" />
-                        </a>
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>
-                    <img src="images/boy-icon.png" alt="girl-icon" /> Praveen
-                    Singh Duggal
-                  </td>
-                  <td>praveen@gail.com</td>
-                  <td>24 Yrs.</td>
-                  <td>Male</td>
-                  <td>95*64*61*9</td>
-                  <td>Mirzapur</td>
-                  <td>
-                    <div className="checkbox-wrapper-8">
-                      <input
-                        className="tgl tgl-skewed"
-                        id="cb3-13"
-                        type="checkbox"
-                        defaultChecked=""
-                      />
-                      <label
-                        className="tgl-btn"
-                        data-tg-off="Inactive"
-                        data-tg-on="Active"
-                        htmlFor="cb3-13"
-                      />
-                    </div>
-                  </td>
-                  <td className="p-0">
-                    <ul className="actionlist">
-                      <li>
-                        <a
-                          href="#"
-                          className=""
-                          data-toggle="modal"
-                          data-target="#basicModal"
-                          title="Quick View"
-                        >
-                          <i className="fa fa-eye" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" className="" title="Remove">
-                          <i className="fa fa-trash" />
-                        </a>
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>
-                    <img src="images/girl-icon.png" alt="girl-icon" /> Komal
-                    Sharma
-                  </td>
-                  <td>tinkaldds8@gmail.com</td>
-                  <td>24 Yrs.</td>
-                  <td>Female</td>
-                  <td>95*64*61*9</td>
-                  <td>Mirzapur</td>
-                  <td>
-                    <div className="checkbox-wrapper-8">
-                      <input
-                        className="tgl tgl-skewed"
-                        id="cb3-14"
-                        type="checkbox"
-                        defaultChecked=""
-                      />
-                      <label
-                        className="tgl-btn"
-                        data-tg-off="Inactive"
-                        data-tg-on="Active"
-                        htmlFor="cb3-14"
-                      />
-                    </div>
-                  </td>
-                  <td className="p-0">
-                    <ul className="actionlist">
-                      <li>
-                        <a
-                          href="#"
-                          className=""
-                          data-toggle="modal"
-                          data-target="#basicModal"
-                          title="Quick View"
-                        >
-                          <i className="fa fa-eye" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" className="" title="Remove">
-                          <i className="fa fa-trash" />
-                        </a>
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            {/* end */}
-          </div>
-        </div>
-      </div>
-    </div>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="5" className="text-center">
+                                                            {loading ? "Loading..." : "No member found."}
+                                                        </td>
+                                                    </tr>
+                                                )  }
+
+                                            </tbody>
+                                        </table>
+                                        
+                                        {/* Pagination */}
+                                            <div className="mt-3">
+                                                {Array.from({ length: totalPages }, (_, i) => (
+                                                <button
+                                                    key={i}
+                                                    className={`btn btn-sm mx-1 ${page === i + 1 ? "btn-primary" : "btn-light"}`}
+                                                    onClick={() => setPage(i + 1)}
+                                                >
+                                                    {i + 1}
+                                                </button>
+                                                ))}
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
   </div>
   {/* bod card end */}
 </div>

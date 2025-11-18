@@ -351,7 +351,7 @@ const fetchUserDetail = async (userId) => {
           } else {
             setShowChildren(true)
           }
-        
+        //console.log('step', data.data[0].step)
         
       setFormData({
 
@@ -384,7 +384,7 @@ const fetchUserDetail = async (userId) => {
   }
 
 useEffect(() => {
-  
+    
   if(userDetail?._id){
   fetchUserDetail(userDetail._id)
   }

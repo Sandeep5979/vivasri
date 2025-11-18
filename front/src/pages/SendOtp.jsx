@@ -4,7 +4,7 @@ import FooterPage from '../components/homePage/FooterPage'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {  useDispatch, useSelector } from 'react-redux';
 import { useRef } from "react";
-import { verifyOtp } from '../store/authActions';
+import { registerUserLogin, verifyOtp } from '../store/authActions';
 import HeaderUser from '../components/homePage/HeaderUser';
 
 
@@ -28,7 +28,7 @@ const [isLoading, setIsLoading] = useState(false)
 useEffect(() => {
 
 if(user){
-  //console.log('okkkkkkkkkkkkkkk', user)
+  //console.log('okkkkkkkkkkkkkkkllll', user)
   //navigate('/registration')
 
 }
@@ -84,8 +84,27 @@ if(user){
       dispatch(verifyOtp(data));
 
       // navigate('/basic-details')
+     
+     
+      if(data.page){
+             // console.log('okkkkkkkkkkkkkkkk', data)
+             //navigate(`/${data.page}`)
+             if(data.page === 'dashboard'){
+
+              handleSubmitOTPButton({email:user.email})
+             } else {
+             document.location.href=`/${data.page}`
+             }
+            
+            } else {
+      
+      
       document.location.href=`/basic-details`
-      } else {
+      
+            }
+    
+    
+    } else {
         setError(data.message)
       }
       
@@ -93,6 +112,35 @@ if(user){
       //console.log(data)
     
   };
+
+  const handleSubmitOTPButton = async (formData) => {
+      
+      //e.preventDefault();
+        //dispatch(registerUser(formData));
+        
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/registration-login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+                credentials: "include"
+    
+            });
+        
+              const data = await res.json();
+              setIsLoading(false)
+              //console.log(data)
+               
+               dispatch(registerUserLogin(data));
+                
+              document.location.href=`/dashboard`
+              
+                
+        
+               
+              
+    
+        
+      };
 
  function maskEmail(email) {
   const [userEmail, domain] = email.split("@");  // split before and after @

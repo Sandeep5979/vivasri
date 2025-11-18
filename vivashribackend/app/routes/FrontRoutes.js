@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllCasteMasterList, getAllCasteMasterListMulti, getAllCityMasterList, getAllCityMasterListMulti, getAllComplexionMasterList, getAllCountryMasterList, getAllDietMasterList, getAllEducationMasterList, getAllEducationTypeMasterList, getAllGotraMasterList, getAllHobbiesMasterList, getAllLanguageMasterList, getAllLookingForMasterList, getAllMaritalStatusMasterList, getAllOccupationMasterList, getAllProfessionalEducationMasterList, getAllReligionMasterList, getAllSearchProfileList, getAllStateMasterList, getAllStateMasterListMulti, getAllSubCasteMasterList, getAllUserOccupationMasterList, getAllUserOrganizationMasterList, getAllWorkingWithMasterList, getHomeBrideGroomList, getHomeMenuCasteList } from "../controllers/front/MasterController.js";
+import { getAllCasteMasterList, getAllCasteMasterListMulti, getAllCityMasterList, getAllCityMasterListMulti, getAllComplexionMasterList, getAllCountryMasterList, getAllDietMasterList, getAllEducationMasterList, getAllEducationTypeMasterList, getAllGotraMasterList, getAllHobbiesMasterList, getAllLanguageMasterList, getAllLookingForMasterList, getAllMaritalStatusMasterList, getAllOccupationMasterList, getAllProfessionalEducationMasterList, getAllReligionMasterList, getAllSearchProfileList, getAllStateMasterList, getAllStateMasterListMulti, getAllSubCasteMasterList, getAllUserOccupationMasterList, getAllUserOrganizationMasterList, getAllWorkingWithMasterList, getHomeBrideGroomList, getHomeMenuCasteList, getMembershipPlanList } from "../controllers/front/MasterController.js";
 import { adminLogin } from "../controllers/admin/AdminController.js"
 
 
@@ -39,6 +39,7 @@ router.route("/gotra").get(getAllGotraMasterList);
 router.route("/gotra/:religion_id").get(getAllGotraMasterList);
 router.route("/bride-groom-list").post(getHomeBrideGroomList);
 router.route("/menu-caste-list").post(getHomeMenuCasteList);
+router.route("/membership-plan-list").get(getMembershipPlanList);
 
 
 export default router;

@@ -1,11 +1,11 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUserLogin } from '../../store/authActions';
+import { registerUser, registerUserLogin, verifyOtp } from '../../store/authActions';
 
-const LoginPopup = forwardRef(({ url }, ref) => {
+const LoginPopup = forwardRef(({ url, email }, ref) => {
 
-    //console.log('urllllllllllllllllll', url)
+    //console.log('urllllllllllllllllll', url, email)
 
   const [formData, setFormData] = useState({ email: "" });
   const dispatch = useDispatch();
@@ -77,6 +77,7 @@ const handleChange = (e) => {
           } 
            
            dispatch(registerUserLogin(data));
+           dispatch(verifyOtp(data));
            //console.log('urlllllllkkkkkk', url) 
           if(url === 'reload'){
             window.location.reload();
@@ -124,6 +125,13 @@ const handleChange = (e) => {
 
     
   };
+
+  useEffect(() => {
+    if(email){
+      setFormData({email:email})
+    }
+
+  }, [email])
 
   
 
@@ -209,6 +217,7 @@ const handleChange = (e) => {
               className="form-control"
               onChange={handleChange}
               name='email'
+              value={email}
               disabled={isLoadingLogin}
               
             />

@@ -10,6 +10,9 @@ import sharp from "sharp";
 import { writeFile } from "fs/promises";
 import ProfileCountModel from "../../models/ProfileCountModel.js";
 import fs from "fs";
+import UserPlanModel from "../../models/UserPlanModel.js";
+import UserPlanHistoryModel from "../../models/UserPlanHistoryModel.js";
+import MembershipPlanModel from "../../models/MembershipPlanModel.js";
 
 
 export const getUserDetailList = async (req, res) => {
@@ -114,32 +117,32 @@ export const userRegistration = async (req, res) => {
   );
       
       if(userDetail.step === 1){
-        return res.json({ status:true, message: "", page:'contact-information', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'contact-information', token:tokenNew });    
       } else if(userDetail.step === 2){
-        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'aadhaar-verification', token:tokenNew });    
       } else if(userDetail.step === 3){
-        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'aadhaar-verification', token:tokenNew });    
       } else if(userDetail.step === 4){
-        return res.json({ status:true, message: "", page:'religion', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'religion', token:tokenNew });    
       } else if(userDetail.step === 5){
-        return res.json({ status:true, message: "", page:'location-detail', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'location-detail', token:tokenNew });    
       } else if(userDetail.step === 6){
-        return res.json({ status:true, message: "", page:'family-detail', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'family-detail', token:tokenNew });    
       } else if(userDetail.step === 7){
-        return res.json({ status:true, message: "", page:'education-detail', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'education-detail', token:tokenNew });    
       } else if(userDetail.step === 8){
-        return res.json({ status:true, message: "", page:'profile-photo', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'profile-photo', token:tokenNew });    
       } else if(userDetail.step === 9){
-        return res.json({ status:true, message: "", page:'partner-qualities', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'partner-qualities', token:tokenNew });    
       } else if(userDetail.step === 10){
-        return res.json({ status:true, message: "", page:'partner-basic-detail', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'partner-basic-detail', token:tokenNew });    
       } else if(userDetail.step === 11){
-        return res.json({ status:true, message: "", page:'dashboard', token:tokenNew });    
+        return res.json({ status:false, show:1, message: "", page:'dashboard', token:tokenNew });    
       } else {
-        return res.json({ status:true, message: "", page:'basic-details', token:tokenNew });
+        return res.json({ status:false, show:1, message: "", page:'basic-details', token:tokenNew });
       }
       
-      //return res.status(400).json({ status:false, message: "Email/Mobile already exists" });
+      //return res.status(400).json({ status:false, show:1, message: "Email/Mobile already exists" });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -155,8 +158,18 @@ export const userRegistration = async (req, res) => {
     });
 */
 
+const tokenNew = jwt.sign(
+    {email:email, otp:otp},
+    process.env.JWT_SECRET,
+    {
+      algorithm: "HS256",
+      allowInsecureKeySizes: true,
+      expiresIn: 86400 * 3,
+    }
+  );
 
-    return res.json({ data: data, status: true });
+
+    return res.json({ data: data, token:tokenNew, status: true });
   } catch (err) {
     return res.status(500).json({ error: err.message, status: false });
   }
@@ -228,13 +241,63 @@ export const userVerifyOtp = async (req, res) => {
   
     //console.log(user)
 
+    const userDetail = await UserModel.findOne({
+      $or: [
+        { email: user.email },
+        { mobile: user.email }
+      ]
+    });
+    if (userDetail) {
+
+      const tokenNew = jwt.sign(
+    {_id:userDetail._id},
+    process.env.JWT_SECRET,
+    {
+      algorithm: "HS256",
+      allowInsecureKeySizes: true,
+      expiresIn: 86400 * 3,
+    }
+  );
+
+    if(userDetail.step === 1){
+        return res.json({ status:true, message: "", page:'contact-information', token:tokenNew });    
+      } else if(userDetail.step === 2){
+        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+      } else if(userDetail.step === 3){
+        return res.json({ status:true, message: "", page:'aadhaar-verification', token:tokenNew });    
+      } else if(userDetail.step === 4){
+        return res.json({ status:true, message: "", page:'religion', token:tokenNew });    
+      } else if(userDetail.step === 5){
+        return res.json({ status:true, message: "", page:'location-detail', token:tokenNew });    
+      } else if(userDetail.step === 6){
+        return res.json({ status:true, message: "", page:'family-detail', token:tokenNew });    
+      } else if(userDetail.step === 7){
+        return res.json({ status:true, message: "", page:'education-detail', token:tokenNew });    
+      } else if(userDetail.step === 8){
+        return res.json({ status:true, message: "", page:'profile-photo', token:tokenNew });    
+      } else if(userDetail.step === 9){
+        return res.json({ status:true, message: "", page:'partner-qualities', token:tokenNew });    
+      } else if(userDetail.step === 10){
+        return res.json({ status:true, message: "", page:'partner-basic-detail', token:tokenNew });    
+      } else if(userDetail.step === 11){
+        return res.json({ status:true, message: "", page:'dashboard', token:tokenNew });    
+      } else {
+        return res.json({ status:true, message: "", page:'basic-details', token:tokenNew });
+      }
+
+
+
+    } else {
+    
+    
+    
     const profileId = await generateProfileId();
-    const userDetail = await createUser(user, profileId, userId)
+    const userDetail1 = await createUser(user, profileId, userId)
 
     
 
     const tokenNew = jwt.sign(
-    {_id:userDetail._id},
+    {_id:userDetail1._id},
     process.env.JWT_SECRET,
     {
       algorithm: "HS256",
@@ -254,7 +317,8 @@ export const userVerifyOtp = async (req, res) => {
   });
     */
 
-    return res.json({ status:true, message: "OTP verified", user: userDetail, token:tokenNew });
+    return res.json({ status:true, message: "OTP verified", user: userDetail1, token:tokenNew });
+}
   }
 
   res.status(400).json({ status:false, message: "Invalid OTP" });
@@ -495,13 +559,23 @@ export const userProfilePhotoAdd = async (req, res) => {
       const uploadPath = path.join(process.cwd(), "public/uploads", fileName);
 
       const buffer = photo.data;
-      const metadata = await sharp(buffer).metadata();
+      
+     /*  let pipeline = sharp(photo.data);
+      const metadata = await pipeline.metadata();
+      if (metadata.width > 576) {
+        pipeline = pipeline.resize({ width: 576 });
+      }
+      pipeline = pipeline.blur(20);
+      const finalBuffer = await pipeline.toBuffer();
+      */
+       const metadata = await sharp(buffer).metadata();
 
       let finalBuffer = buffer;
       if (metadata.width > 576) {
         // finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+        finalBuffer = await sharp(buffer).resize({ width: 576, height:620 }).toBuffer();
       }
-      finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+      //finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
 
@@ -755,4 +829,84 @@ export const deleteProfilePhoto = async (req, res) => {
 
     }
 
+}
+
+
+export const selectMembershipPlan = async (req, res) => {
+
+    try{
+       
+        const { user_id, plan_id, price } = req.body;
+
+        if (!user_id) {
+          return res.status(400).json({ status: false, message: "User ID is required" });
+        }
+        if (!plan_id) {
+          return res.status(400).json({ status: false, message: "Paln ID is required" });
+        }
+
+        let expiry = null;
+
+        const planDet = await MembershipPlanModel.findOne({_id:plan_id})
+        //console.log(planDet)
+
+        const currentDate = new Date();
+        const expiryDate = new Date(currentDate);
+        if(planDet.name === 'Gold'){
+        expiry = expiryDate.setMonth(currentDate.getMonth() + 6);
+        }
+        if(planDet.name === 'Premium'){
+        expiry = expiryDate.setMonth(currentDate.getMonth() + 12);
+        }
+
+        //console.log(expiry)
+        const newPlanHistory = new UserPlanHistoryModel({
+          user_id,
+          plan_id,
+          price,
+          start_date:currentDate,
+          expiry_date:expiry
+        });
+        await newPlanHistory.save();
+        
+        
+        const existingPlan = await UserPlanModel.findOne({
+            user_id,
+          });
+        if (existingPlan) {
+          
+          existingPlan.plan_id = plan_id;
+          existingPlan.price = price;
+          existingPlan.start_date = currentDate;
+          existingPlan.expiry_date = expiry;
+          await existingPlan.save();
+
+          return res.status(200).json({
+            status: true,
+            message: "Plan  activate successfully.",
+            data: existingPlan,
+          });
+        
+
+
+        } else {
+        const newPlan = new UserPlanModel({
+          user_id,
+          plan_id,
+          price,
+          start_date:currentDate,
+          expiry_date:expiry
+        });
+        await newPlan.save();
+
+        return res.status(200).json({
+            status: true,
+            message: "Plan  activate successfully.",
+            data: newPlan,
+          });
+        }
+
+    } catch (err) {
+      res.status(500).json({ status: false, error: err.message });
+    }
 }

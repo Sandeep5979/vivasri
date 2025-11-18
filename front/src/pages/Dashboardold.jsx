@@ -234,7 +234,7 @@ const [isLoading, setIsLoading] = useState(false)
   </section>
   {/* Section End */}
   <section className="astrologersList pt-30 pb-50">
-    <div className="container-fluids con-flu-padds">
+    <div className="container-fluid con-flu-padds">
       <div className="astroList">
         <div className="row m-0 ">
           <div className="col-10 pad-rig-cl">

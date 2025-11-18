@@ -107,79 +107,86 @@ const { userDetailLogin } = useSelector((state) => state.auth);
     </div>
     <div className="site-width">
       <div className="row">
-        <div className="col-lg-4">
-          <div className="foot-social">
-            <h6>Follow Us On</h6>
-            <ul>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on Facebook">
-                  <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/facebook.png`}
-                    alt="Facebook icon"
-                  />
-                </a>
-              </li>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on Instagram">
-                  <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/instagram.png`}
-                    alt="Instagram icon"
-                  />
-                </a>
-              </li>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on X">
-                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/x.png`} alt="X icon" />
-                </a>
-              </li>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on linkedin">
-                  <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/linkedin.png`}
-                    alt="linkedin icon"
-                  />
-                </a>
-              </li>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on threads">
-                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/threads.png`} alt="Threads icon" />
-                </a>
-              </li>
-              <li>
-                <a href="/#" target="_blank" title="Follow Us on youtube">
-                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/youtube.png`} alt="Youtube icon" />
-                </a>
-              </li>
-            </ul>
-          </div>
+        <div className="col-lg-6">
+           <div className="foot-social">
+              <h6>Download Vivashri App</h6>
+              <ul>
+                <li>
+                  <Link
+                    to="#"
+                    title="Download App On Google Play Store"
+                    className="me-lg-2"
+                  >
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL}/assets/img/google-play.png`}
+                      alt=""
+                      style={{ maxHeight: 40 }}
+                    />
+                  </Link>
+                </li>
+                <li>
+                  <Link to="#" title="Download App On Apple Play Store">
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL}/assets/img/apple-play.png`}
+                      alt=""
+                      style={{ maxHeight: 40 }}
+                    />
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          
         </div>
-        <div className="col-lg-4">
-          { /* <div className="foot-social foot-number justify-content-center">
+        { /* <div className="col-lg-4">
+          <div className="foot-social foot-number justify-content-center">
             <h6>Toll Free Number</h6>
             <a href="tel:1800 180 350498" target="_blank" rel='noreferrer'>
               1800 180 350498
             </a>
-          </div> */ }
-        </div>
-        <div className="col-lg-4">
-          <div className="foot-social justify-content-end">
-            <h6>Download the App</h6>
+          </div>
+        </div> */ }
+        <div className="col-lg-6 ">
+            <div className="foot-social justify-content-end">
+            <h6>Follow Us On</h6>
             <ul>
               <li>
-                <a href="/#" target="_blank" title="Download App On Play Store">
+                <Link to="#" target="_blank" title="Follow Us on Facebook">
                   <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/playstore.png`}
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/facebook.png`}
                     alt="Facebook icon"
                   />
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#" target="_blank" title="Download App On Apple Store">
+                <Link to="#" target="_blank" title="Follow Us on Instagram">
                   <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/applestore.png`}
-                    alt="Apple Store icon"
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/instagram.png`}
+                    alt="Instagram icon"
                   />
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="#" target="_blank" title="Follow Us on X">
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/x.png`} alt="X icon" />
+                </Link>
+              </li>
+              <li>
+                <Link to="#" target="_blank" title="Follow Us on linkedin">
+                  <img
+                    src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/linkedin.png`}
+                    alt="linkedin icon"
+                  />
+                </Link>
+              </li>
+              <li>
+                <Link to="#" target="_blank" title="Follow Us on threads">
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/threads.png`} alt="Threads icon" />
+                </Link>
+              </li>
+              <li>
+                <Link to="#" target="_blank" title="Follow Us on youtube">
+                  <img src={`${process.env.REACT_APP_BASE_URL}/assets/img/icons/youtube.png`} alt="Youtube icon" />
+                </Link>
               </li>
             </ul>
           </div>

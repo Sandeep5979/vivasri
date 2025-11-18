@@ -160,9 +160,9 @@ export default function Occupation() {
               <h2>Occupation Entry</h2>
               <ul className="nav navbar-right panel_toolbox" style={{ minWidth: 1 }}>
                 <li>
-                  <a className="collapse-link">
+                  <Link to="#" className="collapse-link">
                     <i className="fa fa-chevron-up" />
-                  </a>
+                  </Link>
                 </li>
 
               </ul>
@@ -216,9 +216,9 @@ export default function Occupation() {
               <h2>Occupation List</h2>
               <ul className="nav navbar-right panel_toolbox" style={{ minWidth: 1 }}>
                 <li>
-                  <a className="collapse-link">
+                  <Link to="#" className="collapse-link">
                     <i className="fa fa-chevron-up" />
-                  </a>
+                  </Link>
                 </li>
 
               </ul>
@@ -286,7 +286,7 @@ export default function Occupation() {
                           ) : (
                             <tr>
                               <td colSpan={4} className="text-center">
-                                No religions found.
+                                No occupation found.
                               </td>
                             </tr>
                           )}

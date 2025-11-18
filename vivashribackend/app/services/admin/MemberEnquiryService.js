@@ -15,9 +15,10 @@ export const getAllMemberEnquiries = async (page, limit, name, mobile) => {
             .where(query)
             .populate('create_profile')
             .skip(skip)
-            .limit(limit);
+            .limit(limit)
+            .sort({createdAt:-1});
 
-     const total = await MemberEnquiryModel.countDocuments();
+     const total = await MemberEnquiryModel.countDocuments().where(query);
 
         return {
                 data,

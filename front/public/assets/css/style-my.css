@@ -1680,12 +1680,17 @@ label {
 }
 
 .invit-res {
-    color: #E31672;
+    color: #000;
     font-size: 13px;
     background-color: #FDEFDB;
     display: inline-block;
     padding: 0px 40px;
+    text-align: center;
 }
+.invit-res a {
+    color: #E31672;
+}
+.invit-res a:hover { color: #000; }
 
 .drops-down ul {
     display: flex;
@@ -1834,11 +1839,11 @@ label {
 .ic-nu img {
     max-width: 37%;
 }
-
-.ic-nums img {
+.dashstat-icon {
     background-color: #FFE1B3;
-    border-radius: 50%;
+    border-radius: 50%; width: 35px; height: 35px;
     padding: 8px 9px;
+	display: flex; align-items: center; justify-content: center
 }
 
 .ic-nums h3 {
@@ -1849,8 +1854,9 @@ label {
 
 .h3-col-con h3 {
     color: #BE3272;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
+    line-height: 1.3;
 }
 
 .bg-prem-con {
@@ -1912,9 +1918,10 @@ label {
 
 .stand-plan-bg p {
     color: black;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     margin-bottom: 3px;
+    line-height: 1.5;
 }
 
 .butt-res-acc p {
@@ -2163,8 +2170,9 @@ label {
 
 .con-matches h6 {
     color: #BF3171;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
+    line-height: 1.5;
 }
 
 .con-matches button {
@@ -3011,6 +3019,16 @@ label {
 
 
 @media screen and (max-width:499px) {
+	.mobpad0 { padding:0 20px; }
+	.ic-nums h3 { font-size: 20px; }
+	.ic-nums img { padding: 2px; height: 20px; }
+	.ic-nums p, .ic-nu p { font-size: 12px; line-height: 1.4;	}
+	.stand-plan-bg { margin-bottom: 20px; }
+	.con-matches h6 { font-size: 16px; margin: 10px 0; }
+	.con-matches button { font-size: 13px; }
+	.noti-cont { margin-top: 20px; border-top: 4px solid #fff; }
+	
+.img-desh-pro {  }
 .inrbnr-2 {
     position: relative;
     min-height: 1827px;
@@ -3134,16 +3152,7 @@ label {
     }
 
     .headerMenu>li.hasSub:hover .headerSubNav {
-        visibility: visible;
-        opacity: 1;
-        top: 98%;
-        margin-top: 0px;
-        position: absolute;
-        top: 91px;
-        left: 0px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0px 6px 15px #7373732e;
+        
     }
 
 
@@ -3662,6 +3671,15 @@ label {
    .inrbnrContent { display: block; padding: 10px 15px 0px 15px; }
    .inrbrnNav li { display: inline-block; margin-bottom: 10px; }
    .astrologersList .con-flu-padds { padding-left: 0; }
+   .inboxcont .profiledata-rowss .my-5 {
+        min-width: 40%;
+        color: #5C5C5C;
+    }
+	.inboxcont .cancel-req.my-5 {
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+
 
 }
 
@@ -3855,6 +3873,9 @@ label {
     .nam-inp input {
         width: 286px !important;
     }
+	.adhaarfld input { width: 30%!important; font-size: 13px!important; letter-spacing: 0; }
+	.nam-inp button { font-size: 14px!important; }
+	.ic-con h3 { font-size: 16px; letter-spacing: 0; }
 
     .line-bg {
         width: 100% !important;
@@ -4110,7 +4131,7 @@ label {
         min-width: 142px;
         color: #5C5C5C;
     }
-
+	
     .profiledata-rowss:first-child {
         margin-top: 15px;
     }
@@ -4213,15 +4234,25 @@ label {
 
 
 .hasSub.megaMenu .headerSubNavsssss {
-    max-width: 490px;
-    min-width: 132px;
+    min-width: 490px;
     width: 100%;
     top: 80% !important;
-    right: 0px;
-    left: 770px;
-    margin: auto;
+    right: 0px; left: auto!important;
+    margin: 0;
     padding: 0px;
 }
+.myprof-menu { position: relative; }
+.myprof-menu .headerMenu>li>a { display: flex; align-items: center; }
+
+.myprof-menu .myprof-img { width: 40px; height: 40px; border-radius: 100%; overflow: hidden }
+.myprof-menu .myprof-img img{ object-fit: cover; height: 100%; }
 
 
+
+@media screen and (min-width:769px) {
+      
+	.hasSub.megaMenu .headerSubNavsssss {
+		width: 490px;
+	}	
+}
 /*package end*/

@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import HeaderUser from '../components/homePage/HeaderUser'
 import FooterPage from '../components/homePage/FooterPage'
 import { useSelector } from 'react-redux';
-import { ageCalculate } from '../utils/utils';
+import { ageCalculate, decimalToFeetInches, decimalToFeetInchesWithoutWord, formatCount, formatDate } from '../utils/utils';
 import { Link, useNavigate } from 'react-router-dom';
+import SuccessPopup from '../components/homePage/SuccessPopup';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -15,6 +16,12 @@ const fileInputRef = useRef(null);
 const [error, setError] = useState({})
 const [message, setMessage] = useState({})
 const [isLoading, setIsLoading] = useState(false)
+const [checkPhoto, setCheckPhoto] = useState({})
+const [inviteAccept, setInviteAccept] = useState({})
+const [freeMember, setFreeMember] = useState([])
+const [premiumMember, setPremiumMember] = useState([])
+const modalSuccessRef = useRef(null)
+  const modalInstanceSuccess = useRef(null);
 
   const fetchUserDetail = async (userId) => {
       
@@ -40,7 +47,7 @@ const [isLoading, setIsLoading] = useState(false)
   
           
         
-          // console.log(data.data[0].name) 
+           // console.log(data.data[0].plan_detail) 
 
                     let profilePhoto;
                     if(data.data[0].profile_photo === 1){
@@ -62,8 +69,19 @@ const [isLoading, setIsLoading] = useState(false)
             
           name:data.data[0].name,
           photo:profilePhoto,
+          planDetail:data.data[0].plan_detail,
             
   
+        })
+
+        setCheckPhoto({
+          photo:data.data[0].photo,
+          photo1:data.data[0].photo1,
+          photo2:data.data[0].photo2,
+          photo3:data.data[0].photo3,
+          photo4:data.data[0].photo4,
+          
+
         })
   
       } else {
@@ -178,54 +196,163 @@ const [isLoading, setIsLoading] = useState(false)
     
   };
 
-  /* const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+
+const fetchListMember = async () => {
+    try {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/inbox`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    pageType: 'sent',
+                    member_id: userDetailLogin._id,
+                }),
+            });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        
+        //console.log(data.data)
+        const result = {
+         pendingCount: formatCount(data.data?.filter(p => p.status === "Pending").length || 0),
+         acceptedCount: formatCount(data.data?.filter(p => p.status === "Accepted").length || 0),
+         acceptedPremiumCount: formatCount(data.data?.filter(p => p.status === "Accepted" && p.partner_id?.plan_detail?.plan_id?.name === 'Premium').length || 0)     
+        };
+        // console.log(result)
+        setInviteAccept(result)
+
+
+
+    } else {
+    console.error("Error fetching members:", data.error || data.message);
+    }
+    } catch (error) {
+    console.error("Fetch failed:", error);
+    }
+};
+
+const fetchGetAllMatchMember = async () => {
+    try {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/member-match`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    totalResult:3,
+                    user_id: userDetailLogin._id,
+                }),
+            });
+
+    const data = await response.json();
+
+    if (data.status) {
+        
+        //console.log(data.usersFree)
+
+        setFreeMember(data.usersFree)
+        setPremiumMember(data.usersPremium)
+
+
+
+    } else {
+    console.error("Error fetching members:", data.error || data.message);
+    }
+    } catch (error) {
+    console.error("Fetch failed:", error);
+    }
+};
+
+useEffect(() => {
+fetchListMember()
+fetchGetAllMatchMember()
+
+}, [])
+
+useEffect(() => {
+        const modalSuccessEl = document.getElementById("successPopup");
+         if (modalSuccessEl) {
+           modalInstanceSuccess.current = new window.bootstrap.Modal(modalSuccessEl);
+         }
+
+       }, []);
+
+const sendInterest = (id, index, val) => {
      
-    setIsLoading(true)
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("id", userDetailLogin._id);
-     if (formData.photo) formDataToSubmit.append("photo", formData.photo);
-         
-     const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/profile-photo-user`, {
-        method: "POST",
-        body: formDataToSubmit,
-        
-      });
+    if(userDetailLogin?._id){
+     
+      interest(id, userDetailLogin?._id, index, val);
+       
+        } else {
+      
+       return;
+   
+         }
+      
+  }
+  const interest = async (partner_id, member_id, index, val) => {
+          try {
+            const response = await fetch(
+              `${process.env.REACT_APP_BASE_URL_API}/api/user/sent-interest`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  partner_id: partner_id,
+                  member_id : member_id 
+                }),
+              }
+            );
 
-      const data = await res.json();
-      setIsLoading(false)
-      if(data.status){
-      //dispatch(verifyOtp(data));
+            const data = await response.json();
 
-      if (fileInputRef.current) {
-          fileInputRef.current = null;
+            if (response.ok) {
+              // console.log("Interest sent successfully:", data);
+              modalInstanceSuccess.current?.show();
+              setTimeout(() => {
+                modalInstanceSuccess.current?.hide();
+              }, 2000)
+              
+              if(val === 1){
+              setFreeMember((prevData) => {
+                      const updated = [...prevData];
+                      updated[index] = {
+                        ...updated[index],
+                        interest_sent: true,
+                      };
+                      return updated;
+                    });
+
+                  } else {
+
+                    setPremiumMember((prevData) => {
+                      const updated = [...prevData];
+                      updated[index] = {
+                        ...updated[index],
+                        interest_sent: true,
+                      };
+                      return updated;
+                    });
+                  }
+
+            } else {
+              console.error("Failed to send interest:", data.message || data);
+            }
+          } catch (error) {
+            console.error("Error while sending interest:", error);
+          }
         }
-        
 
-       navigate('/partner-qualities')
-      } else {
-        
-        if (data.errors) {
-        // Convert array to object keyed by field
-        const errorObj = {};
-        data.errors.forEach(error => {
-          errorObj[error.path] = error.msg;
-        });
-        setError(errorObj);
-      }
-        
-        
-        //setError(data.message)
-      }
-
-      //console.log(data)
-    
-  };
-  */
   
   return (
     <>
       <HeaderUser />
+      <SuccessPopup ref={modalSuccessRef} message="Your interest has been sent!" />
 
         <>
   <section className="inrbnr">
@@ -252,10 +379,10 @@ const [isLoading, setIsLoading] = useState(false)
     <div className="container-fluids con-flu-padds">
       <div className="astroList">
         <div className="row m-0 ">
-          <div className="col-10 pad-rig-cl">
-            <div className="head-desh">
+          <div className="col-lg-10 pad-rig-cl mobpad0">
+            <div className="head-desh mb-3">
               <div className="row ">
-                <div className="col-6">
+                <div className="col-12 col-sm-6">
                   <div className="h3">
                     {" "}
                     <h3>
@@ -267,11 +394,11 @@ const [isLoading, setIsLoading] = useState(false)
                     click
                   </p>
                 </div>
-                <div className="col-6 ">
-                  <div className="row justify-content-end">
-                    <div className="col-4">
+                <div className="col-12 col-sm-6">
+                  <div className="row justify-content-lg-end">
+                    <div className="col-6 col-lg-4">
                       <div className="ic-num ">
-                        <div className="row align-items-center justify-content-end text-right ">
+                        <div className="row align-items-center justify-content-lg-end text-right ">
                           <div className="col-3">
                             <img
                               src="assets/img/icons/bell_svgrepo.com.png"
@@ -285,9 +412,9 @@ const [isLoading, setIsLoading] = useState(false)
                         </div>
                       </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-6 col-lg-4">
                       <div className="ic-num ">
-                        <div className="row align-items-center justify-content-end text-right">
+                        <div className="row align-items-center justify-content-lg-end text-right">
                           <div className="col-3">
                             <img
                               src="assets/img/icons/user-plus-alt-1_svgrepo.com.png"
@@ -323,8 +450,11 @@ const [isLoading, setIsLoading] = useState(false)
                           alt=""
                         />
                       </div>
-                      <div className="image-cap-ic">
+                      
+                      {(checkPhoto.photo && checkPhoto.photo1 && checkPhoto.photo2 && checkPhoto.photo3 && checkPhoto.photo4) ? null :
+                      <div className="image-cap-ic dash-uplodicon">
                         {isLoading ? `Wait...` : 
+                        
                         <img
                           src={`assets/img/icons/img-ic-plus.png`}
                           alt=""
@@ -343,6 +473,7 @@ const [isLoading, setIsLoading] = useState(false)
                           
                         />
                       </div>
+}
 
                     </div>
                   </div>
@@ -361,13 +492,12 @@ const [isLoading, setIsLoading] = useState(false)
                             <div className="ic-nums ">
                               <div className="row align-items-center ">
                                 <div className="col-3">
-                                  <img
-                                    src="assets/img/icons/team_svgrepo.com.png"
-                                    alt=""
-                                  />
+                                   <div className='dashstat-icon'>
+                                       <img src="assets/img/icons/team_svgrepo.com.png" alt="" />
+                                   </div>                                  
                                 </div>
                                 <div className="col-4">
-                                  <h3>03</h3>
+                                  <h3>{inviteAccept?.pendingCount}</h3>
                                 </div>
                                 <p>Pending Invitations</p>
                               </div>
@@ -377,13 +507,14 @@ const [isLoading, setIsLoading] = useState(false)
                             <div className="ic-nums ">
                               <div className="row align-items-center ">
                                 <div className="col-3">
-                                  <img
-                                    src="assets/img/icons/check-alt_svgrepo.com.png"
-                                    alt=""
-                                  />
+                                    <div className='dashstat-icon'>
+                                       <img src="assets/img/icons/check-alt_svgrepo.com.png" alt="" />
+
+                                    </div>
+                                  
                                 </div>
                                 <div className="col-4">
-                                  <h3>07</h3>
+                                  <h3>{inviteAccept?.acceptedCount}</h3>
                                 </div>
                                 <p>Accepted Invitations</p>
                               </div>
@@ -430,9 +561,9 @@ const [isLoading, setIsLoading] = useState(false)
                                         src="assets/img/icons/mobile-alt-2_svgrepo.com.png"
                                         alt=""
                                       />
-                                      <h3>03</h3>
+                                      <h3>{inviteAccept?.acceptedPremiumCount}</h3>
                                     </div>
-                                    <p>Contacts viewed</p>
+                                    <p>Premium Contacts</p>
                                   </div>
                                 </div>
                               </div>
@@ -447,7 +578,7 @@ const [isLoading, setIsLoading] = useState(false)
                                       />
                                       <h3>03</h3>
                                     </div>
-                                    <p>Contacts viewed</p>
+                                    <p>Chats initiated</p>
                                   </div>
                                 </div>
                               </div>
@@ -460,13 +591,15 @@ const [isLoading, setIsLoading] = useState(false)
                 </div>
                 <div className="col-lg-3 col-md-4">
                   <div className="stand-plan-bg">
-                    <h3>Standard Plan</h3>
+                    <h3>{formData.planDetail?.plan_id?.name === 'VIP'? 'VIP Shaadi':formData.planDetail?.plan_id?.name ? formData.planDetail?.plan_id?.name+' Plan':'Basic Plan'}</h3>
                     <img src="assets/img/icons/standard-plan.png" alt="" />
-                    <p>Plan name:&nbsp;Standard</p>
-                    <p>Validity:&nbsp;6 Months</p>
-                    <p>Valid till&nbsp;24 June 2024</p>
+                    <p>Plan name:&nbsp;{formData.planDetail?.plan_id?.name === 'VIP'? 'VIP Shaadi':formData.planDetail?.plan_id?.name ? formData.planDetail?.plan_id?.name:'Basic'}</p>
+                    <p>Validity:&nbsp;
+                      {formData.planDetail?.plan_id?.name === 'VIP'?'Till Shaadi':formData.planDetail?.plan_id?.name === 'Premium'?'1 Year':formData.planDetail?.plan_id?.name === 'Gold'?'6 Month':null}
+                      </p>
+                    <p>Valid till:&nbsp;{formData.planDetail?.expiry_date ? formatDate(formData.planDetail?.expiry_date):formData.planDetail?.plan_id?.name === 'VIP'?'Till Shaadi':null}</p>
                     <div className="butt">
-                      <button>Complete Profile</button>
+                      <Link to="/my-profile"><button>Complete Profile</button></Link>
                     </div>
                   </div>
                 </div>
@@ -474,10 +607,10 @@ const [isLoading, setIsLoading] = useState(false)
             </div>
             <div className="col-12">
               <div className="bg-col-matches">
-                <div className="row">
-                  <div className="col-6 bord-matches ">
+                <div className="row d-lg-flex align-items-lg-center">
+                  <div className="col-lg-6 bord-matches">
                     <div className="row pad-match">
-                      <div className="col-4">
+                      <div className="col-lg-4">
                         <div className="img-match">
                           <img
                             src="assets/img/indian-wedding-character-collection.png"
@@ -485,18 +618,18 @@ const [isLoading, setIsLoading] = useState(false)
                           />
                         </div>
                       </div>
-                      <div className="col-8 align-content-center">
+                      <div className="col-lg-8 align-content-center">
                         <div className="con-matches">
                           <h6>
                             Your Profile is how your Matches see you. Thanks for
                             improving it
                           </h6>
-                          <button>View Today Matches</button>
+                         <Link to="/today-matches"> <button>View Today Matches</button></Link>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="col-6 pad-match">
+                  <div className="col-lg-6 pad-match noti-cont">
                     <div className="row pad-top align-content-center align-items-center">
                       <div className="col-6 d-flex img-bell align-items-center">
                         <img src="assets/img/icons/bell-1.png" alt="" />
@@ -539,221 +672,204 @@ const [isLoading, setIsLoading] = useState(false)
             </div>
             <div className="col-12 mt-5 mb-3">
               <div className="row plane-matches">
-                <div className="col-6">
+                <div className="col-lg-6">
                   <div className="col-12">
                     <div className="row">
                       <div className="col-6">
-                        <p style={{ fontSize: 23, fontWeight: 600 }}>
+                        <h4 className='yourmatch-hd'>
                           Your Matches
-                        </p>
+                        </h4>
                       </div>
                       <div className="col-6 text-end">
-                        <a
+                        <Link
                           style={{ color: "#BE3272", fontSize: 17 }}
-                          href="/#"
+                          to="/my-matches"
                         >
                           See All
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
                   <div className="col-12">
+                    {freeMember.length > 0 &&
                     <div className="bg-your-matches p-3">
+                      
+                      {freeMember && freeMember.map((searchList,index) => {
+
+                        let profilePhoto;
+                    if(searchList.profile_photo === 1){
+                      profilePhoto = searchList.photo
+                    } else if(searchList.profile_photo === 2){
+                      profilePhoto = searchList.photo1
+                    } else if(searchList.profile_photo === 3){
+                      profilePhoto = searchList.photo2
+                    } else if(searchList.profile_photo === 4){
+                      profilePhoto = searchList.photo3
+                    } else if(searchList.profile_photo === 5){
+                      profilePhoto = searchList.photo4
+                    } else {
+                      profilePhoto = searchList.photo
+                    }
+
+                        return (
                       <div className="col-12 py-2 ">
-                        <div className="row">
-                          <div className="col-lg-3">
-                            <img src="assets/img/your-matches-1.png" alt="" />
+                        <div className='yourmatch'>
+                          <div className="row">
+                            <div className="col-4 col-lg-3">
+                                  <Link to={`/profile-details/${searchList._id}`}><img src={profilePhoto ? `${process.env.REACT_APP_BASE_URL_IMAGE}${profilePhoto}` : 'assets/img/no-image.jpg'} alt="" width={87} />
+                                  </Link>
+                            </div>
+                            <div className="col-8 col-lg-6 match-pr-1 p-0">
+                              <h4><Link to={`/profile-details/${searchList._id}`} style={{color:'#BE3272'}}>{searchList.name}</Link></h4>
+                              <p> {searchList?.dob ? `${ageCalculate(searchList.dob)} yrs,`:""} {searchList?.height ? `${decimalToFeetInchesWithoutWord(searchList.height)},`:""} {searchList.religion?.name ? `${searchList.religion?.name},` : ''} {[searchList?.loc_city?.name].filter(Boolean).join("")}</p>
+                              <p>{searchList?.occupation?.name}</p>
+                            </div>
+                            <div className="col-12 col-lg-3">
+                              {searchList?.interest_sent ? (
+                              <>
+                              
+                                <Link to="#" className='dash-interst-btn' style={{cursor:'default'}}>  
+                                 <img className="img-checker" src="assets/img/icons/check-alt_svgrepo.com-match.png"
+                              alt="" />
+                                <span>
+                                  Interest Sent
+                                </span>
+                            </Link>
+                              </>
+
+                            )
+                            :
+                            (
+                            <>
+                            <Link to="#" className='dash-interst-btn' onClick={() => sendInterest(searchList._id, index, 1)}>
+                                 <img className="img-checker" src="assets/img/icons/check-alt_svgrepo.com-match.png"
+                              alt="" />
+                                <span>
+                                  Express Interest
+                                </span>
+                            </Link>
+                            </>
+                            )
+                            
+                            }
+                            </div>
                           </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
-                          </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
-                          </div>
+
                         </div>
                       </div>
-                      <div className="col-12 py-2 ">
-                        <div className="row">
-                          <div className="col-lg-3">
-                            <img src="assets/img/img-pro-matc.png" alt="" />
-                          </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
-                          </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-12 py-2 ">
-                        <div className="row">
-                          <div className="col-lg-3">
-                            <img src="assets/img/img-pro-match.png" alt="" />
-                          </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
-                          </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+
+                        )
+
+                      })
+                    }
+                      
+                      
+
+
                     </div>
+}
                   </div>
                 </div>
-                <div className="col-6">
+                <div className="col-lg-6">
                   <div className="col-12">
-                    <div className="row">
-                      <div className="col-6">
-                        <p style={{ fontSize: 23, fontWeight: 600 }}>
+                    <div className='yourmatch'>
+                    <div className="row mt-4 mt-lg-0">
+                      <div className="col-8">
+                        <h4 className='yourmatch-hd'>
                           Premium Matches
-                        </p>
+                        </h4>
                       </div>
-                      <div className="col-6 text-end">
-                        <a
+                      <div className="col-4 text-end">
+                        <Link
                           style={{ color: "#BE3272", fontSize: 17 }}
-                          href="/#"
+                          to="/my-matches"
                         >
                           See All
-                        </a>
+                        </Link>
                       </div>
+                    </div>
                     </div>
                   </div>
                   <div className="col-12">
+                    {premiumMember.length > 0 && 
                     <div className="bg-your-matches p-3">
+
+                      {premiumMember && premiumMember.map((searchList,index) => {
+
+                        let profilePhoto;
+                    if(searchList.profile_photo === 1){
+                      profilePhoto = searchList.photo
+                    } else if(searchList.profile_photo === 2){
+                      profilePhoto = searchList.photo1
+                    } else if(searchList.profile_photo === 3){
+                      profilePhoto = searchList.photo2
+                    } else if(searchList.profile_photo === 4){
+                      profilePhoto = searchList.photo3
+                    } else if(searchList.profile_photo === 5){
+                      profilePhoto = searchList.photo4
+                    } else {
+                      profilePhoto = searchList.photo
+                    }
+
+
+                  return (
+                      
                       <div className="col-12 py-2 ">
+                        <div className='yourmatch'>
                         <div className="row">
-                          <div className="col-lg-3">
-                            <img src="assets/img/img-pro-matc.png" alt="" />
+                          <div className="col-4 col-lg-3">
+                            <Link to={`/profile-details/${searchList._id}`}>
+                            <img src={profilePhoto ? `${process.env.REACT_APP_BASE_URL_IMAGE}${profilePhoto}` : 'assets/img/no-image.jpg'} alt="" width={87} />
+                            </Link>
                           </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
+                          <div className="col-8 col-lg-6 match-pr-1 p-0">
+                            <h4><Link to={`/profile-details/${searchList._id}`} style={{color:'#BE3272'}}>{searchList.name}</Link></h4>
+                            <p> {searchList?.dob ? `${ageCalculate(searchList.dob)} yrs,`:""} {searchList?.height ? `${decimalToFeetInchesWithoutWord(searchList.height)},`:""} {searchList.religion?.name ? `${searchList.religion?.name},` : ''} {[searchList?.loc_city?.name].filter(Boolean).join("")}</p>
+                              <p>{searchList?.occupation?.name}</p>
                           </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
+                          <div className="col-12 col-lg-3">
+                            {searchList?.interest_sent ? (
+                              <>
+                              
+                                <Link to="#" className='dash-interst-btn' style={{cursor:'default'}}>  
+                                 <img className="img-checker" src="assets/img/icons/check-alt_svgrepo.com-match.png"
+                              alt="" />
+                                <span>
+                                  Interest Sent
+                                </span>
+                            </Link>
+                              </>
+
+                            )
+                            :
+                            (
+                            <>
+                            
+                            <Link to="#" className='dash-interst-btn' onClick={() => sendInterest(searchList._id, index, 2)}>
+                                 <img className="img-checker" src="assets/img/icons/check-alt_svgrepo.com-match.png"
+                              alt="" />
+                                <span>
+                                  Express Interest
+                                </span>
+                            </Link>
+                            </>
+                            )
+                            
+                            }
+                            
+
                           </div>
                         </div>
-                      </div>
-                      <div className="col-12 py-2 ">
-                        <div className="row">
-                          <div className="col-lg-3">
-                            <img
-                              src="assets/img/img-pro-match-2-2.png"
-                              alt=""
-                            />
-                          </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
-                          </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
-                          </div>
                         </div>
                       </div>
-                      <div className="col-12 py-2 ">
-                        <div className="row">
-                          <div className="col-lg-3">
-                            <img src="assets/img/img-pro-match.png" alt="" />
-                          </div>
-                          <div className="col-lg-6 match-pr-1 p-0">
-                            <h4>Miss Kajol Makhija</h4>
-                            <p> 33 yrs, 5' 3", Hindi, Mumbai</p>
-                            <p>Public Relations Professional</p>
-                          </div>
-                          <div className="col-lg-3 text-center align-content-center">
-                            <img
-                              className="img-checker"
-                              src="assets/img/icons/check-alt_svgrepo.com-match.png"
-                              alt=""
-                            />
-                            <p
-                              style={{
-                                color: "#BE3272",
-                                fontSize: 12,
-                                fontWeight: 700
-                              }}
-                            >
-                              Connect Now
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+
+                  )
+                  })}
+                      
+
+
                     </div>
+}
                   </div>
                 </div>
               </div>

@@ -568,6 +568,9 @@ p {
 .hasSub.megaMenu .headerSubNav .headerSubMenu {
     width: 25%;
 }
+.hasSub.megaMenu.megaMenu2 .headerSubNav .headerSubMenu {
+    width: 33%;
+}
 
 .hasSub.megaMenu .headerSubNav .headerSubMenu li h5 {
     font-size: 19px;
@@ -2642,7 +2645,7 @@ ul.footerSocial i {
 }
 
 .foot-social {
-    display: flex;
+    display: flex;  flex-wrap: wrap;
     align-items: center;
     margin: 20px 0 0 0;
     font-size: 12px;
@@ -2654,7 +2657,7 @@ ul.footerSocial i {
 }
 
 .foot-social ul {
-    display: flex;
+    display: flex; flex-wrap: wrap;
 }
 
 .foot-social ul li {
@@ -4192,13 +4195,13 @@ a.smalbtns {
 .faqsCards .accordion-button {
     background-color: #F2F2F2;
     font-size: 17px;
-    padding: 25px 25px;
+    padding: 18px 25px;
     font-weight: 500;
 }
 
 .faqsCards .accordion-header {
     margin-bottom: 0;
-    font-family: 'Poppins';
+    
     font-size: 14px;
 }
 
@@ -5955,7 +5958,7 @@ a.smalbtns {
 }
 
 .fieldname {
-    min-width: 120px;
+    min-width: 94px;
     color: #5C5C5C;
 }
 
@@ -7004,7 +7007,7 @@ a.smalbtns {
 
 
 
-.adhaarfld input { padding-left: 15px!important; padding-right: 15px!important; font-size: 20px!important; width: 30%!important; max-width: 100px!important; letter-spacing: 4px; display: inline-block!important; text-align: center!important; }
+.adhaarfld input { padding-left: 15px!important; padding-right: 15px!important; font-size: 15px!important; width: 30%!important; max-width: 100px!important; letter-spacing: 4px; display: inline-block!important; text-align: center!important; }
 .agefield .dropdown-menu { min-width: 50px; max-width: 100px; }
 .agefield .numbers-grid { display: block; }
 .agefield .number {
@@ -7044,7 +7047,12 @@ a.smalbtns {
 			conic-gradient(hotpink 75%, pink 0); */    
 	}
 	.stepforupload {  }
-	
+	.inboximg { width: 100%; min-height: 160px; background: #fff; }
+	.inboximg img { max-width: 100%; }
+	.dash-uplodicon img { position: relative!important }
+	.yourmatch-hd { font-size: 20px; margin-bottom: 15px; }
+	.dash-interst-btn { display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 12px; color: #e71e99 }
+	.dash-interst-btn:hover { color: #000 }
 
 /* harpreet Responsive start */
 
@@ -7480,6 +7488,7 @@ a.smalbtns {
 }
 
 @media screen and (max-width:768px) {
+	.foot-social h6 { margin-bottom: 9px; }
     .mainHeader {
         display: none;
         position: fixed;
@@ -7885,6 +7894,11 @@ a.smalbtns {
 /*768 end*/
 
 @media screen and (max-width:499px) {
+	.yourmatch { border-bottom: 1px solid #efefef; padding-bottom: 15px; }
+	.yourmatch p { font-size: 12px; margin-bottom: 5px; line-height: 1.3; }
+    .match-pr-1 h4 { font-size: 16px; }
+	.dash-interst-btn { justify-content: flex-end; flex-direction: row; }
+	.dash-interst-btn img { margin-right: 10px; max-height: 30px; }
     .dividers p {
         font-size: 12px;
     }
@@ -8314,7 +8328,9 @@ a.smalbtns {
 	.adhaarfld input { font-size: 18px !important; }
 	
 	.profiledet-btn { display: none; }
-	.step-info h2 { font-size: 18px; }
+	.step-info h2 { font-size: 14px; }
+	.step-info p { font-size: 12px; line-height: 1.3; }
+	
 	
 }
 /*499 end*/
@@ -9020,13 +9036,13 @@ a.smalbtns {
 }
 .hheadings-2 h3 {
     color: #6C1A2F;
-    font-size: 30px;
+    font-size: 24px;
     padding: 15px 0px;
 }
 .plancon-iner {
     background-color: white;
-    padding: 15px 10px 50px 10px;
-    min-height: 397px;
+    padding: 15px 10px 10px 10px;
+    min-height: 435px;
 }
 .select-plan {
     width: 100%;
@@ -9050,11 +9066,11 @@ a.smalbtns {
 }
 .plan-feat-ul li {
     color: black;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     align-items: center;
     align-content: center;
-    margin: 10px 0px; padding-left: 30px; position: relative;
+    margin: 10px 0px; padding-left: 25px; position: relative;
 }
 .plan-feat-ul li img {
     margin-right: 10px; position: absolute; left: 0; top: 2px;
@@ -9152,7 +9168,14 @@ a.smalbtns {
     font-weight: 600;
 }
 .plan-benefit h6 { line-height: 1.5; margin: 5px 0px; }
-
+.inbox-profile .fieldname { min-width: 89px; }
+.inbox-profile .profiledata-rowss { font-size: 12px; }
+.vip-plan { background: #091be7; border: 2px solid #fff; }
+.vip-plan h3 { color: #fff; }
+.vip-plan .plancon-iner { background-color: #fff2de; }
+.vip-plan .button { background: linear-gradient(124deg, #091be7, #e00066); }
+.vip-plan li { padding-left: 20px; }
+.vip-plan li i { position: absolute; left: 0; top: 4px; color: #db0767; }
 
 /*harpreet reponsive start*/
 @media only screen and (max-width: 1280px) {

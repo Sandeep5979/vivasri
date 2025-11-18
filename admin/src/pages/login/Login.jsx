@@ -38,6 +38,8 @@ export default function Login() {
       if (response.ok) {
         // ✅ Save token or redirect to dashboard
         localStorage.setItem("adminToken", result.token);
+        localStorage.setItem("lastActivity", Date.now());
+
         window.location.href = "/admin/dashboard";
       } else {
         setApiError(result.message || "Invalid username or password.");

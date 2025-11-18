@@ -34,6 +34,10 @@ import Feedback from "../pages/feedback/Feedback";
 import Disclaimer from "../pages/disclaimer/Disclaimer";
 import PrivacyPolicy from "../pages/privacy_policy/PrivacyPolicy";
 import TermsCondition from "../pages/terms_conditions/TermsCondition";
+import Logout from "../pages/logout/Logout";
+import WorkingWith from "../pages/attribute/workingwith/WorkingWith";
+import Education from "../pages/attribute/education/Education";
+import ProfessionalEducation from "../pages/attribute/professioaleducation/ProfessionalEducation";
 
 export default function Router() {
   return (
@@ -104,6 +108,18 @@ export default function Router() {
           element={<PrivateRoute><Hobbies /></PrivateRoute>}
         />
         <Route
+          path="/attribute/working-with"
+          element={<PrivateRoute><WorkingWith /></PrivateRoute>}
+        />
+        <Route
+          path="/attribute/education"
+          element={<PrivateRoute><Education /></PrivateRoute>}
+        />
+        <Route
+          path="/attribute/professional-education"
+          element={<PrivateRoute><ProfessionalEducation /></PrivateRoute>}
+        />
+        <Route
           path="/staff/add-staff"
           element={<PrivateRoute><AddStaff /></PrivateRoute>}
         />
@@ -162,6 +178,10 @@ export default function Router() {
         <Route
           path="/terms-condition"
           element={<PrivateRoute><TermsCondition /></PrivateRoute>}
+        />
+        <Route
+          path="/logout"
+          element={<PrivateRoute><Logout /></PrivateRoute>}
         />
       </Routes>
     </BrowserRouter>

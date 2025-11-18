@@ -502,7 +502,9 @@ function SearchProfile() {
         <div className="searchtxt">
           Search Partner For:{" "}
           <span>
-            Age {searchMinAge} to {searchMaxAge}
+           {(searchMinAge && searchMaxAge) ? `Age ${searchMinAge} to ${searchMaxAge}`
+           : null
+           }
           </span>
         </div>
         <Link to="#" className="filter">

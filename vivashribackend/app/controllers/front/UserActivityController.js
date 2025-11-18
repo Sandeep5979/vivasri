@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import InterestModel from "../../models/SentInterest.js"; 
+import UserPlanModel from "../../models/UserPlanModel.js";
 
 export const sendInterest = async (req, res) => {
 
@@ -104,12 +105,20 @@ export const getInbox = async (req, res) => {
         }
       ]);
 
+const usersWithPlans = await Promise.all(fetchMember.map(async (user) => {
+  const planDetail = await UserPlanModel.findOne({ user_id: user.partner_id?._id }).populate("plan_id");
 
+  const plainUser = user.toObject();
+  if (plainUser.partner_id) {
+  plainUser.partner_id.plan_detail = planDetail
+  }
+  return plainUser;
+})); 
 
     return res.status(200).json({
       status: true,
       message: "Fetched successfully",
-      data: fetchMember,
+      data: usersWithPlans,
     });
 
   } catch (err) {

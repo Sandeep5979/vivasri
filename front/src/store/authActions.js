@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 
 export const registerUser = (data) => async (dispatch) => {
     
+    
     if(data.status){
         
         /* Cookies.set("otp-data", JSON.stringify(data.data), {
@@ -10,7 +11,7 @@ export const registerUser = (data) => async (dispatch) => {
         });
         */
 
-        Cookies.set("authTokenUser", JSON.stringify(data.token), {
+        Cookies.set("otp-data", JSON.stringify(data.token), {
             path: "/",
             expires: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
         });
@@ -121,12 +122,29 @@ export const verifyOtp = (data) => async (dispatch) => {
         dispatch({ type: "VERIFY_OTP_FAILURE", error: err.response?.data?.message || err.message });
     }
 };
+export const planChange = (data) => async (dispatch) => {
+    //dispatch({ type: "VERIFY_OTP_REQUEST" });
+    console.log('action', data)
+    try {
+
+    
+
+        dispatch({ type: "PLAN_CHANGE", payload: data });
+    } catch (err) {
+        dispatch({ type: "PLAN_CHANGE", error: err.response?.data?.message || err.message });
+    }
+};
+
+
+
+
 
 export const userLogout = () => async (dispatch) => {
     //dispatch({ type: "VERIFY_OTP_REQUEST" });
     try {
 
         Cookies.remove("authTokenUserLogin");
+        Cookies.remove("authTokenUser");
 
         dispatch({ type: "LOGOUT_SUCCESS", payload: '' });
     } catch (err) {

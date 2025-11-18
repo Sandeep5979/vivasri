@@ -31,7 +31,7 @@ const Sidebar = () => {
                     <li><Link onClick={() => toggleMenu("members")} style={{ cursor: "pointer" }}><i class="fa fa-user"></i> Members <span class="fa fa-chevron-down"></span></Link>
                        
                         <ul class="nav child_menu" style={{ display: openMenu.members ? "block" : "none" }}>
-                          <li><Link to={`${BASE_URL}/members/new-member`}>New Registrations</Link></li>
+                          { /* <li><Link to={`${BASE_URL}/members/new-member`}>New Registrations</Link></li> */ }
                           <li><Link to={`${BASE_URL}/members/member-list`}>View Members</Link></li>
                           <li><Link to={`${BASE_URL}/members/paid-member-list`}>View Paid Members</Link></li>
                           <li><Link to={`${BASE_URL}/members/member-enquiry`}>Members Enquiry</Link></li>
@@ -48,7 +48,11 @@ const Sidebar = () => {
                               <li><Link to={`${BASE_URL}/attribute/gotra`}>Gotra</Link></li>
                               <li><Link to={`${BASE_URL}/attribute/language`}>Language</Link></li>
                               <li><Link to={`${BASE_URL}/attribute/occupation`}>Occupation</Link></li>
+                              <li><Link to={`${BASE_URL}/attribute/working-with`}>Working With</Link></li>
+                              
                               <li><Link to={`${BASE_URL}/attribute/hobbies`}>Hobbies</Link></li>
+                              <li><Link to={`${BASE_URL}/attribute/education`}>Education</Link></li>
+                              <li><Link to={`${BASE_URL}/attribute/professional-education`}>Professional Education</Link></li>
                           </ul>
                          
                     </li>      
@@ -75,8 +79,9 @@ const Sidebar = () => {
                    <li><Link onClick={() => toggleMenu("Plan")} style={{ cursor: "pointer" }}><i class="fa fa-tag"></i> Membership Plans <span class="fa fa-chevron-down"></span></Link>
                      
                         <ul class="nav child_menu" style={{ display: openMenu.Plan ? "block" : "none" }}>
-                            <li><Link to={`${BASE_URL}/membership-plans/add-plan`}>Add Plan</Link></li>
-                            <li><Link to={`${BASE_URL}/membership-plans/view-plan`}>View Plan</Link></li>
+                            <li><Link to={`${BASE_URL}/membership-plans/add-plan`}>View Plan</Link></li>
+                            { /* <li><Link to={`${BASE_URL}/membership-plans/view-plan`}>View Plan</Link></li>
+                            */ }
                         </ul>
                     
                     </li>
@@ -110,7 +115,7 @@ const Sidebar = () => {
                             <Link to={`${BASE_URL}/testimonials/view-testimonials`}>View Testimonials</Link>
                           </li>
                         </ul>
-                      </li>
+                    </li>
 
                     
                     <li><Link to={`${BASE_URL}/faq`}><i class="fa fa-files-o"></i> FAQ/Help</Link></li>
@@ -118,7 +123,10 @@ const Sidebar = () => {
                     <li><Link to={`${BASE_URL}/disclaimer`}><i class="fa fa-list-ul"></i> Disclaimer</Link></li>
                     <li><Link to={`${BASE_URL}/privacy-policy`}><i class="fa fa-shield"></i> Privacy Policy</Link></li>
                     <li><Link to={`${BASE_URL}/terms-condition`}><i class="fa fa-sticky-note-o"></i> Terms & Conditions</Link></li>
-                </ul>
+
+                    <li><Link to={`${BASE_URL}/logout`}><i class="fa fa-sign-out-o"></i> Logout</Link></li>
+                  
+                  </ul>
               </div>
 
             </div>

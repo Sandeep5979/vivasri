@@ -225,7 +225,7 @@ function AadhaarVerification() {
   <div className="register-sec ">
     <div className="container-fluid con-flu-padd  ">
       <div className="container-fluid  bg-register ">
-        <div className="row pb-50 pt-40">
+        <div className="row pb-50 pt-30 pt-sm-40">
           <div className="col-lg-8 col-md-12 col-sm-12 ">
             <div className="con-reg">
                 <div class="step-container">
@@ -233,13 +233,13 @@ function AadhaarVerification() {
 
                     <div className="row">
                                           
-                                          <div className="col-sm-4">
+                                          <div className="col-8 col-sm-8">
                                                <div class="step-info">
                                                   <h2>Aadhaar Verification</h2>
                                                   <p><Link to="/contact-information"> <span>Prev Step- Contact Details</span></Link></p>
                                                 </div>
                                           </div>
-                                          <div className="col-sm-8 text-right">
+                                          <div className="col-4 col-sm-4 text-right">
                                               <div class="progress-bar" style={{background:"radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(hotpink 75%, pink 0)"}}>
                                                   <span>3 of 4</span>
                                               </div>

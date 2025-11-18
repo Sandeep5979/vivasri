@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function  InboxLeftSideBar() {
 
@@ -34,16 +35,16 @@ function  InboxLeftSideBar() {
                                                             >
                                                                 <div className="accordion-body">
                                                                     <p>
-                                                                        <a href="/inbox/received">Received</a>
+                                                                        <Link to="/inbox/received">Received</Link>
                                                                     </p>
                                                                     <p>
-                                                                        <a href="/inbox/accepted">Accepted</a>
+                                                                        <Link to="/inbox/accepted">Accepted</Link>
                                                                     </p>
                                                                     <p>
-                                                                        <a href="/inbox/decline">Decline</a>
+                                                                        <Link to="/inbox/decline">Decline</Link>
                                                                     </p>
                                                                     <p>
-                                                                        <a href="/inbox/sent">Sent</a>
+                                                                        <Link to="/inbox/sent">Sent</Link>
                                                                     </p>
                                                                 </div>
                                                             </div>

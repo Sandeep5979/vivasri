@@ -6,6 +6,7 @@ import { createProfessionalEducation, deleteProfessionalEducation, getAllProfess
 
 export const professionalEducationCreate = async (req, res) => {
   try {
+    
     const data = await createProfessionalEducation(req.body);
     res.status(201).json({ status: true, message: "Professional Education created successfully", data });
   } catch (err) {
