@@ -4,6 +4,7 @@ import HomeRegistrationModel from "../../models/HomeRegistrationModel.js";
 import SentInterest from "../../models/SentInterest.js";
 import fs from "fs";
 import UserPlanModel from "../../models/UserPlanModel.js";
+import UserViewModel from "../../models/UserViewModel.js";
 
 export const getAllUser = async () => {
   
@@ -53,14 +54,16 @@ export const getUserDetailAll = async (id, member_id=null) => {
   ]);
 
   const memberId = member_id;
-    //console.log(memberId)
+    //console.log(id, memberId)
     let sentPartnerIds = [];
       if (memberId) {
         const sentInterests = await SentInterest.find({ member_id: memberId }).select("partner_id");
         sentPartnerIds = sentInterests.map((i) => i.partner_id.toString());
+     // console.log(sentPartnerIds.length)
       }
       const planDetail = await UserPlanModel.findOne({ user_id:id }).populate("plan_id") ;
-      
+      const sentInterestsUser = await SentInterest.find({ member_id: id }).countDocuments();
+      const totalUserView = await UserViewModel.find({ user_id: id }).countDocuments();
       
       users.forEach((user) => {
         user._doc.interest_sent = memberId
@@ -68,6 +71,8 @@ export const getUserDetailAll = async (id, member_id=null) => {
           : false;
 
           user._doc.plan_detail = planDetail || false;
+          user._doc.interest_user = sentInterestsUser || null;
+          user._doc.total_user_view = totalUserView || null;
       });
 
       

@@ -37,7 +37,7 @@ function ConfirmPopup({message, yesNoButton}) {
             Yes
             
           </Link>
-          <Link  to="/#" onClick={(e) => {
+          <Link  to="#" onClick={(e) => {
             e.preventDefault()
             yesNoButton('No')
             

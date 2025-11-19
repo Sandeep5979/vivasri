@@ -24,6 +24,7 @@ function Package() {
   const modalInstanceSuccess = useRef(null);
   const [planId, setPlanId] = useState({})
   const [formData, setFormData] = useState({});
+  const [isScroll, setIsScroll] = useState(false)
 
   const fetchPlanList = async () => {
     
@@ -161,7 +162,12 @@ const fetchUserDetail = async (userId) => {
   
   }, [userDetailLogin])
 
-
+useEffect(() => {
+      
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setIsScroll(false)
+      
+    }, [isScroll]);
 
 
   return (

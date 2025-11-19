@@ -92,6 +92,8 @@ function SearchProfile() {
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState(1)
   const [hasMore, setHasMore] = useState(true);
+  const [planDetailUser, setPlanDetailUser] = useState({})
+  const [totalUserSentInterest, setTotalUserSentInterest] = useState(0)
 
 
   const searchList = async () => {
@@ -301,8 +303,13 @@ function SearchProfile() {
       setPopupMessage('are you sure you want to express interest?')
       modalInstanceConfirm.current?.show();
       */  
+     if(planDetailUser?.plan_id?.name === 'Gold' && totalUserSentInterest >= 50){
+      setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
+
+     } else {
       interest(id, userDetailLogin?._id, index);
-       
+      }
         } else {
          
        modalInstance.current?.show();
@@ -335,7 +342,7 @@ function SearchProfile() {
     
     //console.log('confirm', value)
     if(value === 'Yes'){
-    //interest(userProfileId, userDetailLogin?._id, userProfileIndex);
+    navigate("/membership-plan")
     }
     modalInstanceConfirm.current?.hide();
   }
@@ -393,7 +400,9 @@ function SearchProfile() {
              //console.log(data)
              if(data.status){
                
-       
+                //console.log('interest', data.data[0].interest_user)
+                setTotalUserSentInterest(data.data[0].interest_user)
+               setPlanDetailUser(data.data[0].plan_detail)
                
              if(location.pathname === '/my-matches' || location.pathname === '/today-matches' || location.pathname === '/near-me'){    
                
@@ -803,7 +812,7 @@ function SearchProfile() {
                   {showPartner && 
                   <div className="sectionTop tabContentBox" id="detpro">
                     
-                    <SearchProfileList searchData={userBride} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} />
+                    <SearchProfileList searchData={userBride} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser />
                 
                   </div> 
                   }
@@ -811,7 +820,7 @@ function SearchProfile() {
                   {!showPartner && 
                   <div className="sectionTop tabContentBox" id="parterpre">
 
-                     <SearchProfileList searchData={userGrooms} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} />
+                     <SearchProfileList searchData={userGrooms} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser />
                     
                    </div>
                   }
@@ -824,7 +833,7 @@ function SearchProfile() {
                 
                 :
                 
-                <SearchProfileList searchData={searchData} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={true} />
+                <SearchProfileList searchData={searchData} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={true} planDetailUser={planDetailUser} />
             
               
               }

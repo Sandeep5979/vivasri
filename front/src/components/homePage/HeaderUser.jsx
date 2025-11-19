@@ -91,7 +91,7 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     }
             
           
-          
+         // console.log(data.data[0].plan_detail)
         setFormData({
   
           
@@ -234,9 +234,11 @@ const [isHeaderOpen, setHeaderOpen] = useState(false);
                     <li>
                       <Link to="/basic-search">Basic Search</Link>
                     </li>
+                    
                     <li>
                       <Link to="/advance-search">Advance Search</Link>
                     </li>
+
                   </ul>
                 </div>
               </li>

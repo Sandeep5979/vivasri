@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ageCalculate, decimalToFeetInches, decimalToFeetInchesWithoutWord, formatCount, formatDate } from '../utils/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import SuccessPopup from '../components/homePage/SuccessPopup';
+import ConfirmPopup from '../components/homePage/ConfirmPopup';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -21,9 +22,14 @@ const [inviteAccept, setInviteAccept] = useState({})
 const [freeMember, setFreeMember] = useState([])
 const [premiumMember, setPremiumMember] = useState([])
 const modalSuccessRef = useRef(null)
-  const modalInstanceSuccess = useRef(null);
+const modalInstanceSuccess = useRef(null);
+const [planDetailUser, setPlanDetailUser] = useState(0)
+const modalConfirmRef = useRef(null)
+const modalInstanceConfirm = useRef(null);
+const [popupMessage, setPopupMessage] = useState("")
+const [totalUserSentInterest, setTotalUserSentInterest] = useState()
 
-  const fetchUserDetail = async (userId) => {
+const fetchUserDetail = async (userId) => {
       
       const res = await fetch(`${process.env.REACT_APP_BASE_URL_API}/api/user/user-detail-all/${userId}`, {
           method: "GET",
@@ -64,7 +70,9 @@ const modalSuccessRef = useRef(null)
                       profilePhoto = data.data[0].photo
                     }
           
-          
+          setTotalUserSentInterest(data.data[0].interest_user)
+          setPlanDetailUser(data.data[0].plan_detail)
+
         setFormData({
             
           name:data.data[0].name,
@@ -283,9 +291,13 @@ useEffect(() => {
 const sendInterest = (id, index, val) => {
      
     if(userDetailLogin?._id){
-     
+     if(planDetailUser?.plan_id?.name === 'Gold' && totalUserSentInterest >= 50){
+      setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
+
+     } else {
       interest(id, userDetailLogin?._id, index, val);
-       
+     }
         } else {
       
        return;
@@ -348,12 +360,26 @@ const sendInterest = (id, index, val) => {
           }
         }
 
-  
+  useEffect(() => {
+                    const modalConfirmEl = document.getElementById("confirmPopupId");
+                    if (modalConfirmEl) {
+                       modalInstanceConfirm.current = new window.bootstrap.Modal(modalConfirmEl);
+                    }
+                 
+                  }, []);
+  const yesNoButton = (value) => {
+      
+      //console.log('confirm', value)
+      if(value === 'Yes'){
+      navigate("/membership-plan")
+      }
+      modalInstanceConfirm.current?.hide();
+    }
   return (
     <>
       <HeaderUser />
       <SuccessPopup ref={modalSuccessRef} message="Your interest has been sent!" />
-
+      <ConfirmPopup ref={modalConfirmRef} message={popupMessage} yesNoButton={yesNoButton} />
         <>
   <section className="inrbnr">
     <div className="container-fluid con-flu-padd">
@@ -725,7 +751,10 @@ const sendInterest = (id, index, val) => {
                               <p>{searchList?.occupation?.name}</p>
                             </div>
                             <div className="col-12 col-lg-3">
-                              {searchList?.interest_sent ? (
+                              {
+                              (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic') ? null :
+                                                           
+                              searchList?.interest_sent ? (
                               <>
                               
                                 <Link to="#" className='dash-interst-btn' style={{cursor:'default'}}>  
@@ -828,7 +857,11 @@ const sendInterest = (id, index, val) => {
                               <p>{searchList?.occupation?.name}</p>
                           </div>
                           <div className="col-12 col-lg-3">
-                            {searchList?.interest_sent ? (
+                            {
+                            
+                            (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic') ? null :
+                            
+                            searchList?.interest_sent ? (
                               <>
                               
                                 <Link to="#" className='dash-interst-btn' style={{cursor:'default'}}>  

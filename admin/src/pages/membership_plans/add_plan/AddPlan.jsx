@@ -164,7 +164,7 @@ export default function AddPlan() {
           {/* /top tiles */}
           {/* body card start */}
 
-          
+          {editId &&
           <div className="x_panel">
             <div className="x_title">
               <h2>Plan Entry</h2>
@@ -236,7 +236,7 @@ export default function AddPlan() {
             </div>
           </div>
 
-                        
+}
 
           {/* bod card end */}
           {/* body card start */}

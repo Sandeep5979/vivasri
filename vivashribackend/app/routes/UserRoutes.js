@@ -1,5 +1,5 @@
 import express from "express";
-import { aadhaarVerification, basicProfile, contactInformation, deleteProfilePhoto, getUserDetailList, getUserDetailListAll, getUserHomeDetailList, selectMembershipPlan, setProfilePhoto, userEducationDetail, userFamilyDetail, userHomeRegistration, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, validateBasicProfile } from "../controllers/front/UserController.js";
+import { aadhaarVerification, basicProfile, contactInformation, deleteProfilePhoto, getUserDetailList, getUserDetailListAll, getUserHomeDetailList, selectMembershipPlan, setProfilePhoto, userEducationDetail, userFamilyDetail, userHomeRegistration, userLocationDetail, userPartnerBasicDetail, userPartnerQualities, userProfilePhoto, userProfilePhotoAdd, userRegistration, userRegistrationLogin, userReligion, userVerifyOtp, userViewUpdate, validateBasicProfile } from "../controllers/front/UserController.js";
 import { authJwt } from "../middlewares/index.js";
 import { sendInterest, getInbox, cancelRequest, changeStatusRequest } from "../controllers/front/UserActivityController.js"
 import { getAllMatchProfileList } from "../controllers/front/MasterController.js";
@@ -34,6 +34,7 @@ router.route("/cancel-request").post(cancelRequest);
 router.route("/status-change").post(changeStatusRequest);
 router.route("/activate-plan").post(selectMembershipPlan);
 router.route("/member-match").post(getAllMatchProfileList);
+router.route("/view-user").post(userViewUpdate);
 
 export default router;
 

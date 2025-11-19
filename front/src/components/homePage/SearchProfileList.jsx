@@ -2,9 +2,9 @@ import React from 'react'
 import { ageCalculate, decimalToFeetInches } from '../../utils/utils';
 import { Link } from 'react-router-dom';
 
-function SearchProfileList({searchData, sendInterest, showPopUpButton, showInterest}) {
+function SearchProfileList({searchData, sendInterest, showPopUpButton, showInterest, planDetailUser}) {
   
-  
+  //console.log('inner', planDetailUser)
   
     return (
     <>
@@ -72,16 +72,18 @@ function SearchProfileList({searchData, sendInterest, showPopUpButton, showInter
                         </div>
                       </div>
                       <div>
+                        
+                        {!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' ? null :
                         <div className="profilelist-pinkbox">
                             {showInterest ?
                             
                             <>
                             {searchList?.interest_sent ? (
                                 <span>
-                                 <p class="upgradepara text-center"><a href="">Upgrade</a> to Contact her directly</p>
-                                    <a href="#" class="button callnow-btn mb-2">
-                                    <i class="fa-solid fa-phone"></i> Call Now</a>
-                                    <a href="#" class="button callnow-btn"><i class="fa-regular fa-comment"></i> Chat Now</a>
+                                 <p class="upgradepara text-center"><Link to="#">Upgrade</Link> to Contact her directly</p>
+                                    <Link to="#" class="button callnow-btn mb-2">
+                                    <i class="fa-solid fa-phone"></i> Call Now</Link>
+                                    <Link to="#" class="button callnow-btn"><i class="fa-regular fa-comment"></i> Chat Now</Link>
                                 </span>
                               ) : (
                                 <>
@@ -110,6 +112,8 @@ function SearchProfileList({searchData, sendInterest, showPopUpButton, showInter
                           </Link>
                   }
                         </div>
+                  }
+
                       </div>
                     </div>
                   </div>

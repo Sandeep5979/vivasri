@@ -3,16 +3,18 @@ import HeaderPage from '../components/homePage/HeaderPage';
 import FooterPage from '../components/homePage/FooterPage'
 import { useSelector } from 'react-redux';
 import { ageCalculate, decimaltocm, decimalToFeetInches, decimaltoWithoutcm, isIncomeRangeCompatible, maskEmail, maskMobileNumber } from '../utils/utils';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import HeaderUser from '../components/homePage/HeaderUser';
 import ProfileDetailImage from '../components/profiePage/ProfileDetailImage';
 import SuccessPopup from '../components/homePage/SuccessPopup';
+import ConfirmPopup from '../components/homePage/ConfirmPopup';
 
 
 function ProfileDetail() {
 
   const { profileId } = useParams();
   const { userDetailLogin } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
 
 const [formData, setFormData] = useState({})
 const [formDataPartner, setFormDataPartner] = useState({})
@@ -24,6 +26,13 @@ const [partnerMaritalStatus, setPartnerMaritalStatus] = useState([])
 const [totalMatchValue, setTotalMatchValue] = useState("")
 const modalSuccessRef = useRef(null)
 const modalInstanceSuccess = useRef(null);
+const [planDetailUser, setPlanDetailUser] = useState(0)
+const modalConfirmRef = useRef(null)
+const modalInstanceConfirm = useRef(null);
+const [popupMessage, setPopupMessage] = useState("")
+const [totalUserSentInterest, setTotalUserSentInterest] = useState(0)
+const [totalUserView, setTotalUserView] = useState(0)
+
 
   const fetchUserDetail = async (userId) => {
       
@@ -67,6 +76,26 @@ const modalInstanceSuccess = useRef(null);
                     }
             
           setPartnerMaritalStatus(data.data[0]?.partner_marital_status || [])
+          let mobile;
+          let email;
+          if(data.data[0]?.mobile && data.data[0]?.mobile !==''){
+            mobile = data.data[0].mobile
+            // console.log('mob', mobile)
+
+          } else {
+            mobile = data.data[0].contact_no
+            // console.log('mobn', mobile)
+          }
+
+          if(data.data[0]?.email && data.data[0]?.email !==''){
+            email = data.data[0].email
+            // console.log('email', email)
+
+          } else {
+            email = data.data[0].contact_email
+           // console.log('emailn', email)
+          }
+
           
           
         setFormData({
@@ -133,8 +162,8 @@ const modalInstanceSuccess = useRef(null);
         loc_relation_name:data.data[0].loc_relation_name,
         loc_relation_email:data.data[0].loc_relation_email,
         loc_relation_mobile:data.data[0].loc_relation_mobile,
-        contact_no:data.data[0].contact_no,
-        contact_email:data.data[0].contact_email,
+        contact_no:mobile,
+        contact_email:email,
         instagram:data.data[0].instagram,
         facebook:data.data[0].facebook,
         reference:data.data[0].reference,
@@ -207,7 +236,7 @@ const modalInstanceSuccess = useRef(null);
           }
   
           
-      // console.log(data.data[0].hobbies)
+        // console.log(data.data[0].interest_user)
 
                     let profilePhoto;
                     if(data.data[0].profile_photo === 1){
@@ -224,6 +253,9 @@ const modalInstanceSuccess = useRef(null);
                       profilePhoto = data.data[0].photo
                     }
             
+          setTotalUserSentInterest(data.data[0].interest_user)
+          setPlanDetailUser(data.data[0].plan_detail)
+          setTotalUserView(data.data[0].total_user_view)
           
           
         setFormDataMatch({
@@ -311,8 +343,43 @@ const modalInstanceSuccess = useRef(null);
   
     }
   
-  
+  const fetchUserView = async (user_id, view_id) => {
+          try {
+            const response = await fetch(
+              `${process.env.REACT_APP_BASE_URL_API}/api/user/view-user`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  user_id: user_id,
+                  view_id : view_id 
+                }),
+              }
+            );
+            const data = await response.json();
+            if (response.ok) {
+            // console.log(data)
+            } else {
+              console.error("Failed to data:", data.message || data);
+            }
+          } catch (error) {
+            console.error("Error while data:", error);
+          }
+        }
+
+
     useEffect(() => {
+        
+    if(userDetailLogin?._id && profileId){
+    fetchUserView(userDetailLogin?._id, profileId)
+    }
+    
+  
+  }, [userDetailLogin, profileId])
+    
+        useEffect(() => {
         
     if(userDetailLogin?._id){
     fetchUserDetailMatch(userDetailLogin?._id)
@@ -412,7 +479,14 @@ const modalInstanceSuccess = useRef(null);
 
 
   const sendInterest = (id, index) => {
-   interest(id, userDetailLogin?._id, index)
+   if(planDetailUser?.plan_id?.name === 'Gold' && totalUserSentInterest >= 50){
+      setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
+
+     } else {
+   
+    interest(id, userDetailLogin?._id, index)
+     }
   }
 
 
@@ -460,6 +534,22 @@ const modalInstanceSuccess = useRef(null);
         
                }, []);
 
+
+               useEffect(() => {
+                  const modalConfirmEl = document.getElementById("confirmPopupId");
+                  if (modalConfirmEl) {
+                     modalInstanceConfirm.current = new window.bootstrap.Modal(modalConfirmEl);
+                  }
+               
+                }, []);
+const yesNoButton = (value) => {
+    
+    //console.log('confirm', value)
+    if(value === 'Yes'){
+    navigate("/membership-plan")
+    }
+    modalInstanceConfirm.current?.hide();
+  }
   
   return (
     
@@ -471,6 +561,7 @@ const modalInstanceSuccess = useRef(null);
     { userDetailLogin?._id ? <HeaderUser /> : <HeaderPage /> }
 
     <SuccessPopup ref={modalSuccessRef} message="Your interest has been sent!" />
+    <ConfirmPopup ref={modalConfirmRef} message={popupMessage} yesNoButton={yesNoButton} />
 
     <>
   <section className="inrbnr inrbnr-minhgt">
@@ -547,6 +638,8 @@ const modalInstanceSuccess = useRef(null);
                   </div>
                 </div>
                 <div>
+                  
+                  {!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' ? null :
                   <div className="profilelist-pinkbox">
                     <div>
                       
@@ -557,9 +650,9 @@ const modalInstanceSuccess = useRef(null);
                         {formData?.interest_sent ? (
                                 <span>
                                  <p class="upgradepara text-center"><a href="">Upgrade</a> to Contact her directly</p>
-                                    <a href="#" class="button callnow-btn mb-2">
-                                    <i class="fa-solid fa-phone"></i> Call Now</a> {" "}
-                                    <a href="#" class="button callnow-btn"><i class="fa-regular fa-comment"></i> Chat Now</a>
+                                    <Link to="#" class="button callnow-btn mb-2">
+                                    <i class="fa-solid fa-phone"></i> Call Now</Link> {" "}
+                                    <Link to="#" class="button callnow-btn"><i class="fa-regular fa-comment"></i> Chat Now</Link>
                                 </span>
                               ) : (
                                 <>
@@ -597,6 +690,8 @@ const modalInstanceSuccess = useRef(null);
 
                     </div>
                   </div>
+                  }
+                  
                 </div>
               </div>
             </div>
@@ -718,7 +813,16 @@ const modalInstanceSuccess = useRef(null);
               </div>
               <div className="contact-info">
                 {" "}
-                <span>Contact Number</span> <strong>{maskMobileNumber(formData.contact_no)}</strong>{" "}
+                <span>Contact Number</span> <strong>
+                  {
+                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+                  maskMobileNumber(formData.contact_no)
+                  :
+                  formData.contact_no
+                  
+                  }
+                  
+                  </strong>{" "}
                 <img src="assets/img/icons/opd-verified.png" alt="" />{" "}
               </div>
             </li>
@@ -734,14 +838,26 @@ const modalInstanceSuccess = useRef(null);
               </div>
               <div className="contact-info">
                 {" "}
-                <span>Email ID</span> <strong>{maskEmail(formData.contact_email)}</strong>{" "}
+                <span>Email ID</span> <strong>
+                  {
+                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+                  maskEmail(formData.contact_email)
+                  :
+                  formData.contact_email
+                  
+                  }</strong>{" "}
               </div>
             </li>
           </ul>
           <div className="opd-otvd">
-            <Link href="#">
+            {
+              (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+            <Link to="/membership-plan">
               <span>Upgrade Membership</span> to view Details
             </Link>
+            :
+            null
+            }
           </div>
         </li>
         <li>

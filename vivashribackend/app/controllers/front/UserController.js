@@ -13,6 +13,7 @@ import fs from "fs";
 import UserPlanModel from "../../models/UserPlanModel.js";
 import UserPlanHistoryModel from "../../models/UserPlanHistoryModel.js";
 import MembershipPlanModel from "../../models/MembershipPlanModel.js";
+import UserViewModel from "../../models/UserViewModel.js";
 
 
 export const getUserDetailList = async (req, res) => {
@@ -575,7 +576,7 @@ export const userProfilePhotoAdd = async (req, res) => {
         // finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
         finalBuffer = await sharp(buffer).resize({ width: 576, height:620 }).toBuffer();
       }
-      //finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+      // finalBuffer = await sharp(buffer).blur(20).toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
 
@@ -910,3 +911,43 @@ export const selectMembershipPlan = async (req, res) => {
       res.status(500).json({ status: false, error: err.message });
     }
 }
+
+export const userViewUpdate = async (req, res) => {
+  const {user_id, view_id} = req.body
+    try {
+        if (!mongoose.isValidObjectId(user_id)) {
+            return res.status(400).json({ success: false, message: "ID not found" });
+        }
+        if (!mongoose.isValidObjectId(view_id)) {
+            return res.status(400).json({ success: false, message: "View ID not found" });
+        }
+        
+        const start = new Date();
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date();
+        end.setHours(23, 59, 59, 999);
+
+
+        const users = await UserViewModel.findOne({
+           user_id: user_id,
+           view_id:view_id,    
+           createdAt: { $gte: start, $lt: end }
+        });
+        // console.log(users)
+        
+        if(users){ } else {
+          const newView = new UserViewModel({
+          user_id,
+          view_id,
+        });
+        await newView.save();
+        
+        }
+        
+        
+        res.json({ status: true, message: "User view successfully." });
+    } catch (err) {
+        res.status(500).json({ status: false, error: err.message });
+    }
+};

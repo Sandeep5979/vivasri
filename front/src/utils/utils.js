@@ -94,8 +94,18 @@ export const maskMobileNumber = (number) => {
 export const maskEmail = (email) => {
   if (!email || !email.includes("@")) return email;
   const [localPart, domain] = email.split("@");
+  //console.log(localPart.length)
+  if(localPart.length === 1){
+  const visible = localPart.slice(0, 0);
+  return `${visible}${"*".repeat(Math.max(localPart.length - 0, 0))}@${domain}`;  
+  } else if(localPart.length === 2){
+  const visible = localPart.slice(0, 1);
+  return `${visible}${"*".repeat(Math.max(localPart.length - 1, 0))}@${domain}`;  
+  } else {
   const visible = localPart.slice(0, 2);
-  return `${visible}${"*".repeat(Math.max(localPart.length - 2, 0))}@${domain}`;
+  return `${visible}${"*".repeat(Math.max(localPart.length - 2, 0))}@${domain}`;  
+  }
+  
 }
 
 export const decimaltocm = (value) => {
@@ -121,7 +131,7 @@ return totalCm;
 
 
 function parseIncomeRange(range) {
-  console.log('range', range)
+  // console.log('range', range)
   if (!range || range.toLowerCase() === "Not Applicable") {
     return { min: 0, max: Infinity, applicable: false };
   }
