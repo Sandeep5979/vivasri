@@ -94,6 +94,7 @@ function SearchProfile() {
   const [hasMore, setHasMore] = useState(true);
   const [planDetailUser, setPlanDetailUser] = useState({})
   const [totalUserSentInterest, setTotalUserSentInterest] = useState(0)
+  const [expiryDate, setExpiryDate] = useState(false)
 
 
   const searchList = async () => {
@@ -307,6 +308,11 @@ function SearchProfile() {
       setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
       modalInstanceConfirm.current?.show();
 
+     } else if(expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium')){
+      setPopupMessage(`Your membership plan has expired. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
+      
+
      } else {
       interest(id, userDetailLogin?._id, index);
       }
@@ -401,8 +407,11 @@ function SearchProfile() {
              if(data.status){
                
                 //console.log('interest', data.data[0].interest_user)
-                setTotalUserSentInterest(data.data[0].interest_user)
-               setPlanDetailUser(data.data[0].plan_detail)
+              const isExpired = new Date(data.data[0].plan_detail?.expiry_date) < new Date();          
+                
+              setExpiryDate(isExpired)
+              setTotalUserSentInterest(data.data[0].interest_user)
+              setPlanDetailUser(data.data[0].plan_detail)
                
              if(location.pathname === '/my-matches' || location.pathname === '/today-matches' || location.pathname === '/near-me'){    
                

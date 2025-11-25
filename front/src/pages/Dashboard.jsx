@@ -28,6 +28,8 @@ const modalConfirmRef = useRef(null)
 const modalInstanceConfirm = useRef(null);
 const [popupMessage, setPopupMessage] = useState("")
 const [totalUserSentInterest, setTotalUserSentInterest] = useState()
+const [expiryDate, setExpiryDate] = useState(false)
+const [totalRecentCount, setTotalRecentCount] = useState(0)
 
 const fetchUserDetail = async (userId) => {
       
@@ -69,9 +71,15 @@ const fetchUserDetail = async (userId) => {
                     } else {
                       profilePhoto = data.data[0].photo
                     }
-          
-          setTotalUserSentInterest(data.data[0].interest_user)
-          setPlanDetailUser(data.data[0].plan_detail)
+
+        
+        const isExpired = new Date(data.data[0].plan_detail?.expiry_date) < new Date();
+        setExpiryDate(isExpired)
+        
+        setTotalUserSentInterest(data.data[0].interest_user)
+        setPlanDetailUser(data.data[0].plan_detail)
+        setTotalRecentCount(formatCount(data.data[0].totalRecentUserView || 0))            
+                    
 
         setFormData({
             
@@ -295,6 +303,9 @@ const sendInterest = (id, index, val) => {
       setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
       modalInstanceConfirm.current?.show();
 
+     } else if(expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium')){
+      setPopupMessage(`Your membership plan has expired. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
      } else {
       interest(id, userDetailLogin?._id, index, val);
      }
@@ -368,7 +379,6 @@ const sendInterest = (id, index, val) => {
                  
                   }, []);
   const yesNoButton = (value) => {
-      
       //console.log('confirm', value)
       if(value === 'Yes'){
       navigate("/membership-plan")
@@ -448,7 +458,7 @@ const sendInterest = (id, index, val) => {
                             />
                           </div>
                           <div className="col-4">
-                            <h3>03</h3>
+                            <h3> {totalRecentCount} </h3>
                           </div>
                           <p>Recent Visitors</p>
                         </div>

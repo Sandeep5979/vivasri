@@ -32,7 +32,7 @@ const modalInstanceConfirm = useRef(null);
 const [popupMessage, setPopupMessage] = useState("")
 const [totalUserSentInterest, setTotalUserSentInterest] = useState(0)
 const [totalUserView, setTotalUserView] = useState(0)
-
+const [expiryDate, setExpiryDate] = useState(false)
 
   const fetchUserDetail = async (userId) => {
       
@@ -236,7 +236,7 @@ const [totalUserView, setTotalUserView] = useState(0)
           }
   
           
-        // console.log(data.data[0].interest_user)
+        //console.log(isExpired)
 
                     let profilePhoto;
                     if(data.data[0].profile_photo === 1){
@@ -253,10 +253,13 @@ const [totalUserView, setTotalUserView] = useState(0)
                       profilePhoto = data.data[0].photo
                     }
             
-          setTotalUserSentInterest(data.data[0].interest_user)
-          setPlanDetailUser(data.data[0].plan_detail)
-          setTotalUserView(data.data[0].total_user_view)
-          
+        const isExpired = new Date(data.data[0].plan_detail?.expiry_date) < new Date();          
+        setExpiryDate(isExpired)  
+        
+        setTotalUserSentInterest(data.data[0].interest_user)
+        setPlanDetailUser(data.data[0].plan_detail)
+        setTotalUserView(data.data[0].total_user_view)
+           
           
         setFormDataMatch({
   
@@ -483,6 +486,9 @@ const [totalUserView, setTotalUserView] = useState(0)
       setPopupMessage(`You've reached the limit of 50 member interests. Kindly upgrade your plan to continue.`)
       modalInstanceConfirm.current?.show();
 
+     } else if(expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium')){
+      setPopupMessage(`Your membership plan has expired. Kindly upgrade your plan to continue.`)
+      modalInstanceConfirm.current?.show();
      } else {
    
     interest(id, userDetailLogin?._id, index)
@@ -815,7 +821,7 @@ const yesNoButton = (value) => {
                 {" "}
                 <span>Contact Number</span> <strong>
                   {
-                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100) || (expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium'))) ?
                   maskMobileNumber(formData.contact_no)
                   :
                   formData.contact_no
@@ -840,7 +846,7 @@ const yesNoButton = (value) => {
                 {" "}
                 <span>Email ID</span> <strong>
                   {
-                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+                  (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100) || (expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium'))) ?
                   maskEmail(formData.contact_email)
                   :
                   formData.contact_email
@@ -851,7 +857,7 @@ const yesNoButton = (value) => {
           </ul>
           <div className="opd-otvd">
             {
-              (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100)) ?
+              (!planDetailUser || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserView > 100) || (expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium'))) ?
             <Link to="/membership-plan">
               <span>Upgrade Membership</span> to view Details
             </Link>

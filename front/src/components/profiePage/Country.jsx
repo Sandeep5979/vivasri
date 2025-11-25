@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useSelect2 from "../../hooks/useSelect2";
 
 export default function Country({countryButton, searchCountry, searchState, searchCity}) {
-  console.log(searchCity)
+ // console.log(searchCity)
   const [country, setCountry] = useState([])
   const [state, setState] = useState([])
   const [city, setCity] = useState([])

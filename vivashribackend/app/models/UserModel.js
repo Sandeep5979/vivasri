@@ -337,6 +337,26 @@ const UserSchema = new Schema(
       type: String,
       trim: true
     },
+    photo_blur: {
+      type: String,
+      trim: true
+    },
+    photo1_blur: {
+      type: String,
+      trim: true
+    },
+    photo2_blur: {
+      type: String,
+      trim: true
+    },
+    photo3_blur: {
+      type: String,
+      trim: true
+    },
+    photo4_blur: {
+      type: String,
+      trim: true
+    },
     partner_hobbies: [
       {
         type: mongoose.Schema.Types.ObjectId,

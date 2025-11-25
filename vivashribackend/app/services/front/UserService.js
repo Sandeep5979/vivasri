@@ -64,8 +64,17 @@ export const getUserDetailAll = async (id, member_id=null) => {
       const planDetail = await UserPlanModel.findOne({ user_id:id }).populate("plan_id") ;
       const sentInterestsUser = await SentInterest.find({ member_id: id }).countDocuments();
       const totalUserView = await UserViewModel.find({ user_id: id }).countDocuments();
+
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      const totalRecentUserView = await UserViewModel.find({
+        view_id: id, 
+        //createdAt: { $gte: oneMonthAgo }
+        }).countDocuments();
+
+        
       
-      users.forEach((user) => {
+        users.forEach((user) => {
         user._doc.interest_sent = memberId
           ? sentPartnerIds.includes(user._id.toString())
           : false;
@@ -73,6 +82,7 @@ export const getUserDetailAll = async (id, member_id=null) => {
           user._doc.plan_detail = planDetail || false;
           user._doc.interest_user = sentInterestsUser || null;
           user._doc.total_user_view = totalUserView || null;
+          user._doc.totalRecentUserView =  totalRecentUserView || 0;
       });
 
       

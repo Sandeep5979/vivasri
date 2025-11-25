@@ -464,6 +464,11 @@ export const userEducationDetail = async (req, res) => {
     }
 
 }
+
+function rand(n) {
+  return Math.floor(Math.random() * n);
+}
+
 export const userProfilePhoto = async (req, res) => {
 
   const id = req.body.id;
@@ -479,7 +484,6 @@ export const userProfilePhoto = async (req, res) => {
 
   try {
     const savedPhotos = [];
-
     
     const savePhoto = async (photo, name, id) => {
       if (!photo) return null;
@@ -490,9 +494,13 @@ export const userProfilePhoto = async (req, res) => {
       if (!allowed.includes(ext)) {
         throw new Error(`Invalid file type for ${photo.name}`);
       }
-
+      
       const fileName = `${Date.now()}-${photo.name}`;
       const uploadPath = path.join(process.cwd(), "public/uploads", fileName);
+
+      const randId = rand(10)
+      const fileNameBlur = `${Date.now()}${randId}-blur-${photo.name}`;
+      const uploadPathBlur = path.join(process.cwd(), "public/uploads", fileNameBlur);
 
       const buffer = photo.data;
       const metadata = await sharp(buffer).metadata();
@@ -503,14 +511,21 @@ export const userProfilePhoto = async (req, res) => {
       finalBuffer = await sharp(buffer).resize({ width: 576, height:620 }).toBuffer();
       }
       //finalBuffer = await sharp(buffer).resize({ width: 576 }).toBuffer();
+      
+      let finalBufferBlur = await sharp(finalBuffer).blur(20).toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
+      await writeFile(uploadPathBlur, finalBufferBlur);
+
 
       await updateProfilePhoto(id, {[name]:`/uploads/${fileName}`})
+      let blurName = `${name}_blur`
+      await updateProfilePhoto(id, {[blurName]:`/uploads/${fileNameBlur}`})
 
       return `/uploads/${fileName}`;
     };
-
+    
+         
     if (photo) savedPhotos.push(await savePhoto(photo, 'photo', id));
     if (photo1) savedPhotos.push(await savePhoto(photo1, 'photo1', id));
     if (photo2) savedPhotos.push(await savePhoto(photo2, 'photo2', id));
@@ -559,6 +574,10 @@ export const userProfilePhotoAdd = async (req, res) => {
       const fileName = `${Date.now()}-${photo.name}`;
       const uploadPath = path.join(process.cwd(), "public/uploads", fileName);
 
+      const randId = rand(10)
+      const fileNameBlur = `${Date.now()}${randId}-blur-${photo.name}`;
+      const uploadPathBlur = path.join(process.cwd(), "public/uploads", fileNameBlur);
+
       const buffer = photo.data;
       
      /*  let pipeline = sharp(photo.data);
@@ -577,10 +596,15 @@ export const userProfilePhotoAdd = async (req, res) => {
         finalBuffer = await sharp(buffer).resize({ width: 576, height:620 }).toBuffer();
       }
       // finalBuffer = await sharp(buffer).blur(20).toBuffer();
+      let finalBufferBlur = await sharp(finalBuffer).blur(20).toBuffer();
 
       await writeFile(uploadPath, finalBuffer);
+      await writeFile(uploadPathBlur, finalBufferBlur);
 
       await updateProfilePhoto(id, {[name]:`/uploads/${fileName}`})
+      let blurName = `${name}_blur`
+      await updateProfilePhoto(id, {[blurName]:`/uploads/${fileNameBlur}`})
+
 
       return `/uploads/${fileName}`;
     };
@@ -932,7 +956,7 @@ export const userViewUpdate = async (req, res) => {
         const users = await UserViewModel.findOne({
            user_id: user_id,
            view_id:view_id,    
-           createdAt: { $gte: start, $lt: end }
+           //createdAt: { $gte: start, $lt: end }
         });
         // console.log(users)
         

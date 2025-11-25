@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 function SearchProfileList({searchData, sendInterest, showPopUpButton, showInterest, planDetailUser}) {
   
   //console.log('inner', planDetailUser)
+
   
     return (
     <>
@@ -26,6 +27,7 @@ function SearchProfileList({searchData, sendInterest, showPopUpButton, showInter
                     } else {
                       profilePhoto = searchList.photo
                     }
+
 
                   return (
 
