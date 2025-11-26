@@ -2,24 +2,39 @@ import React from "react";
 import Slider from "react-slick";
 
 
-const ProfileDetailImage = ({ formData }) => {
+const ProfileDetailImage = ({ formData, planDetailUser, totalUserSentInterest, expiryDate }) => {
   const baseUrl = process.env.REACT_APP_BASE_URL_IMAGE;
 
+  let photos = [];
+  let blurPhoto = 0 
+ if(!planDetailUser || Object.keys(planDetailUser).length === 0  || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserSentInterest >= 50) || (expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium'))){
+    //console.log('blur photo')
+    blurPhoto = 1
+    photos = [
+    formData.photo_blur,
+    formData.photo1_blur,
+    formData.photo2_blur,
+    formData.photo3_blur,
+    formData.photo4_blur,
+  ].filter(Boolean);
+  } else {
   // Collect all existing images dynamically
-  const photos = [
+   photos = [
     formData.photo,
     formData.photo1,
     formData.photo2,
     formData.photo3,
     formData.photo4,
   ].filter(Boolean);
+}
 
   if (photos.length === 0) {
-    return (
+     return (
       <div className="text-center">
         <img src="assets/img/no-image.jpg" alt="No Profile" style={{maxWidth:'100%'}} />
       </div>
     );
+    
   }
 
   const settings = {

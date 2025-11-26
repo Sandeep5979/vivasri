@@ -132,6 +132,11 @@ const [expiryDate, setExpiryDate] = useState(false)
           photo2:data.data[0]?.photo2,
           photo3:data.data[0]?.photo3,
           photo4:data.data[0]?.photo4,
+          photo_blur:data.data[0]?.photo_blur,
+          photo1_blur:data.data[0]?.photo1_blur,
+          photo2_blur:data.data[0]?.photo2_blur,
+          photo3_blur:data.data[0]?.photo3_blur,
+          photo4_blur:data.data[0]?.photo4_blur,
           loc_state:data.data[0].loc_state?.name,
           loc_city:data.data[0].loc_city?.name,
           health_information:data.data[0].health_information,
@@ -579,7 +584,7 @@ const yesNoButton = (value) => {
       <div className="profiledetailpink">
         <div className="row">
           <div className="col-lg-3">
-            <ProfileDetailImage formData={formData} />
+            <ProfileDetailImage formData={formData} planDetailUser={planDetailUser} totalUserSentInterest={totalUserSentInterest} expiryDate={expiryDate} />
             {/* carousal end */}
           </div>
           <div className="col-lg-9">

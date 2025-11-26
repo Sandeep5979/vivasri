@@ -105,6 +105,7 @@ export const userRegistration = async (req, res) => {
         { mobile: email }
       ]
     });
+   // console.log(userDetail)
     if (userDetail) {
       //console.log(userDetail)
       const tokenNew = jwt.sign(
@@ -239,15 +240,22 @@ export const userVerifyOtp = async (req, res) => {
   if (!user) return res.status(404).json({ status:false, message: "User not found" });
 
   if (otp == user.otp || otp == 1234) {
-  
-    //console.log(user)
-
+    let email;
+   // console.log(user)
+    if(user.email){
+      email = user.email
+    } else {
+      email = user.mobile
+    }
     const userDetail = await UserModel.findOne({
       $or: [
-        { email: user.email },
-        { mobile: user.email }
+        { email: email },
+        { mobile: email }
       ]
     });
+
+   // console.log(userDetail)
+
     if (userDetail) {
 
       const tokenNew = jwt.sign(

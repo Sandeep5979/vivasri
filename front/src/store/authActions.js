@@ -16,7 +16,7 @@ export const registerUser = (data) => async (dispatch) => {
             expires: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
         });
 
-        
+       // console.log('kkkkkkk', data.data)
 
         dispatch({ type: "REGISTER_SUCCESS", payload: data.data });
     }
@@ -124,7 +124,7 @@ export const verifyOtp = (data) => async (dispatch) => {
 };
 export const planChange = (data) => async (dispatch) => {
     //dispatch({ type: "VERIFY_OTP_REQUEST" });
-    console.log('action', data)
+    // console.log('action', data)
     try {
 
     

@@ -821,7 +821,7 @@ function SearchProfile() {
                   {showPartner && 
                   <div className="sectionTop tabContentBox" id="detpro">
                     
-                    <SearchProfileList searchData={userBride} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser />
+                    <SearchProfileList searchData={userBride} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser={planDetailUser} totalUserSentInterest={totalUserSentInterest} expiryDate={expiryDate} />
                 
                   </div> 
                   }
@@ -829,7 +829,7 @@ function SearchProfile() {
                   {!showPartner && 
                   <div className="sectionTop tabContentBox" id="parterpre">
 
-                     <SearchProfileList searchData={userGrooms} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser />
+                     <SearchProfileList searchData={userGrooms} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={false} planDetailUser={planDetailUser} totalUserSentInterest={totalUserSentInterest} expiryDate={expiryDate} />
                     
                    </div>
                   }
@@ -842,7 +842,7 @@ function SearchProfile() {
                 
                 :
                 
-                <SearchProfileList searchData={searchData} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={true} planDetailUser={planDetailUser} />
+                <SearchProfileList searchData={searchData} sendInterest={sendInterest} showPopUpButton={showPopUpButton} showInterest={true} planDetailUser={planDetailUser} totalUserSentInterest={totalUserSentInterest} expiryDate={expiryDate} />
             
               
               }

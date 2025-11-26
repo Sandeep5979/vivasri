@@ -385,6 +385,15 @@ const sendInterest = (id, index, val) => {
       }
       modalInstanceConfirm.current?.hide();
     }
+
+let blurPhoto = 0 
+ if(!planDetailUser || Object.keys(planDetailUser).length === 0  || planDetailUser?.plan_id?.name === 'Basic' || (planDetailUser?.plan_id?.name === 'Gold' && totalUserSentInterest >= 50) || (expiryDate && (planDetailUser?.plan_id?.name === 'Gold' || planDetailUser?.plan_id?.name === 'Premium'))){
+    //console.log('blur photo')
+    blurPhoto = 1
+
+}
+
+
   return (
     <>
       <HeaderUser />
@@ -735,16 +744,34 @@ const sendInterest = (id, index, val) => {
                         let profilePhoto;
                     if(searchList.profile_photo === 1){
                       profilePhoto = searchList.photo
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo_blur  
+                      }
                     } else if(searchList.profile_photo === 2){
                       profilePhoto = searchList.photo1
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo1_blur  
+                      }
                     } else if(searchList.profile_photo === 3){
                       profilePhoto = searchList.photo2
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo2_blur  
+                      }
                     } else if(searchList.profile_photo === 4){
                       profilePhoto = searchList.photo3
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo3_blur  
+                      }
                     } else if(searchList.profile_photo === 5){
                       profilePhoto = searchList.photo4
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo4_blur  
+                      }
                     } else {
                       profilePhoto = searchList.photo
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo_blur  
+                      }
                     }
 
                         return (
@@ -838,16 +865,34 @@ const sendInterest = (id, index, val) => {
                         let profilePhoto;
                     if(searchList.profile_photo === 1){
                       profilePhoto = searchList.photo
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo_blur  
+                      }
                     } else if(searchList.profile_photo === 2){
                       profilePhoto = searchList.photo1
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo1_blur  
+                      }
                     } else if(searchList.profile_photo === 3){
                       profilePhoto = searchList.photo2
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo2_blur  
+                      }
                     } else if(searchList.profile_photo === 4){
                       profilePhoto = searchList.photo3
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo3_blur  
+                      }
                     } else if(searchList.profile_photo === 5){
                       profilePhoto = searchList.photo4
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo4_blur  
+                      }
                     } else {
                       profilePhoto = searchList.photo
+                      if(blurPhoto === 1){
+                      profilePhoto = searchList.photo_blur  
+                      }
                     }
 
 

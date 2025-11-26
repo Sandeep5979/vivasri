@@ -61,11 +61,12 @@ if(otpSent){
     
           const data = await res.json();
           setIsLoading(false)
+          // console.log('okkkkkkkkkkkkkkkk', data)
           if(data.status){
             dispatch(registerUser(data));
             
             if(data.page){
-             // console.log('okkkkkkkkkkkkkkkk', data)
+             
              //navigate(`/${data.page}`)
              if(data.page === 'dashboard'){
 
